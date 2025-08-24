@@ -61,12 +61,12 @@ export function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-6">
             {getCurrentNavItems().map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-gray-700 hover:text-green-600 font-medium transition-all duration-300 relative group px-4 py-2 rounded-lg hover:bg-green-50"
+                className="text-gray-700 hover:text-green-600 font-medium transition-all duration-300 relative group px-3 py-2 rounded-lg hover:bg-green-50 text-sm"
               >
                 {item.label}
                 <span className="absolute inset-x-0 -bottom-2 h-1 bg-green-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-center rounded-full"></span>
@@ -75,12 +75,12 @@ export function Navbar() {
           </div>
 
           {/* Right side actions */}
-          <div className="hidden lg:flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-2">
             {/* Language Selector */}
             <div className="relative">
               <button
                 onClick={toggleLangMenu}
-                className="flex items-center space-x-2 px-4 py-2 rounded-xl hover:bg-green-50 transition-colors border border-transparent hover:border-green-200"
+                className="flex items-center space-x-1 px-3 py-2 rounded-lg hover:bg-green-50 transition-colors border border-transparent hover:border-green-200"
               >
                 <Globe className="w-4 h-4 text-green-600" />
                 <span className="text-sm font-medium text-gray-700">
@@ -114,7 +114,7 @@ export function Navbar() {
             {/* Cart */}
             <Link 
               href="/cart"
-              className="relative p-3 rounded-xl hover:bg-green-50 transition-colors border border-transparent hover:border-green-200 group"
+              className="relative p-2 rounded-lg hover:bg-green-50 transition-colors border border-transparent hover:border-green-200 group"
             >
               <ShoppingBag className="w-5 h-5 text-gray-700 group-hover:text-green-600" />
               <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-600 text-white text-xs rounded-full flex items-center justify-center font-medium">
@@ -123,18 +123,18 @@ export function Navbar() {
             </Link>
 
             {/* Action Buttons */}
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
               <Button 
                 variant="outline" 
-                size="lg" 
-                className="border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300 font-medium rounded-xl px-6"
+                size="sm" 
+                className="border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300 font-medium rounded-lg px-4 text-sm"
               >
-                Телеграм бот
+                Телеграм
               </Button>
               <Button 
                 variant="default" 
-                size="lg" 
-                className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-lg hover:shadow-xl transition-all duration-300 font-medium rounded-xl px-6"
+                size="sm" 
+                className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-lg hover:shadow-xl transition-all duration-300 font-medium rounded-lg px-4 text-sm"
               >
                 Харид қилиш
               </Button>
