@@ -10,7 +10,7 @@ const navItems = [
   { href: "/", label: "Бош саҳифа", labelEn: "Home", labelRu: "Главная" },
   { href: "/about", label: "Биз ҳақимизда", labelEn: "About", labelRu: "О нас" },
   { href: "/products", label: "Маҳсулотлар", labelEn: "Products", labelRu: "Продукты" },
-  { href: "/franchise", label: "Франшиза", labelEn: "Franchise", labelRu: "Франшиза" },
+  { href: "/franchise", label: "Франчайзинг", labelEn: "Franchise", labelRu: "Франчайзинг" },
   { href: "/education", label: "Таълим", labelEn: "Education", labelRu: "Образование" },
   { href: "/blog", label: "Янгиликлар", labelEn: "News", labelRu: "Новости" },
   { href: "/contact", label: "Алоқа", labelEn: "Contact", labelRu: "Контакты" },
