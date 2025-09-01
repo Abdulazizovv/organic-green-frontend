@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 import { LanguageProvider } from "@/lib/language";
 import { AuthProvider } from "@/lib/authContext";
 import { CartProvider } from "@/context/CartContext";
+import { ToastProvider } from "@/context/ToastContext";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -91,11 +92,13 @@ export default function RootLayout({
         <LanguageProvider>
           <AuthProvider>
             <CartProvider>
-              <Navbar />
-              <main className="flex-1">
-                {children}
-              </main>
-              <Footer />
+              <ToastProvider>
+                <Navbar />
+                <main className="flex-1">
+                  {children}
+                </main>
+                <Footer />
+              </ToastProvider>
             </CartProvider>
           </AuthProvider>
         </LanguageProvider>

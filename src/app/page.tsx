@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Sprout, Users, TrendingUp, Award, ArrowRight, Play, Star, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import ProductCard from "@/components/ui/ProductCard";
+import { ProductCard } from "@/components/ui/ProductCard";
 import { useFeaturedProducts, useCategories } from "@/lib/hooks";
 import { useLanguage } from "@/lib/language";
 

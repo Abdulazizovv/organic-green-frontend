@@ -341,6 +341,7 @@ export interface SearchParams {
   min_price?: number;
   max_price?: number;
   sort?: 'name' | 'price_asc' | 'price_desc' | 'newest';
+  ordering?: string;
   page?: number;
   page_size?: number;
   tags?: string;
