@@ -136,8 +136,11 @@ export function CartProvider({ children, enableOptimistic = false }: CartProvide
     }
 
     try {
+      console.log('🛒 CartContext: Adding item:', request);
       dispatch({ type: 'SET_LOADING', payload: true });
-      await cartService.addItem(request);
+      
+      const response = await cartService.addItem(request);
+      console.log('✅ CartContext: Add item response:', response);
       
       // Refresh cart to get latest state
       await loadCart();
@@ -148,6 +151,9 @@ export function CartProvider({ children, enableOptimistic = false }: CartProvide
       
       dispatch({ type: 'SET_ERROR', payload: null });
     } catch (error) {
+      console.error('❌ CartContext: Add item failed:', error);
+      console.error('❌ CartContext: Add request was:', request);
+      
       if (optimistic) {
         dispatch({ type: 'ROLLBACK_OPTIMISTIC' });
       }
@@ -159,11 +165,18 @@ export function CartProvider({ children, enableOptimistic = false }: CartProvide
 
   const updateItem = async (request: UpdateItemRequest) => {
     try {
+      console.log('🔄 CartContext: Updating item:', request);
       dispatch({ type: 'SET_LOADING', payload: true });
-      await cartService.updateItem(request);
+      
+      const response = await cartService.updateItem(request);
+      console.log('✅ CartContext: Update item response:', response);
+      
       await loadCart();
       dispatch({ type: 'SET_ERROR', payload: null });
     } catch (error) {
+      console.error('❌ CartContext: Update item failed:', error);
+      console.error('❌ CartContext: Update request was:', request);
+      
       const message = error instanceof Error ? error.message : 'Failed to update item';
       dispatch({ type: 'SET_ERROR', payload: message });
       throw error;
@@ -172,11 +185,18 @@ export function CartProvider({ children, enableOptimistic = false }: CartProvide
 
   const removeItem = async (itemId: string) => {
     try {
+      console.log('🗑️ CartContext: Removing item:', { itemId });
       dispatch({ type: 'SET_LOADING', payload: true });
-      await cartService.removeItem(itemId);
+      
+      const response = await cartService.removeItem(itemId);
+      console.log('✅ CartContext: Remove item response:', response);
+      
       await loadCart();
       dispatch({ type: 'SET_ERROR', payload: null });
     } catch (error) {
+      console.error('❌ CartContext: Remove item failed:', error);
+      console.error('❌ CartContext: Remove item ID was:', itemId);
+      
       const message = error instanceof Error ? error.message : 'Failed to remove item';
       dispatch({ type: 'SET_ERROR', payload: message });
       throw error;

@@ -1,310 +1,336 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Search, 
-  Grid3X3, 
-  List, 
-  Filter, 
-  X, 
-  Loader2, 
-  RefreshCw,
-  AlertTriangle,
-  Package,
-  ShoppingCart,
-  CheckCircle
+  Search, X, Grid3X3, List, ChevronLeft, ChevronRight, 
+  RefreshCw, Filter, Package, Loader2, AlertTriangle,
+  Leaf, Zap, Award, Droplets, ShoppingCart, ArrowRight
 } from 'lucide-react';
+
+import { ProductCard } from '@/components/ui/ProductCard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ProductCard } from '@/components/ui/ProductCard';
-import { CategoryPillFilters } from '@/components/ui/CategoryPillFilters';
 import { OrderingDropdown, type SortOption } from '@/components/ui/OrderingDropdown';
-import { useProducts, useCategories } from '@/lib/hooks';
 import { useLanguage } from '@/lib/language';
 import { useToast } from '@/context/ToastContext';
-import { useCart } from '@/context/CartContext';
-import { 
-  getLocalizedName, 
-  isThrottleError, 
-  handleAPIError 
-} from '@/lib/utils';
-import type { Product, Category } from '@/lib/api';
+import { getLocalizedName, formatPriceSimple, handleAPIError, isThrottleError } from '@/lib/utils';
+import type { Product } from '@/lib/api';
+import { productsAPI, categoriesAPI } from '@/lib/api';
+import type { Category } from '@/lib/api';
+
+// Types
+interface ProductsResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Product[];
+}
+
+interface CategoriesResponse {
+  count: number;
+  results: Category[];
+}
+
+interface CartItem {
+  productId: string;
+  quantity: number;
+  price: number;
+}
 
 type ViewMode = 'grid' | 'list';
-type StockFilter = 'all' | 'in_stock' | 'out_of_stock' | 'low_stock';
 
 export default function ProductsPage() {
-  // Core state
+  // State management
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  
+  // Filter states
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [sortBy, setSortBy] = useState<SortOption>('name_asc');
-  const [sortApiParam, setSortApiParam] = useState('name_uz');
-  const [stockFilter, setStockFilter] = useState<StockFilter>('all');
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
+  const [hasNext, setHasNext] = useState(false);
+  const [hasPrevious, setHasPrevious] = useState(false);
+  const itemsPerPage = 20;
+  
+  // UI states
+  const [showCartPanel, setShowCartPanel] = useState(false);
+  
+  // Ref to track first render for useEffect
+  const isFirstRender = useRef(true);
+  
+  // Cart state - simple implementation
+  const [cart, setCart] = useState<CartItem[]>([]);
+  
+  // Refs
+  const categoryScrollRef = useRef<HTMLDivElement>(null);
+  
+  // Hooks
+  const { language, t } = useLanguage();
+  const { showError, showThrottleWarning } = useToast();
 
-  // UI state
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [searchFocused, setSearchFocused] = useState(false);
+  // Cart functions
+  const getTotalItems = useCallback(() => {
+    return cart.reduce((total, item) => total + item.quantity, 0);
+  }, [cart]);
 
-  const { t, language } = useLanguage();
-  const { showError, showThrottleWarning, showSuccess } = useToast();
-  const { getTotalItems } = useCart();
-  const itemsPerPage = 12;
+  const getTotalPrice = useCallback(() => {
+    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+  }, [cart]);
 
-  // Fetch data with enhanced parameters
-  const { 
-    data: productsData, 
-    loading: productsLoading, 
-    error: productsError
-  } = useProducts({
-    search: searchQuery,
-    category: selectedCategoryId || undefined,
-    ordering: sortApiParam,
-    page: currentPage,
-    page_size: itemsPerPage
-  });
-
-  const { 
-    data: categoriesData, 
-    loading: categoriesLoading
-  } = useCategories();
-
-  const products = productsData?.results || [];
-  const totalProducts = productsData?.count || 0;
-  const totalPages = Math.ceil(totalProducts / itemsPerPage);
-  const categories = Array.isArray(categoriesData?.results) ? categoriesData.results : [];
-
-  // Enhanced filtering with client-side filters for better performance
-  const filteredProducts = useMemo(() => {
-    if (!products) return [];
-    
-    let filtered = [...products];
-
-    console.log('🔍 ProductsPage: Filtering products...', {
-      total: products.length,
-      stockFilter,
-      priceRange,
-      searchQuery: searchQuery.slice(0, 20) + (searchQuery.length > 20 ? '...' : '')
-    });
-
-    // Apply stock filter (client-side for immediate feedback)
-    switch (stockFilter) {
-      case 'in_stock':
-        filtered = filtered.filter(product => (product.available_stock || product.stock || 0) > 0);
-        break;
-      case 'out_of_stock':
-        filtered = filtered.filter(product => (product.available_stock || product.stock || 0) === 0);
-        break;
-      case 'low_stock':
-        filtered = filtered.filter(product => {
-          const stock = product.available_stock || product.stock || 0;
-          return stock > 0 && stock <= 5;
-        });
-        break;
-      default:
-        // 'all' - no filter
-        break;
-    }
-
-    // Apply price range filter (client-side)
-    if (priceRange[0] > 0 || priceRange[1] < 1000) {
-      filtered = filtered.filter(product => {
-        const price = parseFloat(product.final_price || product.price || '0');
-        return price >= priceRange[0] && price <= priceRange[1];
-      });
-    }
-
-    console.log('🔍 ProductsPage: Filtered products:', filtered.length);
-    return filtered;
-  }, [products, stockFilter, priceRange]);
-
-  // Handle category change
-  const handleCategoryChange = useCallback((categoryId: string | null) => {
-    console.log('🏷️ ProductsPage: Category changed:', categoryId);
-    setSelectedCategoryId(categoryId);
-    setCurrentPage(1);
-  }, []);
-
-  // Handle sort change
-  const handleSortChange = useCallback((sort: SortOption, apiParam: string) => {
-    console.log('🔀 ProductsPage: Sort changed:', sort, apiParam);
-    setSortBy(sort);
-    setSortApiParam(apiParam);
-    setCurrentPage(1);
-  }, []);
-
-  // Handle stock filter change
-  const handleStockFilterChange = useCallback((filter: StockFilter) => {
-    console.log('📦 ProductsPage: Stock filter changed:', filter);
-    setStockFilter(filter);
-    setCurrentPage(1);
-  }, []);
-
-  // Handle search with debouncing
-  const handleSearchChange = useCallback((value: string) => {
-    setSearchQuery(value);
-    setCurrentPage(1);
-  }, []);
-
-  // Refresh all data
-  const handleRefresh = useCallback(async () => {
-    setIsRefreshing(true);
+  // API functions
+  const fetchCategories = useCallback(async () => {
     try {
-      console.log('🔄 ProductsPage: Refreshing data...');
-      // Force re-render by updating search state
-      setSearchQuery(prev => prev + ' ');
-      setTimeout(() => setSearchQuery(prev => prev.trim()), 100);
-      showSuccess(t('products.refreshed') || 'Products refreshed');
+      setIsCategoriesLoading(true);
+      setHasError(false);
+      
+      const data = await categoriesAPI.getAll();
+      console.log('🏷️ Categories data received:', data);
+      
+      // Handle both direct array and paginated response
+      if (Array.isArray(data)) {
+        setCategories(data);
+      } else if (data && typeof data === 'object' && 'results' in data && Array.isArray((data as any).results)) {
+        setCategories((data as any).results);
+      } else if (data && typeof data === 'object') {
+        setCategories([]);
+        console.warn('Categories data is not in expected format:', data);
+      } else {
+        setCategories([]);
+      }
+      
     } catch (error) {
-      console.error('🔄 ProductsPage: Refresh failed:', error);
+      console.error('❌ Failed to load categories:', error);
+      setHasError(true);
+      setCategories([]); // Ensure categories is always an array
       
       if (isThrottleError(error)) {
+        setErrorMessage('Too many requests. Please wait a moment and try again.');
         showThrottleWarning();
       } else {
         const apiError = handleAPIError(error);
-        showError(apiError.message, 'Refresh Error');
+        setErrorMessage(apiError.message);
+        showError(apiError.message, 'Categories Error');
       }
     } finally {
+      setIsCategoriesLoading(false);
+    }
+  }, [showThrottleWarning, showError]);
+
+  const fetchProducts = useCallback(async (page: number = 1, forceRefresh: boolean = false) => {
+    try {
+      if (forceRefresh) {
+        setIsRefreshing(true);
+      } else {
+        setIsLoading(true);
+      }
+      setHasError(false);
+      
+      // Build query parameters
+      const params: any = {
+        page: page,
+        page_size: itemsPerPage,
+      };
+      
+      // Add cache busting parameter for force refresh
+      if (forceRefresh) {
+        params._t = Date.now();
+      }
+      
+      if (searchQuery.trim()) {
+        params.search = searchQuery.trim();
+      }
+      
+      if (selectedCategoryId) {
+        params.category = selectedCategoryId;
+      }
+      
+      // Map sort option to API parameter
+      const sortMapping: Record<SortOption, string> = {
+        name_asc: 'name_uz',
+        name_desc: '-name_uz',
+        price_asc: 'price',
+        price_desc: '-price',
+        newest: '-created_at',
+        oldest: 'created_at',
+        stock_high: '-stock',
+        stock_low: 'stock',
+        popularity: '-id'
+      };
+      params.ordering = sortMapping[sortBy] || 'name_uz';
+      
+      const data = await productsAPI.getAll(params);
+      console.log('📦 Products data received:', data);
+      
+      setProducts(data.results || []);
+      setTotalCount(data.count || 0);
+      setHasNext(!!data.next);
+      setHasPrevious(!!data.previous);
+      setCurrentPage(page);
+      
+    } catch (error) {
+      console.error('❌ Failed to load products:', error);
+      setHasError(true);
+      
+      if (isThrottleError(error)) {
+        setErrorMessage('Too many requests. Please wait a moment and try again.');
+        showThrottleWarning();
+      } else {
+        const apiError = handleAPIError(error);
+        setErrorMessage(apiError.message);
+        showError(apiError.message, 'Products Error');
+      }
+    } finally {
+      setIsLoading(false);
       setIsRefreshing(false);
     }
-  }, [showSuccess, showThrottleWarning, showError, t]);
+  }, [searchQuery, selectedCategoryId, sortBy, showThrottleWarning, showError]);
 
-  // Clear all filters
-  const handleClearFilters = useCallback(() => {
-    console.log('🧹 ProductsPage: Clearing all filters');
-    setSearchQuery('');
-    setSelectedCategoryId(null);
-    setStockFilter('all');
-    setPriceRange([0, 1000]);
-    setSortBy('name_asc');
-    setSortApiParam('name_uz');
+  // Load data on mount
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
+  // Initial load only
+  useEffect(() => {
+    fetchProducts(1, false);
+  }, []); // Empty dependency array for initial load only
+
+  // Fetch products when search/category/sort changes (but not on initial mount)
+  useEffect(() => {
+    // Skip only the very first render to avoid double request
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    
+    // Add debounce for search to avoid too many requests
+    const timer = setTimeout(() => {
+      fetchProducts(currentPage, false); // Normal fetch, not force refresh
+    }, searchQuery !== '' ? 500 : 0); // 500ms debounce for search, immediate for others
+    
+    return () => clearTimeout(timer);
+  }, [searchQuery, selectedCategoryId, sortBy, currentPage, fetchProducts]);
+
+  // Show cart panel when there are items
+  useEffect(() => {
+    const totalItems = getTotalItems();
+    setShowCartPanel(totalItems > 0);
+  }, [cart, getTotalItems]);
+
+  // Handle search
+  const handleSearch = useCallback((query: string) => {
+    setSearchQuery(query);
+    setCurrentPage(1);
+    // No force refresh - let useEffect handle normal fetch
+  }, []);
+
+  // Handle category selection
+  const handleCategorySelect = useCallback((categoryId: string | null) => {
+    setSelectedCategoryId(categoryId);
+    setCurrentPage(1);
+    // No force refresh - let useEffect handle normal fetch
+  }, []);
+
+  // Handle sort change
+  const handleSortChange = useCallback((newSort: SortOption) => {
+    setSortBy(newSort);
     setCurrentPage(1);
   }, []);
 
-  // Check if any filters are active
-  const hasActiveFilters = useMemo(() => {
-    return searchQuery.trim() !== '' || 
-           selectedCategoryId !== null || 
-           stockFilter !== 'all' || 
-           priceRange[0] > 0 || 
-           priceRange[1] < 1000;
-  }, [searchQuery, selectedCategoryId, stockFilter, priceRange]);
+  // Handle pagination
+  const handlePageChange = useCallback((page: number) => {
+    fetchProducts(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [fetchProducts]);
 
-  // Reset page when data changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, selectedCategoryId, sortApiParam]);
+  // Handle refresh
+  const handleRefresh = useCallback(() => {
+    fetchProducts(currentPage, true);
+  }, [fetchProducts, currentPage]);
 
-  // Stock filter options
-  const stockFilterOptions = [
-    { value: 'all' as StockFilter, label: t('products.stock.all') || 'All Products', icon: Package },
-    { value: 'in_stock' as StockFilter, label: t('products.stock.in_stock') || 'In Stock', icon: CheckCircle },
-    { value: 'out_of_stock' as StockFilter, label: t('products.stock.out_of_stock') || 'Out of Stock', icon: X },
-    { value: 'low_stock' as StockFilter, label: t('products.stock.low_stock') || 'Low Stock', icon: AlertTriangle },
+  // Category scroll functions
+  const scrollCategories = useCallback((direction: 'left' | 'right') => {
+    if (categoryScrollRef.current) {
+      const scrollAmount = 200;
+      const currentScroll = categoryScrollRef.current.scrollLeft;
+      const newScroll = direction === 'left' 
+        ? currentScroll - scrollAmount 
+        : currentScroll + scrollAmount;
+      
+      categoryScrollRef.current.scrollTo({
+        left: newScroll,
+        behavior: 'smooth'
+      });
+    }
+  }, []);
+
+  // Get localized category name
+  const getCategoryName = useCallback((category: Category) => {
+    return getLocalizedName(category, language);
+  }, [language]);
+
+  // Unique Selling Points data
+  const sellingPoints = [
+    {
+      icon: Leaf,
+      title: t('features.organic_fresh') || 'Organic & Fresh',
+      description: t('features.organic_desc') || 'Certified organic products'
+    },
+    {
+      icon: Zap,
+      title: t('features.fast_delivery') || 'Fast Delivery',
+      description: t('features.delivery_desc') || 'Same day delivery available'
+    },
+    {
+      icon: Award,
+      title: t('features.certified_quality') || 'Certified Quality',
+      description: t('features.quality_desc') || 'Premium quality guarantee'
+    },
+    {
+      icon: Droplets,
+      title: t('features.fresh_harvest') || 'Fresh Harvest',
+      description: t('features.harvest_desc') || 'Directly from farmers'
+    }
   ];
 
-  // Get stock filter counts
-  const getStockFilterCount = (filter: StockFilter) => {
-    if (!products) return 0;
-    
-    switch (filter) {
-      case 'in_stock':
-        return products.filter(p => (p.available_stock || p.stock || 0) > 0).length;
-      case 'out_of_stock':
-        return products.filter(p => (p.available_stock || p.stock || 0) === 0).length;
-      case 'low_stock':
-        return products.filter(p => {
-          const stock = p.available_stock || p.stock || 0;
-          return stock > 0 && stock <= 5;
-        }).length;
-      default:
-        return products.length;
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
     }
   };
 
-  // Pagination component
-  const Pagination = () => {
-    if (totalPages <= 1) return null;
-    
-    const getPageNumbers = () => {
-      const delta = 2;
-      const range = [];
-      const rangeWithDots = [];
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
 
-      for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
-        range.push(i);
-      }
-
-      if (currentPage - delta > 2) {
-        rangeWithDots.push(1, '...');
-      } else {
-        rangeWithDots.push(1);
-      }
-
-      rangeWithDots.push(...range);
-
-      if (currentPage + delta < totalPages - 1) {
-        rangeWithDots.push('...', totalPages);
-      } else {
-        rangeWithDots.push(totalPages);
-      }
-
-      return rangeWithDots;
-    };
-
-    return (
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex flex-wrap justify-center items-center gap-2 mt-8"
-      >
-        <Button
-          variant="outline"
-          disabled={currentPage === 1}
-          onClick={() => setCurrentPage(currentPage - 1)}
-          className="border-green-200 hover:bg-green-50 disabled:opacity-50"
-        >
-          {t('common.previous') || 'Previous'}
-        </Button>
-        
-        {getPageNumbers().map((page, index) => (
-          page === '...' ? (
-            <span key={`dots-${index}`} className="px-2 text-gray-400">...</span>
-          ) : (
-            <Button
-              key={page}
-              variant={currentPage === page ? 'default' : 'outline'}
-              onClick={() => setCurrentPage(page as number)}
-              className={
-                currentPage === page 
-                  ? 'bg-green-600 hover:bg-green-700 text-white' 
-                  : 'border-green-200 hover:bg-green-50'
-              }
-              size="sm"
-            >
-              {page}
-            </Button>
-          )
-        ))}
-        
-        <Button
-          variant="outline"
-          disabled={currentPage === totalPages}
-          onClick={() => setCurrentPage(currentPage + 1)}
-          className="border-green-200 hover:bg-green-50 disabled:opacity-50"
-        >
-          {t('common.next') || 'Next'}
-        </Button>
-      </motion.div>
-    );
+  const cardVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: { 
+      opacity: 1, 
+      scale: 1,
+      transition: { duration: 0.2 }
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <motion.div
@@ -313,140 +339,81 @@ export default function ProductsPage() {
           className="text-center mb-8"
         >
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            {t('products.title') || 'Organic Products'}
+            {t('products.title') || 'Our Products'}
           </h1>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            {t('products.subtitle') || 'Discover fresh, healthy, and sustainable products grown with care'}
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            {t('products.subtitle') || 'Discover our wide range of fresh, organic products delivered straight from local farms.'}
           </p>
-          
-          {/* Cart indicator */}
-          <div className="flex justify-center mt-4">
-            <div className="flex items-center gap-2 text-sm text-gray-600 bg-white px-4 py-2 rounded-full shadow-sm border">
-              <ShoppingCart className="w-4 h-4" />
-              <span>{getTotalItems()} {t('products.items_in_cart') || 'items in cart'}</span>
-            </div>
-          </div>
         </motion.div>
 
-        {/* Search and Controls */}
+        {/* Unique Selling Points */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
+        >
+          {sellingPoints.map((point, index) => (
+            <motion.div
+              key={index}
+              variants={itemVariants}
+              className="bg-white rounded-lg p-4 shadow-sm border border-green-100 text-center hover:shadow-md transition-shadow"
+            >
+              <point.icon className="w-8 h-8 text-green-600 mx-auto mb-2" />
+              <h3 className="font-semibold text-gray-900 text-sm mb-1">
+                {point.title}
+              </h3>
+              <p className="text-xs text-gray-600">
+                {point.description}
+              </p>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Search and Filters */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-8"
+          transition={{ delay: 0.2 }}
+          className="bg-white rounded-lg shadow-sm border p-6 mb-8"
         >
-          {/* Search Bar */}
-          <div className="flex flex-col lg:flex-row gap-4 mb-6">
-            <div className="relative flex-1">
-              <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors ${searchFocused ? 'text-green-500' : 'text-gray-400'}`} />
+          <div className="flex flex-col lg:flex-row gap-4 items-center">
+            {/* Search */}
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <Input
                 type="text"
-                placeholder={t('products.search_placeholder') || 'Search products...'}
+                placeholder={t('search.placeholder') || 'Search products...'}
                 value={searchQuery}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                onFocus={() => setSearchFocused(true)}
-                onBlur={() => setSearchFocused(false)}
-                className={`pl-10 h-12 border-gray-200 focus:border-green-300 focus:ring-2 focus:ring-green-100 ${searchFocused ? 'shadow-md' : ''}`}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="pl-10 pr-4 py-2 w-full"
               />
+              {searchQuery && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSearch('')}
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              )}
             </div>
-            
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                onClick={handleRefresh}
-                disabled={isRefreshing}
-                className="h-12 px-4 border-gray-200 hover:bg-gray-50"
-                title={t('common.refresh') || 'Refresh'}
-              >
-                {isRefreshing ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : (
-                  <RefreshCw className="w-5 h-5" />
-                )}
-              </Button>
-            </div>
-          </div>
 
-          {/* Category Filters */}
-          <div className="mb-6">
-            <CategoryPillFilters
-              selectedCategoryId={selectedCategoryId}
-              onCategoryChange={handleCategoryChange}
-            />
-          </div>
-
-          {/* Controls Row */}
-          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-            {/* Left side - Ordering and Stock Filter */}
-            <div className="flex flex-wrap gap-3 items-center">
+            {/* Sort and View Controls */}
+            <div className="flex items-center gap-2">
               <OrderingDropdown
                 selectedSort={sortBy}
-                onSortChange={handleSortChange}
-                className="min-w-[200px]"
+                onSortChange={(sort, apiParam) => handleSortChange(sort)}
+                className="min-w-[160px]"
               />
               
-              {/* Stock Filter Pills */}
-              <div className="flex flex-wrap gap-2">
-                {stockFilterOptions.map((option) => {
-                  const IconComponent = option.icon;
-                  const isSelected = stockFilter === option.value;
-                  const count = getStockFilterCount(option.value);
-                  
-                  return (
-                    <Button
-                      key={option.value}
-                      variant={isSelected ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => handleStockFilterChange(option.value)}
-                      className={`
-                        h-9 px-3 text-xs font-medium transition-all duration-200
-                        ${isSelected 
-                          ? 'bg-green-600 text-white shadow-md hover:bg-green-700' 
-                          : 'bg-white text-gray-700 border-gray-200 hover:bg-green-50 hover:border-green-300'
-                        }
-                      `}
-                    >
-                      <IconComponent className="w-4 h-4 mr-1" />
-                      {option.label}
-                      <span className="ml-1 px-1.5 py-0.5 bg-black/10 rounded-full text-xs">
-                        {count}
-                      </span>
-                    </Button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Right side - View controls and Clear filters */}
-            <div className="flex items-center gap-3">
-              {/* Clear Filters */}
-              <AnimatePresence>
-                {hasActiveFilters && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                  >
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleClearFilters}
-                      className="text-red-600 hover:bg-red-50 h-9"
-                    >
-                      <X className="w-4 h-4 mr-1" />
-                      {t('products.clear_filters') || 'Clear Filters'}
-                    </Button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* View Mode Toggle */}
-              <div className="flex border border-gray-200 rounded-lg overflow-hidden">
+              <div className="flex bg-gray-100 rounded-lg p-1">
                 <Button
                   variant={viewMode === 'grid' ? 'default' : 'ghost'}
                   size="sm"
                   onClick={() => setViewMode('grid')}
-                  className={`h-9 px-3 ${viewMode === 'grid' ? 'bg-green-600 text-white' : 'hover:bg-gray-50'}`}
+                  className="p-2"
                 >
                   <Grid3X3 className="w-4 h-4" />
                 </Button>
@@ -454,149 +421,340 @@ export default function ProductsPage() {
                   variant={viewMode === 'list' ? 'default' : 'ghost'}
                   size="sm"
                   onClick={() => setViewMode('list')}
-                  className={`h-9 px-3 ${viewMode === 'list' ? 'bg-green-600 text-white' : 'hover:bg-gray-50'}`}
+                  className="p-2"
                 >
                   <List className="w-4 h-4" />
                 </Button>
               </div>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                className="p-2"
+              >
+                <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+              </Button>
             </div>
           </div>
         </motion.div>
 
-        {/* Results Summary */}
+        {/* Categories */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="mb-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="mb-8"
         >
-          <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
-            <div className="flex items-center gap-4 text-sm text-gray-600">
-              <span>
-                <strong className="text-gray-900">{filteredProducts.length}</strong> {t('products.of') || 'of'} <strong className="text-gray-900">{totalProducts}</strong> {t('products.products') || 'products'}
-              </span>
-              {hasActiveFilters && (
-                <span className="text-green-600">({t('products.filtered') || 'filtered'})</span>
+          <div className="flex items-center gap-2 mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">
+              {t('categories.title') || 'Categories'}
+            </h2>
+            
+            {/* Mobile scroll buttons */}
+            <div className="md:hidden flex gap-1 ml-auto">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => scrollCategories('left')}
+                className="p-2"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => scrollCategories('right')}
+                className="p-2"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+
+          <div className="relative">
+            <div
+              ref={categoryScrollRef}
+              className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 md:flex-wrap md:overflow-visible"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {/* All Categories Button */}
+              <Button
+                variant={selectedCategoryId === null ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => handleCategorySelect(null)}
+                className={`whitespace-nowrap flex-shrink-0 ${
+                  selectedCategoryId === null 
+                    ? 'bg-green-600 hover:bg-green-700 text-white' 
+                    : 'hover:bg-green-50 hover:text-green-700 hover:border-green-300'
+                }`}
+              >
+                {t('categories.all') || 'All Products'}
+              </Button>
+
+              {/* Category Pills */}
+              {isCategoriesLoading ? (
+                <div className="flex gap-2">
+                  {[...Array(6)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="h-9 w-24 bg-gray-200 rounded-full animate-pulse flex-shrink-0"
+                    />
+                  ))}
+                </div>
+              ) : (
+                (() => {
+                  console.log('🏷️ Rendering categories:', categories, 'Type:', typeof categories, 'Is Array:', Array.isArray(categories));
+                  return (categories || []).map((category) => (
+                    <div key={category.id} className="relative inline-block">
+                      <Button
+                        variant={selectedCategoryId === category.id ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => handleCategorySelect(category.id)}
+                        className={`whitespace-nowrap flex-shrink-0 ${
+                          selectedCategoryId === category.id ? 'pr-8' : ''
+                        }`}
+                      >
+                        {getCategoryName(category)}
+                        <span className="ml-1 text-xs opacity-75">
+                          ({category.products_count || 0})
+                        </span>
+                      </Button>
+                      
+                      {/* X button for selected category - outside of Button */}
+                      {selectedCategoryId === category.id && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleCategorySelect(null);
+                          }}
+                          className="absolute right-1 top-1/2 -translate-y-1/2 p-0.5 rounded-full hover:bg-white/20 transition-colors z-10"
+                          title={t('common.remove_filter') || 'Remove filter'}
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      )}
+                    </div>
+                  ));
+                })()
               )}
             </div>
-            
-            {productsLoading && (
-              <div className="flex items-center gap-2 text-green-600">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="text-sm">{t('products.loading') || 'Loading...'}</span>
-              </div>
-            )}
           </div>
         </motion.div>
 
-        {/* Products Grid/List */}
-        <AnimatePresence mode="wait">
-          {productsLoading && !isRefreshing ? (
-            <motion.div
-              key="loading"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex justify-center items-center py-20"
-            >
-              <div className="text-center">
-                <Loader2 className="w-8 h-8 animate-spin text-green-600 mx-auto mb-4" />
-                <p className="text-gray-600">{t('products.loading') || 'Loading products...'}</p>
-              </div>
-            </motion.div>
-          ) : productsError ? (
-            <motion.div
-              key="error"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="text-center py-20"
-            >
-              <div className="max-w-md mx-auto">
-                <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {t('products.error_title') || 'Unable to load products'}
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  {productsError || (t('products.error_message') || 'Please try again later')}
-                </p>
-                <Button
-                  onClick={handleRefresh}
-                  disabled={isRefreshing}
-                  className="bg-green-600 hover:bg-green-700"
-                >
-                  {isRefreshing ? (
-                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  ) : (
-                    <RefreshCw className="w-4 h-4 mr-2" />
-                  )}
-                  {t('common.retry') || 'Try Again'}
-                </Button>
-              </div>
-            </motion.div>
-          ) : filteredProducts.length === 0 ? (
-            <motion.div
-              key="empty"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="text-center py-20"
-            >
-              <div className="max-w-md mx-auto">
-                <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {hasActiveFilters 
-                    ? (t('products.no_results') || 'No products found') 
-                    : (t('products.no_products') || 'No products available')
-                  }
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  {hasActiveFilters 
-                    ? (t('products.try_different_filters') || 'Try adjusting your search or filters') 
-                    : (t('products.check_back_later') || 'Check back later for new products')
-                  }
-                </p>
-                {hasActiveFilters && (
-                  <Button
-                    variant="outline"
-                    onClick={handleClearFilters}
-                    className="border-green-200 text-green-700 hover:bg-green-50"
-                  >
-                    <X className="w-4 h-4 mr-2" />
-                    {t('products.clear_filters') || 'Clear Filters'}
-                  </Button>
+        {/* Loading State */}
+        {isLoading && !isRefreshing && (
+          <div className="flex justify-center items-center py-20">
+            <div className="text-center">
+              <Loader2 className="w-8 h-8 animate-spin text-green-600 mx-auto mb-4" />
+              <p className="text-gray-600">{t('loading.products') || 'Loading products...'}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Error State */}
+        {hasError && !isLoading && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center py-20"
+          >
+            <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              {t('error.failed_to_load') || 'Failed to load products'}
+            </h3>
+            <p className="text-gray-600 mb-4">{errorMessage}</p>
+            <Button onClick={handleRefresh} className="bg-green-600 hover:bg-green-700">
+              <RefreshCw className="w-4 h-4 mr-2" />
+              {t('common.try_again') || 'Try Again'}
+            </Button>
+          </motion.div>
+        )}
+
+        {/* Products Section Header */}
+        {!isLoading && !hasError && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="flex items-center justify-between mb-6"
+          >
+            <div className="flex items-center gap-2">
+              <h2 className="text-xl font-semibold text-gray-900">
+                {t('products.title') || 'Products'} 
+                {totalCount > 0 && (
+                  <span className="text-sm text-gray-500 font-normal ml-2">
+                    ({totalCount} {totalCount === 1 ? (t('products.item') || 'item') : (t('products.items') || 'items')})
+                  </span>
                 )}
-              </div>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="products"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className={
-                viewMode === 'grid'
-                  ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-                  : "space-y-4"
-              }
+              </h2>
+            </div>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => fetchProducts(currentPage, true)}
+              disabled={isRefreshing}
+              className="p-2"
+              title={t('common.refresh') || 'Refresh products'}
             >
-              {filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  viewMode={viewMode}
-                  className="h-full"
-                />
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
+              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+            </Button>
+          </motion.div>
+        )}
+
+        {/* Products Grid */}
+        {!isLoading && !hasError && (
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className={`grid gap-6 ${
+              viewMode === 'grid'
+                ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                : 'grid-cols-1'
+            }`}
+          >
+            <AnimatePresence mode="wait">
+              {products.length === 0 ? (
+                <motion.div
+                  key="no-products"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="col-span-full text-center py-20"
+                >
+                  <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {t('products.no_products') || 'No products found'}
+                  </h3>
+                  <p className="text-gray-600">
+                    {searchQuery || selectedCategoryId
+                      ? t('products.no_results') || 'Try adjusting your search or filters'
+                      : t('products.no_products_available') || 'No products are currently available'
+                    }
+                  </p>
+                </motion.div>
+              ) : (
+                products.map((product) => (
+                  <motion.div
+                    key={product.id}
+                    variants={cardVariants}
+                    layout
+                  >
+                    <ProductCard
+                      product={product}
+                      viewMode={viewMode}
+                      className="h-full"
+                    />
+                  </motion.div>
+                ))
+              )}
+            </AnimatePresence>
+          </motion.div>
+        )}
 
         {/* Pagination */}
-        {!productsLoading && !productsError && filteredProducts.length > 0 && (
-          <Pagination />
+        {!isLoading && !hasError && totalCount > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex justify-center items-center gap-4 mt-12"
+          >
+            <Button
+              variant="outline"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={!hasPrevious}
+              className="flex items-center gap-2"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              {t('pagination.previous') || 'Previous'}
+            </Button>
+            
+            <span className="text-sm text-gray-600">
+              {t('pagination.page') || 'Page'} {currentPage}
+            </span>
+            
+            <Button
+              variant="outline"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={!hasNext}
+              className="flex items-center gap-2"
+            >
+              {t('pagination.next') || 'Next'}
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </motion.div>
+        )}
+
+        {/* Results Summary */}
+        {!isLoading && !hasError && products.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center mt-8 text-sm text-gray-600"
+          >
+            {t('products.showing') || 'Showing'} {products.length} {t('products.of') || 'of'} {totalCount} {t('products.products') || 'products'}
+            {selectedCategoryId && (
+              <span className="ml-1">
+                {t('products.in_category') || 'in'} {(categories || []).find(c => c.id === selectedCategoryId) && getCategoryName((categories || []).find(c => c.id === selectedCategoryId)!)}
+              </span>
+            )}
+          </motion.div>
         )}
       </div>
+
+      {/* Floating Cart Info Panel */}
+      <AnimatePresence>
+        {showCartPanel && (
+          <motion.div
+            initial={{ opacity: 0, x: 100, y: 100 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            exit={{ opacity: 0, x: 100, y: 100 }}
+            className="fixed bottom-6 right-6 z-50"
+          >
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-green-600 text-white rounded-lg shadow-lg p-4 cursor-pointer"
+              onClick={() => window.location.href = '/cart'}
+            >
+              <div className="flex items-center gap-3">
+                <div className="bg-white bg-opacity-20 rounded-full p-2">
+                  <ShoppingCart className="w-5 h-5" />
+                </div>
+                <div className="text-sm">
+                  <div className="font-semibold">
+                    {getTotalItems()} {t('cart.items') || 'items'}
+                  </div>
+                  <div className="opacity-90">
+                    {formatPriceSimple(getTotalPrice())}
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 opacity-75" />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Refreshing Indicator */}
+      <AnimatePresence>
+        {isRefreshing && (
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            className="fixed top-4 right-4 z-50"
+          >
+            <div className="bg-blue-600 text-white rounded-lg shadow-lg p-3 flex items-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span className="text-sm">{t('loading.refreshing') || 'Refreshing...'}</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

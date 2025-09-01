@@ -83,7 +83,32 @@
     "search_placeholder": "Search products...",
     "stock_limit_reached": "Stock limit reached",
     "items": "items",
-    "per_item": "per item"
+    "per_item": "per item",
+    "title": "Products",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "remove_from_cart": "Remove from Cart",
+    "added_to_cart": "Added to cart",
+    "removed_from_cart": "Removed from cart",
+    "low_stock": "Low Stock",
+    "quick_remove": "Quick Remove",
+    "price": "Price",
+    "sale_price": "Sale Price",
+    "original_price": "Original Price",
+    "save": "Save",
+    "discount": "Discount",
+    "view_details": "View Details",
+    "categories": "Categories",
+    "sort_by": "Sort By",
+    "sort_newest": "Newest",
+    "sort_oldest": "Oldest",
+    "sort_price_low": "Price: Low to High",
+    "sort_price_high": "Price: High to Low",
+    "sort_name_az": "Name: A-Z",
+    "sort_name_za": "Name: Z-A",
+    "sort_discount_high": "Highest Discount",
+    "sort_stock_high": "Highest Stock",
+    "sort_featured": "Featured"
   },
   "statistics": {
     "products": "Products",
@@ -189,7 +214,28 @@
     "ok": "OK",
     "yes": "Yes",
     "no": "No",
-    "back_to_products": "Back to Products"
+    "back_to_products": "Back to Products",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information",
+    "edit": "Edit",
+    "delete": "Delete",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "apply": "Apply",
+    "close": "Close"
+  },
+  "errors": {
+    "network": "Network connection error",
+    "server": "Server error",
+    "not_found": "Page not found",
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
+    "validation": "Invalid data",
+    "unknown": "Unknown error",
+    "try_again": "Try again",
+    "throttle_warning": "Too many requests. Please wait a moment."
   },
   "features": {
     "quality_guarantee": "Quality Guarantee",
@@ -212,6 +258,13 @@
     "total": "Total",
     "order_summary": "Order Summary",
     "checkout": "Checkout",
-    "secure_payment": "Secure Payment"
+    "secure_payment": "Secure Payment",
+    "empty": "Cart is empty",
+    "subtotal": "Subtotal",
+    "continue_shopping": "Continue Shopping",
+    "item_count": "item",
+    "items_count": "items",
+    "updating": "Updating...",
+    "removing": "Removing..."
   }
 }

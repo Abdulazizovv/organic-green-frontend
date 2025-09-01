@@ -295,7 +295,12 @@ class CartService {
       
       const requestKey = `update_${request.item_id}_${request.quantity}`;
       return this.debounceRequest(requestKey, async () => {
+        console.log('🔄 CartService: Updating item with request:', request);
+        console.log('🔗 CartService: API endpoint:', `${this.api.defaults.baseURL}/update_item/`);
+        
         const { data } = await this.api.patch<CartResponse>('/update_item/', request);
+        
+        console.log('✅ CartService: Update item response:', data);
         logger.info('Successfully updated cart item', { 
           item_id: request.item_id, 
           quantity: request.quantity 
@@ -315,6 +320,11 @@ class CartService {
         };
       });
     } catch (error) {
+      console.error('❌ CartService: Update item failed:', error);
+      console.error('❌ CartService: Update item request was:', request);
+      if (error instanceof Error) {
+        console.error('❌ CartService: Error message:', error.message);
+      }
       logger.error('Failed to update cart item', { request, error });
       throw error;
     }

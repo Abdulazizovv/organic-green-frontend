@@ -129,7 +129,7 @@ export function CartItemRow({
         <QuantityControl
           value={item.quantity}
           min={0} // Allow 0 to enable removal via quantity
-          max={item.max_quantity || 999}
+          max={item.max_quantity && item.max_quantity > 0 ? item.max_quantity : 999}
           disabled={!item.is_available || loading}
           loading={loading}
           onChange={handleQuantityChange}

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Plus, Minus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -18,35 +18,29 @@ interface QuantityControlProps {
 export function QuantityControl({
   value,
   min = 1,
-  max = 999,
+  max,
   disabled = false,
   loading = false,
   onChange,
   size = 'md',
   'aria-label': ariaLabel = 'Quantity control'
 }: QuantityControlProps) {
-  const [localValue, setLocalValue] = useState(value);
-
-  React.useEffect(() => {
-    setLocalValue(value);
-  }, [value]);
 
   const handleDecrement = () => {
-    const newValue = Math.max(min, localValue - 1);
-    setLocalValue(newValue);
+    const newValue = Math.max(min, value - 1);
     onChange(newValue);
   };
 
   const handleIncrement = () => {
-    const newValue = Math.min(max, localValue + 1);
-    setLocalValue(newValue);
+    const newValue = max !== undefined ? Math.min(max, value + 1) : value + 1;
     onChange(newValue);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = parseInt(e.target.value) || min;
-    const clampedValue = Math.max(min, Math.min(max, newValue));
-    setLocalValue(clampedValue);
+    const clampedValue = max !== undefined 
+      ? Math.max(min, Math.min(max, newValue))
+      : Math.max(min, newValue);
     onChange(clampedValue);
   };
 
@@ -69,7 +63,7 @@ export function QuantityControl({
         size="sm"
         className={classes.button}
         onClick={handleDecrement}
-        disabled={disabled || loading || localValue <= min}
+        disabled={disabled || loading || value <= min}
         aria-label="Decrease quantity"
       >
         <Minus className={classes.icon} />
@@ -77,7 +71,7 @@ export function QuantityControl({
       
       <input
         type="number"
-        value={localValue}
+        value={value}
         onChange={handleInputChange}
         min={min}
         max={max}
@@ -91,7 +85,7 @@ export function QuantityControl({
         size="sm"
         className={classes.button}
         onClick={handleIncrement}
-        disabled={disabled || loading || localValue >= max}
+        disabled={disabled || loading || (max !== undefined && value >= max)}
         aria-label="Increase quantity"
       >
         <Plus className={classes.icon} />

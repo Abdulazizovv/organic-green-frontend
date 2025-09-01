@@ -59,7 +59,7 @@ export interface Product {
     is_primary: boolean;
     order: number;
   }>;
-  primary_image: string;
+  primary_image: string | ProductImage | null;
   all_images: string[];
   image_count: number;
   suggested_products?: Array<{

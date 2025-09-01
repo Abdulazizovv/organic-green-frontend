@@ -25,8 +25,15 @@ export function formatDate(date: Date, locale: string = "uz-UZ"): string {
 // Image utilities for product display
 export function getProductImage(product: Product): string | null {
   // Priority order: primary_image -> first image from images array -> null for fallback
-  if (product.primary_image && typeof product.primary_image === 'string' && product.primary_image.trim()) {
-    return product.primary_image;
+  if (product.primary_image) {
+    // Handle primary_image as object with image property
+    if (typeof product.primary_image === 'object' && 'image' in product.primary_image && product.primary_image.image) {
+      return product.primary_image.image;
+    }
+    // Handle primary_image as string
+    if (typeof product.primary_image === 'string' && product.primary_image.trim()) {
+      return product.primary_image;
+    }
   }
   
   if (product.images && product.images.length > 0) {
