@@ -425,6 +425,38 @@ export const productsAPI = {
 // Convenience function for getting product by slug
 export const getProduct = productsAPI.getBySlug;
 
+// Favorites API
+export const favoritesAPI = {
+  check: async (productId: string): Promise<{ is_favorite: boolean; favorite_id?: string }> => {
+    try {
+      const response = await api.get(`/favorites/check/?product_id=${productId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Failed to check favorite status for product ${productId}:`, error);
+      return { is_favorite: false };
+    }
+  },
+
+  add: async (productId: string): Promise<{ id: string; product_id: string }> => {
+    try {
+      const response = await api.post('/favorites/', { product_id: productId });
+      return response.data;
+    } catch (error) {
+      console.error(`Failed to add product ${productId} to favorites:`, error);
+      throw error;
+    }
+  },
+
+  remove: async (favoriteId: string): Promise<void> => {
+    try {
+      await api.delete(`/favorites/${favoriteId}/`);
+    } catch (error) {
+      console.error(`Failed to remove favorite ${favoriteId}:`, error);
+      throw error;
+    }
+  }
+};
+
 // Categories API
 export const categoriesAPI = {
   getAll: async (): Promise<Category[]> => {

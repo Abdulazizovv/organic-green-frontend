@@ -242,3 +242,21 @@ export function calculateDiscount(originalPrice: string | number, salePrice: str
   
   return Math.round(((original - sale) / original) * 100);
 }
+
+// Image URL builder utility
+export function buildImageUrl(imagePath: string): string {
+  if (!imagePath) return '';
+  
+  // If already absolute URL, return as is
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
+  
+  // If relative path, prepend API base URL
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://api.organicgreen.uz';
+  
+  // Ensure proper path joining
+  const cleanPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+  
+  return `${baseUrl}${cleanPath}`;
+}
