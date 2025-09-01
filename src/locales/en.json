@@ -1,0 +1,217 @@
+{
+  "navigation": {
+    "home": "Home",
+    "about": "About Us",
+    "products": "Products",
+    "categories": "Categories",
+    "blog": "Blog",
+    "contact": "Contact",
+    "education": "Education",
+    "franchise": "Franchise",
+    "cart": "Cart",
+    "search_placeholder": "Search products...",
+    "language": "Language",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "profile": "Profile"
+  },
+  "auth": {
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "password_confirm": "Confirm Password",
+    "login_title": "Login",
+    "register_title": "Register",
+    "login_subtitle": "Enter your credentials to access your account",
+    "register_subtitle": "Fill out the following information to create a new account",
+    "login_button": "Login",
+    "register_button": "Register",
+    "forgot_password": "Forgot password?",
+    "have_account": "Already have an account?",
+    "no_account": "Don't have an account?",
+    "password_min_length": "Password must be at least 4 characters long",
+    "passwords_not_match": "Passwords do not match",
+    "required_field": "Required field"
+  },
+  "hero": {
+    "title": "For Healthy and Natural Lifestyle",
+    "subtitle": "The purest and most natural products for a healthy lifestyle",
+    "description": "Start a healthy lifestyle with the highest quality microgreens and natural products grown in Uzbekistan",
+    "shop_now": "Shop Now",
+    "learn_more": "Learn More"
+  },
+  "products": {
+    "featured_products": "Featured Products",
+    "featured_products_title": "Featured Products",
+    "featured_products_description": "Our highest quality and most popular products",
+    "featured_products_subtitle": "Our highest quality and most popular products",
+    "view_all_products": "View All Products",
+    "add_to_cart": "Add to Cart",
+    "set_quantity": "Set Quantity",
+    "in_cart": "in cart",
+    "in_cart_label": "In cart",
+    "adding": "Adding...",
+    "no_products": "No products found",
+    "filter_by_category": "Filter by category",
+    "all_categories": "All categories",
+    "all_products": "All Products",
+    "search_products": "Search products",
+    "grid_view": "Grid View",
+    "list_view": "List View",
+    "clear_filters": "Clear Filters",
+    "available": "Available",
+    "sold_out": "Sold Out",
+    "not_available": "Not Available",
+    "out_of_stock": "Out of stock",
+    "loading_products": "Loading products...",
+    "sale": "Sale",
+    "quantity": "Quantity",
+    "description": "Description",
+    "details": "Details",
+    "sku": "SKU",
+    "category": "Category",
+    "availability": "Availability",
+    "in_stock": "In stock",
+    "tags": "Tags",
+    "add_to_wishlist": "Add to Wishlist",
+    "share": "Share",
+    "loading_product": "Loading product...",
+    "back_to_products": "Back to products",
+    "search_placeholder": "Search products...",
+    "stock_limit_reached": "Stock limit reached",
+    "items": "items",
+    "per_item": "per item"
+  },
+  "statistics": {
+    "products": "Products",
+    "customers": "Customers",
+    "cities": "Cities",
+    "happy_customers": "Happy Customers",
+    "product_types": "Product Types",
+    "years_experience": "Years Experience",
+    "quality_certificates": "Quality Certificates"
+  },
+  "directions": {
+    "title": "Our Production Directions",
+    "subtitle": "Discover our wide range of healthy and natural products",
+    "microgreens": {
+      "title": "Microgreens",
+      "description": "Young plants packed with nutrients and vitamins"
+    },
+    "herbs": {
+      "title": "Fresh Herbs",
+      "description": "Aromatic herbs for cooking and health"
+    },
+    "vegetables": {
+      "title": "Organic Vegetables",
+      "description": "Fresh vegetables grown with love and care"
+    },
+    "fruits": {
+      "title": "Natural Fruits",
+      "description": "Sweet and healthy fruits from our garden"
+    }
+  },
+  "testimonials": {
+    "title": "What Our Customers Say",
+    "subtitle": "Read reviews from our satisfied customers",
+    "customer1": {
+      "name": "Aziza Karimova",
+      "text": "The quality of products is amazing! I've been buying microgreens for 6 months and I'm very satisfied.",
+      "rating": "5"
+    },
+    "customer2": {
+      "name": "Jasur Abdullayev",
+      "text": "Fast delivery and fresh products. I recommend to everyone who cares about their health.",
+      "rating": "5"
+    },
+    "customer3": {
+      "name": "Dilnoza Rahimova",
+      "text": "Great variety of products. Especially love the herbs - always fresh and aromatic.",
+      "rating": "5"
+    }
+  },
+  "certificates": {
+    "title": "Quality Certificates",
+    "subtitle": "Our products meet international quality standards",
+    "organic": "Organic Certificate",
+    "haccp": "HACCP Certificate",
+    "iso": "ISO 9001:2015",
+    "halal": "Halal Certificate"
+  },
+  "cta": {
+    "title": "Start Your Healthy Journey Today",
+    "subtitle": "Join thousands of customers who chose quality and health",
+    "description": "Order fresh and organic products now and feel the difference",
+    "button": "Order Now",
+    "phone": "Call us: +998 90 123 45 67"
+  },
+  "footer": {
+    "newsletter_title": "Subscribe to Newsletter",
+    "newsletter_description": "Stay updated with new products and special offers",
+    "newsletter_placeholder": "Your email address",
+    "subscribe": "Subscribe",
+    "company_section": "Company",
+    "quick_links": "Quick Links",
+    "contact_info": "Contact Information",
+    "all_rights_reserved": "All rights reserved",
+    "description": "Leading microgreen company in Uzbekistan. Developing healthy lifestyle through natural and organic products.",
+    "company_links": "Company",
+    "products_section": "Products",
+    "support_section": "Support"
+  },
+  "company": {
+    "about": "About Us",
+    "team": "Team",
+    "careers": "Careers",
+    "news": "News"
+  },
+  "support": {
+    "support": "Support",
+    "shipping": "Shipping",
+    "returns": "Returns",
+    "faq": "FAQ"
+  },
+  "contact": {
+    "address": "Tashkent, Mirzo Ulugbek District, University Street 4",
+    "phone": "+998 90 123 45 67",
+    "email": "info@organicgreen.uz"
+  },
+  "common": {
+    "currency": "UZS",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "try_again": "Try again",
+    "save": "Save",
+    "cancel": "Cancel",
+    "ok": "OK",
+    "yes": "Yes",
+    "no": "No",
+    "back_to_products": "Back to Products"
+  },
+  "features": {
+    "quality_guarantee": "Quality Guarantee",
+    "quality_description": "All our products are certified organic and meet the highest quality standards",
+    "fast_delivery": "Fast Delivery",
+    "delivery_description": "We deliver fresh products to your door within 24 hours",
+    "fresh_products": "Always Fresh",
+    "freshness_description": "Our products are harvested daily to ensure maximum freshness"
+  },
+  "cart": {
+    "title": "Cart",
+    "loading": "Loading cart...",
+    "empty_title": "Your cart is empty",
+    "empty_description": "No items in your cart yet",
+    "start_shopping": "Start Shopping",
+    "clear_cart": "Clear Cart",
+    "items": "Items",
+    "shipping": "Shipping",
+    "free_shipping": "Free",
+    "total": "Total",
+    "order_summary": "Order Summary",
+    "checkout": "Checkout",
+    "secure_payment": "Secure Payment"
+  }
+}

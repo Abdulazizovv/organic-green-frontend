@@ -1,28 +1,31 @@
+"use client";
+
 import Link from "next/link";
 import { Mail, Phone, MapPin, Send, Instagram, Facebook, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useLanguage } from "@/lib/language";
 
 const footerLinks = {
   company: [
-    { href: "/about", label: "Биз ҳақимизда" },
-    { href: "/franchise", label: "Франшиза" },
-    { href: "/education", label: "Таълим" },
-    { href: "/blog", label: "Янгиликлар" },
-    { href: "/contact", label: "Алоқа" },
+    { href: "/about", key: "about" },
+    { href: "/franchise", key: "franchise" },
+    { href: "/education", key: "education" },
+    { href: "/blog", key: "blog" },
+    { href: "/contact", key: "contact" },
   ],
   products: [
-    { href: "/products?category=microgreens", label: "Микрозелень" },
-    { href: "/products?category=powders", label: "Порошоклар" },
-    { href: "/products?category=supplements", label: "Қўшимчалар" },
-    { href: "/products?category=kits", label: "Наборлар" },
+    { href: "/products?category=microgreens", key: "microgreens" },
+    { href: "/products?category=powders", key: "powders" },
+    { href: "/products?category=supplements", key: "supplements" },
+    { href: "/products?category=kits", key: "kits" },
   ],
   support: [
-    { href: "/shipping", label: "Етказиб бериш" },
-    { href: "/payment", label: "Тўлов" },
-    { href: "/returns", label: "Қайтариш" },
-    { href: "/warranty", label: "Кафолат" },
-    { href: "/faq", label: "Саволлар" },
+    { href: "/shipping", key: "shipping" },
+    { href: "/payment", key: "payment" },
+    { href: "/returns", key: "returns" },
+    { href: "/warranty", key: "warranty" },
+    { href: "/faq", key: "faq" },
   ],
 };
 
@@ -52,6 +55,8 @@ const contactInfo = [
 ];
 
 export function Footer() {
+  const { t } = useLanguage();
+
   return (
     <footer className="bg-gray-900 text-white">
       {/* Newsletter Section */}
@@ -128,7 +133,7 @@ export function Footer() {
                     href={link.href}
                     className="text-gray-300 hover:text-organic-green-400 transition-colors"
                   >
-                    {link.label}
+                    {t(link.key)}
                   </Link>
                 </li>
               ))}
@@ -145,7 +150,7 @@ export function Footer() {
                     href={link.href}
                     className="text-gray-300 hover:text-organic-green-400 transition-colors"
                   >
-                    {link.label}
+                    {t(link.key)}
                   </Link>
                 </li>
               ))}
@@ -162,7 +167,7 @@ export function Footer() {
                     href={link.href}
                     className="text-gray-300 hover:text-organic-green-400 transition-colors"
                   >
-                    {link.label}
+                    {t(link.key)}
                   </Link>
                 </li>
               ))}

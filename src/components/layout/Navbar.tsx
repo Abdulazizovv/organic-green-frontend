@@ -2,22 +2,26 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, ChevronDown, Globe, ShoppingBag } from "lucide-react";
+import { Menu, X, ChevronDown, Globe, ShoppingBag, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useCategories } from "@/lib/hooks";
+import { useLanguage, getLocalizedName, type Language } from "@/lib/language";
+import { useAuth } from "@/lib/authContext";
+import { useCart } from "@/context/CartContext";
 
 const navItems = [
-  { href: "/", label: "Бош саҳифа", labelEn: "Home", labelRu: "Главная" },
-  { href: "/about", label: "Биз ҳақимизда", labelEn: "About", labelRu: "О нас" },
-  { href: "/products", label: "Маҳсулотлар", labelEn: "Products", labelRu: "Продукты" },
-  { href: "/franchise", label: "Франчайзинг", labelEn: "Franchise", labelRu: "Франчайзинг" },
-  { href: "/education", label: "Таълим", labelEn: "Education", labelRu: "Образование" },
-  { href: "/blog", label: "Янгиликлар", labelEn: "News", labelRu: "Новости" },
-  { href: "/contact", label: "Алоқа", labelEn: "Contact", labelRu: "Контакты" },
+  { href: "/", key: "home" },
+  { href: "/about", key: "about" },
+  { href: "/products", key: "products" },
+  { href: "/franchise", key: "franchise" },
+  { href: "/education", key: "education" },
+  { href: "/blog", key: "blog" },
+  { href: "/contact", key: "contact" },
 ];
 
 const languages = [
-  { code: "uz", label: "O'zbek", flag: "🇺🇿" },
+  { code: "uz", label: "Ўзбек", flag: "🇺🇿" },
   { code: "ru", label: "Русский", flag: "🇷🇺" },
   { code: "en", label: "English", flag: "🇺🇸" },
 ];
@@ -25,21 +29,26 @@ const languages = [
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
-  const [currentLang, setCurrentLang] = useState("uz");
+  const [isProductsOpen, setIsProductsOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  
+  // Get language context
+  const { language, setLanguage, t } = useLanguage();
+  
+  // Get auth context
+  const { user, isAuthenticated, logout } = useAuth();
+  
+  // Get cart context
+  const { getTotalItems } = useCart();
+  
+  // Get categories from API
+  const { data: categoriesData } = useCategories();
+  const categories = Array.isArray(categoriesData?.results) ? categoriesData.results : [];
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleLangMenu = () => setIsLangOpen(!isLangOpen);
-
-  const getCurrentNavItems = () => {
-    switch (currentLang) {
-      case "en":
-        return navItems.map(item => ({ ...item, label: item.labelEn }));
-      case "ru":
-        return navItems.map(item => ({ ...item, label: item.labelRu }));
-      default:
-        return navItems;
-    }
-  };
+  const toggleProductsMenu = () => setIsProductsOpen(!isProductsOpen);
+  const toggleUserMenu = () => setIsUserMenuOpen(!isUserMenuOpen);
 
   return (
     <nav className="bg-white/95 backdrop-blur-sm border-b border-green-100 sticky top-0 z-50 shadow-sm">
@@ -62,16 +71,62 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-6">
-            {getCurrentNavItems().map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-gray-700 hover:text-green-600 font-medium transition-all duration-300 relative group px-3 py-2 rounded-lg hover:bg-green-50 text-sm"
-              >
-                {item.label}
-                <span className="absolute inset-x-0 -bottom-2 h-1 bg-green-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-center rounded-full"></span>
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              // Special handling for products link to show dropdown
+              if (item.href === "/products") {
+                return (
+                  <div key={item.href} className="relative">
+                    <button
+                      onMouseEnter={() => setIsProductsOpen(true)}
+                      onMouseLeave={() => setIsProductsOpen(false)}
+                      className="flex items-center space-x-1 text-gray-700 hover:text-green-600 font-medium transition-all duration-300 relative group px-3 py-2 rounded-lg hover:bg-green-50 text-sm"
+                    >
+                      <span>{t(item.key)}</span>
+                      <ChevronDown className="w-4 h-4" />
+                      <span className="absolute inset-x-0 -bottom-2 h-1 bg-green-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-center rounded-full"></span>
+                    </button>
+
+                    {/* Products Dropdown */}
+                    {isProductsOpen && (
+                      <div 
+                        className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-green-100 py-2 z-50"
+                        onMouseEnter={() => setIsProductsOpen(true)}
+                        onMouseLeave={() => setIsProductsOpen(false)}
+                      >
+                        <Link
+                          href="/products"
+                          className="flex items-center px-4 py-2 text-gray-700 hover:text-green-600 hover:bg-green-50 transition-colors"
+                        >
+                          <span className="font-medium">{t('view_all_products')}</span>
+                        </Link>
+                        <div className="border-t border-green-100 my-2"></div>
+                        {categories.slice(0, 5).map((category) => (
+                          <Link
+                            key={category.id}
+                            href={`/products?category=${category.id}`}
+                            className="flex items-center justify-between px-4 py-2 text-gray-600 hover:text-green-600 hover:bg-green-50 transition-colors"
+                          >
+                            <span>{getLocalizedName(category, language)}</span>
+                            <span className="text-xs text-gray-400">({category.products_count})</span>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="text-gray-700 hover:text-green-600 font-medium transition-all duration-300 relative group px-3 py-2 rounded-lg hover:bg-green-50 text-sm"
+                >
+                  {t(item.key)}
+                  <span className="absolute inset-x-0 -bottom-2 h-1 bg-green-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-center rounded-full"></span>
+                </Link>
+              );
+            })}
           </div>
 
           {/* Right side actions */}
@@ -84,7 +139,7 @@ export function Navbar() {
               >
                 <Globe className="w-4 h-4 text-green-600" />
                 <span className="text-sm font-medium text-gray-700">
-                  {languages.find(lang => lang.code === currentLang)?.flag}
+                  {languages.find(lang => lang.code === language)?.flag}
                 </span>
                 <ChevronDown className="w-4 h-4 text-gray-600" />
               </button>
@@ -95,12 +150,12 @@ export function Navbar() {
                     <button
                       key={lang.code}
                       onClick={() => {
-                        setCurrentLang(lang.code);
+                        setLanguage(lang.code as Language);
                         setIsLangOpen(false);
                       }}
                       className={cn(
                         "w-full px-4 py-3 text-left hover:bg-green-50 transition-colors flex items-center space-x-3 rounded-lg mx-1",
-                        currentLang === lang.code && "bg-green-50 text-green-600 font-medium"
+                        language === lang.code && "bg-green-50 text-green-600 font-medium"
                       )}
                     >
                       <span className="text-lg">{lang.flag}</span>
@@ -117,28 +172,74 @@ export function Navbar() {
               className="relative p-2 rounded-lg hover:bg-green-50 transition-colors border border-transparent hover:border-green-200 group"
             >
               <ShoppingBag className="w-5 h-5 text-gray-700 group-hover:text-green-600" />
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-600 text-white text-xs rounded-full flex items-center justify-center font-medium">
-                3
-              </span>
+              {getTotalItems() > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-600 text-white text-xs rounded-full flex items-center justify-center font-medium">
+                  {getTotalItems() > 99 ? '99+' : getTotalItems()}
+                </span>
+              )}
             </Link>
 
-            {/* Action Buttons */}
-            <div className="flex items-center space-x-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300 font-medium rounded-lg px-4 text-sm"
-              >
-                Телеграм
-              </Button>
-              <Button 
-                variant="default" 
-                size="sm" 
-                className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-lg hover:shadow-xl transition-all duration-300 font-medium rounded-lg px-4 text-sm"
-              >
-                Харид қилиш
-              </Button>
-            </div>
+            {/* Auth Buttons or User Menu */}
+            {isAuthenticated ? (
+              <div className="relative">
+                <button
+                  onClick={toggleUserMenu}
+                  className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-green-50 transition-colors border border-transparent hover:border-green-200"
+                >
+                  <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center text-white font-medium text-sm">
+                    {user?.first_name?.[0] || user?.username?.[0] || 'U'}
+                  </div>
+                  <span className="text-sm font-medium text-gray-700 max-w-24 truncate">
+                    {user?.first_name || user?.username}
+                  </span>
+                  <ChevronDown className="w-4 h-4 text-gray-600" />
+                </button>
+
+                {isUserMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-green-100 py-2 z-50">
+                    <Link
+                      href="/profile"
+                      className="flex items-center space-x-2 px-4 py-3 text-gray-600 hover:bg-green-50 hover:text-green-600 transition-colors"
+                      onClick={() => setIsUserMenuOpen(false)}
+                    >
+                      <User className="w-4 h-4" />
+                      <span className="text-sm">{t('profile')}</span>
+                    </Link>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setIsUserMenuOpen(false);
+                      }}
+                      className="w-full flex items-center space-x-2 px-4 py-3 text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span className="text-sm">{t('logout')}</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Link href="/login">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300 font-medium rounded-lg px-4 text-sm"
+                  >
+                    {t('login')}
+                  </Button>
+                </Link>
+                <Link href="/register">
+                  <Button 
+                    variant="default" 
+                    size="sm" 
+                    className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-lg hover:shadow-xl transition-all duration-300 font-medium rounded-lg px-4 text-sm"
+                  >
+                    {t('register')}
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -160,14 +261,14 @@ export function Navbar() {
         <div className="lg:hidden border-t border-green-100 bg-white shadow-xl">
           <div className="container py-8">
             <div className="flex flex-col space-y-6">
-              {getCurrentNavItems().map((item) => (
+              {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   className="text-gray-700 hover:text-green-600 font-medium transition-colors py-4 px-4 rounded-xl hover:bg-green-50 border border-transparent hover:border-green-200"
                   onClick={() => setIsOpen(false)}
                 >
-                  {item.label}
+                  {t(item.key)}
                 </Link>
               ))}
               
@@ -179,10 +280,10 @@ export function Navbar() {
                       {languages.map((lang) => (
                         <button
                           key={lang.code}
-                          onClick={() => setCurrentLang(lang.code)}
+                          onClick={() => setLanguage(lang.code as Language)}
                           className={cn(
                             "px-4 py-2 rounded-xl text-base transition-colors border",
-                            currentLang === lang.code 
+                            language === lang.code 
                               ? "bg-green-100 text-green-600 border-green-200" 
                               : "hover:bg-gray-100 border-transparent"
                           )}
@@ -199,12 +300,14 @@ export function Navbar() {
                     className="flex items-center justify-between py-4 px-4 rounded-xl hover:bg-green-50 border border-transparent hover:border-green-200 transition-colors"
                     onClick={() => setIsOpen(false)}
                   >
-                    <span className="text-gray-700 font-medium">Харид савати</span>
+                    <span className="text-gray-700 font-medium">{t('cart')}</span>
                     <div className="relative">
                       <ShoppingBag className="w-5 h-5 text-gray-700" />
-                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-600 text-white text-xs rounded-full flex items-center justify-center font-medium">
-                        3
-                      </span>
+                      {getTotalItems() > 0 && (
+                        <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-600 text-white text-xs rounded-full flex items-center justify-center font-medium">
+                          {getTotalItems() > 99 ? '99+' : getTotalItems()}
+                        </span>
+                      )}
                     </div>
                   </Link>
                   
