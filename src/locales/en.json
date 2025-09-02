@@ -34,7 +34,8 @@
     "no_account": "Don't have an account?",
     "password_min_length": "Password must be at least 4 characters long",
     "passwords_not_match": "Passwords do not match",
-    "required_field": "Required field"
+    "required_field": "Required field",
+    "login_required_favorites": "Please login to save favorites ❤️"
   },
   "hero": {
     "title": "For Healthy and Natural Lifestyle",
@@ -98,6 +99,45 @@
     "save": "Save",
     "discount": "Discount",
     "view_details": "View Details",
+    "suggested_products": "You Might Also Like",
+    "max_quantity": "Maximum quantity:",
+    "left": "left",
+    "save_for_later": "Save for later",
+    "feature_organic": "100% Organic",
+    "feature_delivery": "Fast Delivery",
+    "feature_fresh": "Always Fresh",
+    "about_product": "About This Product",
+    "default_description": "Experience the pure goodness of our premium organic microgreens. Carefully cultivated to deliver exceptional taste and nutritional value.",
+    "freshness": "Freshness",
+    "daily_harvest": "Daily Harvest",
+    "origin": "Origin",
+    "origin_uzbekistan": "Uzbekistan",
+    "why_choose": "Why Choose Our Products?",
+    "advantage_organic": "100% Organic",
+    "advantage_organic_desc": "Grown without chemicals or pesticides",
+    "advantage_quality": "Premium Quality",
+    "advantage_quality_desc": "Carefully selected and quality controlled",
+    "advantage_fresh": "Always Fresh",
+    "advantage_fresh_desc": "Harvested daily for maximum freshness",
+    "advantage_packaging": "Eco Packaging",
+    "advantage_packaging_desc": "Environmentally friendly packaging",
+    "nutritional_benefits": "Nutritional Benefits",
+    "more_nutrients": "More Nutrients",
+    "natural": "Natural",
+    "chemicals": "Chemicals",
+    "days_fresh": "Days Fresh",
+    "rich_in": "Rich in:",
+    "vitamin_a": "Vitamin A",
+    "vitamin_c": "Vitamin C",
+    "vitamin_k": "Vitamin K",
+    "folate": "Folate",
+    "iron": "Iron",
+    "antioxidants": "Antioxidants",
+    "storage_instructions": "Storage & Care Instructions",
+    "storage_1": "Store in refrigerator at 2-4°C",
+    "storage_2": "Keep in original packaging until use",
+    "storage_3": "Consume within 7-10 days for best quality",
+    "storage_4": "Rinse gently before consumption",
     "categories": "Categories",
     "sort_by": "Sort By",
     "sort_newest": "Newest",
@@ -224,7 +264,8 @@
     "filter": "Filter",
     "clear": "Clear",
     "apply": "Apply",
-    "close": "Close"
+    "close": "Close",
+    "retry": "Try Again"
   },
   "errors": {
     "network": "Network connection error",
@@ -265,6 +306,33 @@
     "item_count": "item",
     "items_count": "items",
     "updating": "Updating...",
-    "removing": "Removing..."
+    "removing": "Removing...",
+    "added_success": "Added to cart successfully!",
+    "updated_success": "Cart updated successfully!",
+    "removed_success": "Item removed from cart",
+    "add_error": "Failed to add item to cart",
+    "update_error": "Failed to update cart",
+    "remove_error": "Failed to remove item",
+    "remove": "Remove from cart"
+  },
+  "favorites": {
+    "title": "Favorites",
+    "add_tooltip": "Add to favorites",
+    "remove_tooltip": "Remove from favorites",
+    "added_success": "Added to favorites ❤️",
+    "removed_success": "Removed from favorites",
+    "toggle_error": "Failed to update favorites",
+    "empty_title": "No favorites yet",
+    "empty_description": "Save products you love to see them here"
+  },
+  "loading": {
+    "product": "Loading product details...",
+    "please_wait": "Please wait a moment"
+  },
+  "error": {
+    "product_not_found": "Product Not Found",
+    "product_not_found_desc": "The product you are looking for does not exist or has been removed.",
+    "something_went_wrong": "Something Went Wrong",
+    "failed_to_load": "Failed to load product details. Please try again."
   }
 }
