@@ -22,9 +22,9 @@ export interface Order {
   status: 'pending' | 'paid' | 'processing' | 'shipped' | 'delivered' | 'canceled';
   
   // Financial
-  subtotal: number;
-  discount_total: number;
-  total_price: number;
+  subtotal: number | string; // API returns string numbers
+  discount_total: number | string;
+  total_price: number | string;
   
   // Timestamps
   created_at: string;
@@ -36,21 +36,25 @@ export interface Order {
 
 export interface OrderItem {
   id: string;
-  order: string;
+  order?: string;
   
-  // Product snapshot
-  product_id: string;
-  product_name_uz: string;
-  product_name_ru: string;
-  product_name_en: string;
-  product_slug: string;
+  // Product snapshot - flexible format to handle API variations
+  product?: string; // Product ID from actual API
+  product_id?: string; // Alternative format
+  product_name?: string; // Single product name from actual API
+  product_name_uz?: string; // Multilingual format
+  product_name_ru?: string;
+  product_name_en?: string;
+  product_slug?: string;
   product_image_url?: string;
   
   // Order details
   quantity: number;
-  unit_price: number;
+  unit_price: number | string; // API returns string numbers
+  price?: number; // Alternative field name
   sale_price?: number;
-  total_price: number;
+  total_price: number | string; // API returns string numbers
+  is_sale_price?: boolean; // From actual API
 }
 
 export interface CreateOrderRequest {

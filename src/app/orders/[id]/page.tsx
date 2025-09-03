@@ -7,20 +7,23 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { 
   ArrowLeft, 
-  Calendar,
-  MapPin,
-  Phone,
+  Package, 
+  CreditCard, 
+  Calendar, 
+  RefreshCw, 
+  XCircle, 
+  MapPin, 
   User,
-  CreditCard,
-  Package,
-  AlertCircle,
+  Download,
   Loader2,
-  XCircle,
-  RefreshCw
-} from "lucide-react";
+  AlertCircle,
+  Phone
+} from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { useLanguage, getLocalizedName } from "@/lib/language";
 import { useToast } from "@/context/ToastContext";
+import { TelegramPromoCard } from "@/components/TelegramPromo";
+import { downloadReceipt, formatUzbekistanDateTime } from "@/utils/receiptGenerator";
 import orderService from "@/lib/api/orderService";
 import type { Order } from "@/types/order";
 
@@ -33,8 +36,10 @@ export default function OrderDetailPage() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [canceling, setCanceling] = useState(false);
+  const [downloadingReceipt, setDownloadingReceipt] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true);
+  const [showTelegramPromo, setShowTelegramPromo] = useState(true);
   const refreshIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const previousStatusRef = useRef<string | null>(null);
 
@@ -137,6 +142,21 @@ export default function OrderDetailPage() {
       showError(errorMessage);
     } finally {
       setCanceling(false);
+    }
+  };
+
+  const handleDownloadReceipt = async () => {
+    if (!order) return;
+
+    try {
+      setDownloadingReceipt(true);
+      await downloadReceipt(order, t);
+      showSuccess(t('order.download_receipt') + ' ✓');
+    } catch (error) {
+      console.error('Failed to download receipt:', error);
+      showError('Failed to download receipt');
+    } finally {
+      setDownloadingReceipt(false);
     }
   };
 
@@ -268,6 +288,22 @@ export default function OrderDetailPage() {
                 {t(`order.status.${order.status}`)}
               </span>
               
+              {/* Download Receipt Button */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDownloadReceipt}
+                disabled={downloadingReceipt}
+                className="text-green-600 border-green-300 hover:bg-green-50"
+              >
+                {downloadingReceipt ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Download className="w-4 h-4 mr-2" />
+                )}
+                {downloadingReceipt ? t('order.downloading_receipt') : t('order.download_receipt')}
+              </Button>
+              
               {canCancelOrder(order.status) && (
                 <Button
                   variant="outline"
@@ -288,6 +324,13 @@ export default function OrderDetailPage() {
           </div>
         </motion.div>
 
+        {/* Telegram Promo Card */}
+        {showTelegramPromo && (
+          <TelegramPromoCard 
+            onDismiss={() => setShowTelegramPromo(false)}
+          />
+        )}
+
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Order Information */}
           <div className="lg:col-span-2 space-y-6">
@@ -307,11 +350,13 @@ export default function OrderDetailPage() {
               {order.items && order.items.length > 0 ? (
                 <div className="space-y-4">
                   {order.items.map((item) => {
-                    const productName = getLocalizedName({
-                      name_uz: item.product_name_uz,
-                      name_ru: item.product_name_ru,
-                      name_en: item.product_name_en
-                    }, language);
+                    // Handle the actual API response format
+                    const productName = item.product_name || 
+                                      getLocalizedName({
+                                        name_uz: item.product_name_uz,
+                                        name_ru: item.product_name_ru,
+                                        name_en: item.product_name_en
+                                      }, language);
 
                     return (
                       <div key={item.id} className="flex items-center space-x-4 p-6 bg-gradient-to-r from-green-50 to-white rounded-xl border border-green-100 hover:border-green-200 transition-colors">
@@ -325,8 +370,8 @@ export default function OrderDetailPage() {
                               className="w-full h-full object-cover"
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-green-100 to-green-200">
-                              <Package className="w-8 h-8 text-green-600" />
+                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-green-100 to-green-200 text-green-600">
+                              <span className="text-2xl">🌿</span>
                             </div>
                           )}
                         </div>
@@ -344,11 +389,11 @@ export default function OrderDetailPage() {
                             </div>
                             <div className="flex items-center text-gray-600">
                               <span className="font-medium mr-1">{t('order.detail.unit_price')}:</span>
-                              <span className="font-semibold">${item.unit_price.toLocaleString()}</span>
+                              <span className="font-semibold">{Number(item.unit_price).toLocaleString()} UZS</span>
                             </div>
                             <div className="flex items-center text-gray-600">
                               <span className="font-medium mr-1">{t('order.detail.total_price')}:</span>
-                              <span className="font-bold text-green-600">${item.total_price.toLocaleString()}</span>
+                              <span className="font-bold text-green-600">{Number(item.total_price).toLocaleString()} UZS</span>
                             </div>
                           </div>
                         </div>
@@ -442,24 +487,35 @@ export default function OrderDetailPage() {
                   <div>
                     <p className="text-sm text-gray-500">{t('order.created_at')}</p>
                     <p className="font-medium text-gray-900">
-                      {new Date(order.created_at).toLocaleDateString()} at{' '}
-                      {new Date(order.created_at).toLocaleTimeString()}
+                      {formatUzbekistanDateTime(order.created_at)}
                     </p>
                   </div>
                 </div>
+                
+                {order.updated_at && order.updated_at !== order.created_at && (
+                  <div className="flex items-center space-x-3">
+                    <RefreshCw className="w-4 h-4 text-blue-600" />
+                    <div>
+                      <p className="text-sm text-gray-500">{t('order.updated_at')}</p>
+                      <p className="font-medium text-gray-900">
+                        {formatUzbekistanDateTime(order.updated_at)}
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="space-y-3 border-t border-gray-200 pt-4">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
-                  <span className="font-medium">{order.subtotal.toLocaleString()}</span>
+                  <span className="font-medium">{Number(order.subtotal).toLocaleString()} UZS</span>
                 </div>
                 
-                {order.discount_total > 0 && (
+                {Number(order.discount_total) > 0 && (
                   <div className="flex justify-between">
                     <span className="text-gray-600">Discount</span>
                     <span className="font-medium text-green-600">
-                      -{order.discount_total.toLocaleString()}
+                      -{Number(order.discount_total).toLocaleString()} UZS
                     </span>
                   </div>
                 )}
@@ -471,7 +527,7 @@ export default function OrderDetailPage() {
                 
                 <div className="flex justify-between text-lg font-bold border-t border-gray-200 pt-3">
                   <span>Total</span>
-                  <span className="text-green-600">{order.total_price.toLocaleString()}</span>
+                  <span className="text-green-600">{Number(order.total_price).toLocaleString()} UZS</span>
                 </div>
               </div>
             </motion.div>

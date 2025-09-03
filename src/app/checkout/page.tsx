@@ -296,6 +296,19 @@ export default function CheckoutPage() {
                     {errors.contact_phone && (
                       <p className="text-sm text-red-600 mt-1">{errors.contact_phone}</p>
                     )}
+                    <div className="mt-2 text-sm text-gray-600 bg-green-50 p-3 rounded-lg border border-green-200">
+                      <p className="mb-2">
+                        💡 {t('checkout.phone_note')}
+                      </p>
+                      <a
+                        href="https://t.me/organic_green_bot"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center text-green-600 hover:text-green-700 font-medium"
+                      >
+                        🔗 {t('checkout.telegram_bot_link')}
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>

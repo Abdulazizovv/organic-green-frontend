@@ -387,7 +387,9 @@
     },
     "errors": {
       "cart_empty_retry": "Your cart appears to be empty. Please refresh the page and try again."
-    }
+    },
+    "phone_note": "If you register on our Telegram bot with this phone number, order details and status updates will be sent to you.",
+    "telegram_bot_link": "Go to Telegram Bot"
   },
   "order": {
     "order_success": "Order Placed Successfully!",
@@ -401,10 +403,30 @@
     "order_details": "Order Details",
     "order_status": "Order Status",
     "created_at": "Created At",
+    "updated_at": "Updated At",
     "cancel_order": "Cancel Order",
     "confirm_cancel": "Are you sure you want to cancel this order?",
     "order_canceled": "Order canceled successfully",
     "cannot_cancel": "This order cannot be canceled",
+    "download_receipt": "Download Receipt",
+    "downloading_receipt": "Preparing receipt...",
+    "receipt": {
+      "title": "PAYMENT RECEIPT",
+      "order_info": "Order Information",
+      "customer_info": "Customer Information",
+      "items": "Items",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "total": "Total",
+      "thank_you": "Thank you for your purchase!",
+      "contact": "Contact: +998 90 123 45 67"
+    },
+    "telegram_promo": {
+      "title": "Track your order updates through our Telegram bot!",
+      "subtitle": "Get notified first about order status, new products and special offers",
+      "cta": "Join Telegram Bot",
+      "dismiss": "Later"
+    },
     "status": {
       "pending": "Pending",
       "paid": "Paid", 

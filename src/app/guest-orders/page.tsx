@@ -9,10 +9,14 @@ import {
   Receipt,
   AlertCircle,
   ExternalLink,
-  User
+  User,
+  Download,
+  Loader2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language";
+import { downloadReceipt, formatUzbekistanDateTime } from "@/utils/receiptGenerator";
+import type { Order } from "@/types/order";
 
 interface GuestOrder {
   id: string;
@@ -29,6 +33,7 @@ interface GuestOrder {
 export default function GuestOrdersPage() {
   const { t } = useLanguage();
   const [guestOrders, setGuestOrders] = useState<GuestOrder[]>([]);
+  const [downloadingReceipt, setDownloadingReceipt] = useState<string | null>(null);
 
   useEffect(() => {
     // Load guest orders from localStorage
@@ -41,6 +46,50 @@ export default function GuestOrdersPage() {
       }
     }
   }, []);
+
+  const handleDownloadReceipt = async (order: GuestOrder) => {
+    try {
+      setDownloadingReceipt(order.id);
+      
+      // Convert guest order to Order type for receipt generation
+      const orderForReceipt: Order = {
+        id: order.id,
+        order_number: `#${order.id.slice(-8)}`,
+        created_at: order.date,
+        updated_at: order.date,
+        status: order.status === 'cancelled' ? 'canceled' : order.status as 'pending' | 'processing' | 'shipped' | 'delivered',
+        total_price: order.total,
+        subtotal: order.total,
+        discount_total: 0,
+        payment_method: 'cod',
+        delivery_address: 'Guest Order - Address not stored',
+        full_name: 'Guest Customer',
+        contact_phone: 'Guest Order - Phone not stored',
+        notes: '',
+        items: order.items.map((item, index) => ({
+          id: `guest-item-${index + 1}`,
+          order: order.id,
+          product_id: `guest-product-${index + 1}`,
+          product_slug: `guest-product-${index + 1}`,
+          quantity: item.quantity,
+          unit_price: item.price,
+          price: item.price,
+          product_name: item.name,
+          product_name_en: item.name,
+          product_name_uz: item.name,
+          product_name_ru: item.name,
+          product_image_url: undefined,
+          total_price: item.price * item.quantity
+        }))
+      };
+
+      await downloadReceipt(orderForReceipt, () => 'guest');
+    } catch (error) {
+      console.error('Failed to download receipt:', error);
+    } finally {
+      setDownloadingReceipt(null);
+    }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -60,7 +109,7 @@ export default function GuestOrdersPage() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
+    return formatUzbekistanDateTime(dateString);
   };
 
   return (
@@ -158,6 +207,23 @@ export default function GuestOrdersPage() {
                           </span>
                         </div>
                       ))}
+                    </div>
+                    
+                    {/* Download Receipt Button */}
+                    <div className="mt-6 pt-6 border-t border-gray-100">
+                      <Button
+                        variant="outline"
+                        onClick={() => handleDownloadReceipt(order)}
+                        disabled={downloadingReceipt === order.id}
+                        className="w-full text-green-600 border-green-300 hover:bg-green-50"
+                      >
+                        {downloadingReceipt === order.id ? (
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        ) : (
+                          <Download className="w-4 h-4 mr-2" />
+                        )}
+                        {downloadingReceipt === order.id ? t('order.downloading_receipt') : t('order.download_receipt')}
+                      </Button>
                     </div>
                   </div>
                 </div>
