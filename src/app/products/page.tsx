@@ -61,7 +61,7 @@ export default function ProductsPage() {
   const [totalCount, setTotalCount] = useState(0);
   const [hasNext, setHasNext] = useState(false);
   const [hasPrevious, setHasPrevious] = useState(false);
-  const itemsPerPage = 20;
+  const itemsPerPage = 10;
   
   // UI states
   const [showCartPanel, setShowCartPanel] = useState(false);

@@ -26,7 +26,7 @@ export default function ProductsPage() {
     search: searchTerm,
     category: selectedCategory,
     page: currentPage,
-    page_size: 12
+    page_size: 10
   });
 
   const { 
