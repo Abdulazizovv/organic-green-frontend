@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { useLanguage, getLocalizedName } from "@/lib/language";
 import { useToast } from "@/context/ToastContext";
-import type { CartItem, UpdateItemRequest } from "@/types/cart";
+import type { CartItem } from "@/types/cart";
 
 // Animation variants
 const containerVariants = {
@@ -28,48 +28,35 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.1,
-      duration: 0.4,
-      ease: [0.25, 0.46, 0.45, 0.94] as const
+      staggerChildren: 0.1,
+      delayChildren: 0.1
     }
   }
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20, scale: 0.95 },
+  hidden: { opacity: 0, y: 20 },
   visible: { 
     opacity: 1, 
-    y: 0, 
-    scale: 1,
-    transition: {
-      duration: 0.4,
-      ease: [0.25, 0.46, 0.45, 0.94] as const
-    }
+    y: 0,
+    transition: { duration: 0.4, ease: "easeOut" }
   },
   exit: { 
     opacity: 0, 
     x: -100, 
-    scale: 0.95,
-    transition: {
-      duration: 0.3,
-      ease: [0.55, 0.085, 0.68, 0.53] as const
-    }
+    transition: { duration: 0.3 }
   }
 };
 
 const quantityVariants = {
-  tap: { scale: 0.92 },
+  tap: { scale: 0.95 },
   hover: { scale: 1.05 }
 };
 
 const bounceVariants = {
   bounce: {
-    scale: [1, 1.1, 1],
-    transition: { 
-      duration: 0.4, 
-      ease: [0.175, 0.885, 0.32, 1.275] as const 
-    }
+    scale: [1, 1.2, 1],
+    transition: { duration: 0.3 }
   }
 };
 
@@ -94,14 +81,16 @@ const CartItemSkeleton = () => (
 const CartItemCard = ({ 
   item, 
   onQuantityChange, 
-  onRemove
+  onRemove, 
+  isUpdating 
 }: {
   item: CartItem;
-  onQuantityChange: (request: UpdateItemRequest) => Promise<void>;
+  onQuantityChange: (itemId: string, newQuantity: number) => Promise<void>;
   onRemove: (itemId: string) => Promise<void>;
+  isUpdating: boolean;
 }) => {
   const { language, t } = useLanguage();
-  const { showError } = useToast();
+  const { showToast } = useToast();
   const [isRemoving, setIsRemoving] = useState(false);
   const [quantityLoading, setQuantityLoading] = useState<'increase' | 'decrease' | null>(null);
 
@@ -117,17 +106,17 @@ const CartItemCard = ({
     
     // Check stock limit
     if (newQuantity > item.product.stock) {
-      showError(t('outOfStock'));
+      showToast(t('outOfStock'), 'error');
       return;
     }
 
     setQuantityLoading(change > 0 ? 'increase' : 'decrease');
     
     try {
-      await onQuantityChange({ item_id: item.id, quantity: newQuantity });
+      await onQuantityChange(item.id, newQuantity);
     } catch (error) {
       console.error('Failed to update quantity:', error);
-      showError(t('updateFailed'));
+      showToast(t('updateFailed'), 'error');
     } finally {
       setQuantityLoading(null);
     }
@@ -139,7 +128,7 @@ const CartItemCard = ({
       await onRemove(item.id);
     } catch (error) {
       console.error('Failed to remove item:', error);
-      showError(t('removeFailed'));
+      showToast(t('removeFailed'), 'error');
       setIsRemoving(false);
     }
   };
@@ -155,10 +144,6 @@ const CartItemCard = ({
       animate="visible"
       exit="exit"
       className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-green-100 hover:shadow-md transition-all duration-300 hover:border-green-200"
-      whileHover={{ 
-        y: -2,
-        transition: { duration: 0.2 }
-      }}
     >
       <div className="flex flex-col sm:flex-row gap-4">
         {/* Product Image */}
@@ -289,27 +274,21 @@ const CartSummary = ({
 
   if (!cart || cart.is_empty) return null;
 
-  // Use API summary data when available, fallback to cart data
-  const subtotal = summary ? Number(summary.total_price) : Number(cart.total_price || 0);
-  const totalItems = summary ? Number(summary.total_items) : Number(cart.total_items || 0);
-  const deliveryFee = 0; // Free delivery for now
+  const subtotal = summary?.total_price || cart.total_price || 0;
+  const deliveryFee = subtotal > 100000 ? 0 : 15000; // Free delivery over 100k
   const total = subtotal + deliveryFee;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ 
-        duration: 0.5, 
-        ease: [0.25, 0.46, 0.45, 0.94] as const 
-      }}
       className={`bg-white rounded-2xl p-6 shadow-lg border border-green-100 ${isSticky ? 'sticky top-24' : ''} ${className}`}
     >
       <h3 className="text-xl font-bold text-gray-900 mb-6">{t('orderSummary')}</h3>
       
       <div className="space-y-4 mb-6">
         <div className="flex justify-between items-center">
-          <span className="text-gray-600">{t('subtotal')} ({totalItems} {t('items')})</span>
+          <span className="text-gray-600">{t('subtotal')} ({cart.total_items} {t('items')})</span>
           <span className="font-medium">{subtotal.toLocaleString()} {t('currency')}</span>
         </div>
         
@@ -318,15 +297,17 @@ const CartSummary = ({
             <Truck className="w-4 h-4 text-green-600" />
             <span className="text-gray-600">{t('delivery')}</span>
           </div>
-          <span className="font-medium text-green-600">
-            {t('free')}
+          <span className={`font-medium ${deliveryFee === 0 ? 'text-green-600' : ''}`}>
+            {deliveryFee === 0 ? t('free') : `${deliveryFee.toLocaleString()} ${t('currency')}`}
           </span>
         </div>
         
-        <div className="flex items-center space-x-2 text-green-600 text-sm">
-          <ShieldCheck className="w-4 h-4" />
-          <span>{t('freeDeliveryEligible')}</span>
-        </div>
+        {deliveryFee === 0 && (
+          <div className="flex items-center space-x-2 text-green-600 text-sm">
+            <ShieldCheck className="w-4 h-4" />
+            <span>{t('freeDeliveryEligible')}</span>
+          </div>
+        )}
         
         <hr className="border-gray-200" />
         
@@ -339,7 +320,7 @@ const CartSummary = ({
       <Button 
         size="lg"
         disabled={loading}
-        className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98]"
+        className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] disabled:transform-none disabled:opacity-50"
       >
         {loading ? (
           <Loader2 className="w-5 h-5 mr-2 animate-spin" />
@@ -388,7 +369,7 @@ const EmptyCart = () => {
         <Link href="/products">
           <Button 
             size="lg"
-            className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95"
+            className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
           >
             <Leaf className="w-5 h-5 mr-2" />
             {t('startShopping')}
@@ -401,17 +382,13 @@ const EmptyCart = () => {
 
 // Main Cart Page Component
 export default function CartPage() {
-  const { cart, summary, loading, updateItem, removeItem, refreshCart } = useCart();
+  const { cart, loading, updateItem, removeItem, refreshCart } = useCart();
   const { t } = useLanguage();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
-    // Only refresh if cart is empty or not loaded yet
-    if (!cart) {
-      refreshCart();
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Intentionally empty to avoid infinite loop
+    refreshCart();
+  }, [refreshCart]);
 
   // Loading state
   if (loading && !cart) {
@@ -503,6 +480,7 @@ export default function CartPage() {
                     item={item}
                     onQuantityChange={updateItem}
                     onRemove={removeItem}
+                    isUpdating={loading}
                   />
                 ))}
               </AnimatePresence>
@@ -549,7 +527,7 @@ export default function CartPage() {
               <div className="flex justify-between items-center mb-4">
                 <span className="font-medium">{t('total')}</span>
                 <span className="font-bold text-green-600">
-                  {(summary ? Number(summary.total_price) : Number(cart.total_price || 0)).toLocaleString()} {t('currency')}
+                  {(cart.total_price + (cart.total_price > 100000 ? 0 : 15000)).toLocaleString()} {t('currency')}
                 </span>
               </div>
             )}
@@ -557,7 +535,7 @@ export default function CartPage() {
             <Button 
               size="lg"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-4 rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-4 rounded-xl"
             >
               <CreditCard className="w-5 h-5 mr-2" />
               {t('proceedToCheckout')}

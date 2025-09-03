@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useCallback, ReactNode } from 'react';
 import cartService from '@/lib/cart';
 import type {
   Cart,
@@ -102,12 +102,7 @@ interface CartProviderProps {
 export function CartProvider({ children, enableOptimistic = false }: CartProviderProps) {
   const [state, dispatch] = useReducer(cartReducer, initialState);
 
-  // Load cart on mount
-  useEffect(() => {
-    loadCart();
-  }, []);
-
-  const loadCart = async () => {
+  const loadCart = useCallback(async () => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
       const [cart, summary] = await Promise.all([
@@ -120,7 +115,12 @@ export function CartProvider({ children, enableOptimistic = false }: CartProvide
       const message = error instanceof Error ? error.message : 'Failed to load cart';
       dispatch({ type: 'SET_ERROR', payload: message });
     }
-  };
+  }, []);
+
+  // Load cart on mount
+  useEffect(() => {
+    loadCart();
+  }, [loadCart]);
 
   const addItem = async (request: AddItemRequest, optimistic = enableOptimistic) => {
     if (optimistic && state.cart) {
@@ -216,9 +216,9 @@ export function CartProvider({ children, enableOptimistic = false }: CartProvide
     }
   };
 
-  const refreshCart = async () => {
+  const refreshCart = useCallback(async () => {
     await loadCart();
-  };
+  }, [loadCart]);
 
   const getItemQuantity = (productId: string): number => {
     if (!state.cart) return 0;
