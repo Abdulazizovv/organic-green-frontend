@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useReducer, useEffect, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useCallback, useState, ReactNode } from 'react';
 import cartService from '@/lib/cart';
 import type {
   Cart,
@@ -85,6 +85,7 @@ interface CartContextType {
   removeItem: (itemId: string, optimistic?: boolean) => Promise<void>;
   clearCart: () => Promise<void>;
   refreshCart: () => Promise<void>;
+  syncWithBackend: () => Promise<void>;
   
   // Utilities
   getItemQuantity: (productId: string) => number;
@@ -101,24 +102,89 @@ interface CartProviderProps {
 
 export function CartProvider({ children, enableOptimistic = false }: CartProviderProps) {
   const [state, dispatch] = useReducer(cartReducer, initialState);
+  const [sessionInitialized, setSessionInitialized] = useState(false);
 
   const loadCart = useCallback(async () => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
+      console.log('🛒 CartContext: Loading cart...');
+      
+      // Ensure we have a session key before making requests
+      const currentSessionKey = typeof window !== 'undefined' ? 
+        localStorage.getItem('cart_session_key') : null;
+      
+      console.log('🔑 CartContext: Session status before cart load:', {
+        hasSessionKey: !!currentSessionKey,
+        sessionKeyLength: currentSessionKey?.length || 0,
+        sessionPreview: currentSessionKey ? 
+          `${currentSessionKey.substring(0, 12)}...${currentSessionKey.substring(-4)}` : 'none'
+      });
+      
       const [cart, summary] = await Promise.all([
         cartService.getCurrentCart(),
         cartService.getCartSummary(),
       ]);
+      
+      // Verify session key after cart load
+      const sessionKeyAfterLoad = typeof window !== 'undefined' ? 
+        localStorage.getItem('cart_session_key') : null;
+      
+      console.log('✅ CartContext: Cart loaded successfully', {
+        itemsCount: cart.items?.length || 0,
+        totalItems: cart.total_items,
+        ownerType: cart.owner?.type,
+        sessionKeyBeforeLoad: currentSessionKey?.length || 0,
+        sessionKeyAfterLoad: sessionKeyAfterLoad?.length || 0,
+        sessionKeyUpdated: currentSessionKey !== sessionKeyAfterLoad
+      });
+      
       dispatch({ type: 'SET_CART', payload: cart });
       dispatch({ type: 'SET_SUMMARY', payload: summary });
+      dispatch({ type: 'SET_ERROR', payload: null });
+      
+      if (!sessionInitialized) {
+        setSessionInitialized(true);
+        console.log('🎯 CartContext: Session marked as initialized');
+      }
     } catch (error) {
+      console.error('❌ CartContext: Failed to load cart', error);
       const message = error instanceof Error ? error.message : 'Failed to load cart';
       dispatch({ type: 'SET_ERROR', payload: message });
+    } finally {
+      dispatch({ type: 'SET_LOADING', payload: false });
     }
-  }, []);
+  }, [sessionInitialized]);
 
-  // Load cart on mount
+  // Load cart on mount and ensure session is initialized
   useEffect(() => {
+    console.log('🚀 CartContext: Initializing cart context...');
+    
+    // Comprehensive session state logging for debugging
+    if (typeof window !== 'undefined') {
+      const currentSessionKey = localStorage.getItem('cart_session_key');
+      const allCartKeys = Object.keys(localStorage).filter(key => 
+        key.includes('cart') || key.includes('session')
+      );
+      
+      console.log('🔑 CartContext: Initial session state:', {
+        hasSessionKey: !!currentSessionKey,
+        sessionKeyLength: currentSessionKey?.length || 0,
+        sessionPreview: currentSessionKey ? 
+          `${currentSessionKey.substring(0, 12)}...${currentSessionKey.substring(-4)}` : 'none',
+        allCartRelatedKeys: allCartKeys,
+        storageContents: Object.fromEntries(
+          allCartKeys.map(key => [key, localStorage.getItem(key)])
+        )
+      });
+      
+      // Check for potential truncation issues
+      if (currentSessionKey && currentSessionKey.includes('...')) {
+        console.error('🚨 CartContext: Session key appears to be truncated!', {
+          suspiciousKey: currentSessionKey
+        });
+      }
+    }
+    
     loadCart();
   }, [loadCart]);
 
@@ -142,7 +208,7 @@ export function CartProvider({ children, enableOptimistic = false }: CartProvide
       const response = await cartService.addItem(request);
       console.log('✅ CartContext: Add item response:', response);
       
-      // Refresh cart to get latest state
+      // Immediately sync with backend to ensure consistency
       await loadCart();
       
       if (optimistic) {
@@ -150,6 +216,7 @@ export function CartProvider({ children, enableOptimistic = false }: CartProvide
       }
       
       dispatch({ type: 'SET_ERROR', payload: null });
+      console.log('✅ CartContext: Item added and cart synced successfully');
     } catch (error) {
       console.error('❌ CartContext: Add item failed:', error);
       console.error('❌ CartContext: Add request was:', request);
@@ -160,6 +227,8 @@ export function CartProvider({ children, enableOptimistic = false }: CartProvide
       const message = error instanceof Error ? error.message : 'Failed to add item';
       dispatch({ type: 'SET_ERROR', payload: message });
       throw error;
+    } finally {
+      dispatch({ type: 'SET_LOADING', payload: false });
     }
   };
 
@@ -171,8 +240,11 @@ export function CartProvider({ children, enableOptimistic = false }: CartProvide
       const response = await cartService.updateItem(request);
       console.log('✅ CartContext: Update item response:', response);
       
+      // Immediately sync with backend to ensure consistency
       await loadCart();
+      
       dispatch({ type: 'SET_ERROR', payload: null });
+      console.log('✅ CartContext: Item updated and cart synced successfully');
     } catch (error) {
       console.error('❌ CartContext: Update item failed:', error);
       console.error('❌ CartContext: Update request was:', request);
@@ -180,6 +252,8 @@ export function CartProvider({ children, enableOptimistic = false }: CartProvide
       const message = error instanceof Error ? error.message : 'Failed to update item';
       dispatch({ type: 'SET_ERROR', payload: message });
       throw error;
+    } finally {
+      dispatch({ type: 'SET_LOADING', payload: false });
     }
   };
 
@@ -191,8 +265,11 @@ export function CartProvider({ children, enableOptimistic = false }: CartProvide
       const response = await cartService.removeItem(itemId);
       console.log('✅ CartContext: Remove item response:', response);
       
+      // Immediately sync with backend to ensure consistency
       await loadCart();
+      
       dispatch({ type: 'SET_ERROR', payload: null });
+      console.log('✅ CartContext: Item removed and cart synced successfully');
     } catch (error) {
       console.error('❌ CartContext: Remove item failed:', error);
       console.error('❌ CartContext: Remove item ID was:', itemId);
@@ -200,24 +277,53 @@ export function CartProvider({ children, enableOptimistic = false }: CartProvide
       const message = error instanceof Error ? error.message : 'Failed to remove item';
       dispatch({ type: 'SET_ERROR', payload: message });
       throw error;
+    } finally {
+      dispatch({ type: 'SET_LOADING', payload: false });
     }
   };
 
   const clearCart = async () => {
     try {
+      console.log('🗑️ CartContext: Clearing cart...');
       dispatch({ type: 'SET_LOADING', payload: true });
+      
       await cartService.clearCart();
+      console.log('✅ CartContext: Cart cleared successfully');
+      
+      // Immediately sync with backend to ensure consistency
       await loadCart();
+      
       dispatch({ type: 'SET_ERROR', payload: null });
+      console.log('✅ CartContext: Cart cleared and synced successfully');
     } catch (error) {
+      console.error('❌ CartContext: Clear cart failed:', error);
       const message = error instanceof Error ? error.message : 'Failed to clear cart';
       dispatch({ type: 'SET_ERROR', payload: message });
       throw error;
+    } finally {
+      dispatch({ type: 'SET_LOADING', payload: false });
     }
   };
 
   const refreshCart = useCallback(async () => {
+    console.log('🔄 CartContext: Manually refreshing cart...');
     await loadCart();
+  }, [loadCart]);
+
+  // Force sync with backend - useful for guest users
+  const syncWithBackend = useCallback(async () => {
+    console.log('🔄 CartContext: Forcing sync with backend...');
+    try {
+      dispatch({ type: 'SET_LOADING', payload: true });
+      await loadCart();
+      console.log('✅ CartContext: Backend sync completed successfully');
+    } catch (error) {
+      console.error('❌ CartContext: Backend sync failed:', error);
+      const message = error instanceof Error ? error.message : 'Failed to sync with backend';
+      dispatch({ type: 'SET_ERROR', payload: message });
+    } finally {
+      dispatch({ type: 'SET_LOADING', payload: false });
+    }
   }, [loadCart]);
 
   const getItemQuantity = (productId: string): number => {
@@ -244,6 +350,7 @@ export function CartProvider({ children, enableOptimistic = false }: CartProvide
     removeItem,
     clearCart,
     refreshCart,
+    syncWithBackend,
     getItemQuantity,
     getTotalItems,
     getTotalPrice,

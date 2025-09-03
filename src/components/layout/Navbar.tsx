@@ -244,6 +244,14 @@ export function Navbar() {
                           <User className="w-4 h-4" />
                           <span className="text-sm">{t('profile')}</span>
                         </Link>
+                        <Link
+                          href="/orders"
+                          className="flex items-center space-x-2 px-3 py-2 lg:px-4 lg:py-3 text-gray-600 hover:bg-green-50 hover:text-green-600 transition-colors"
+                          onClick={() => setIsUserMenuOpen(false)}
+                        >
+                          <ShoppingBag className="w-4 h-4" />
+                          <span className="text-sm">{t('order.my_orders')}</span>
+                        </Link>
                         <button
                           onClick={() => {
                             logout();
@@ -411,6 +419,14 @@ export function Navbar() {
                       >
                         <User className="w-4 h-4" />
                         <span className="text-sm">{t('profile')}</span>
+                      </Link>
+                      <Link
+                        href="/orders"
+                        className="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-green-50 hover:text-green-600 transition-colors rounded-lg border border-gray-200"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <ShoppingBag className="w-4 h-4" />
+                        <span className="text-sm">{t('order.my_orders')}</span>
                       </Link>
                       <button
                         onClick={() => {

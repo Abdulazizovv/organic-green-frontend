@@ -336,18 +336,20 @@ const CartSummary = ({
         </div>
       </div>
       
-      <Button 
-        size="lg"
-        disabled={loading}
-        className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98]"
-      >
-        {loading ? (
-          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-        ) : (
-          <CreditCard className="w-5 h-5 mr-2" />
-        )}
-        {t('proceedToCheckout')}
-      </Button>
+      <Link href="/checkout" className="w-full block">
+        <Button 
+          size="lg"
+          disabled={loading}
+          className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98]"
+        >
+          {loading ? (
+            <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+          ) : (
+            <CreditCard className="w-5 h-5 mr-2" />
+          )}
+          {t('cart.proceedToCheckout')}
+        </Button>
+      </Link>
       
       <div className="mt-4 flex items-center justify-center space-x-4 text-xs text-gray-500">
         <div className="flex items-center space-x-1">
@@ -554,14 +556,16 @@ export default function CartPage() {
               </div>
             )}
             
-            <Button 
-              size="lg"
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-4 rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
-            >
-              <CreditCard className="w-5 h-5 mr-2" />
-              {t('proceedToCheckout')}
-            </Button>
+            <Link href="/checkout" className="w-full block">
+              <Button 
+                size="lg"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-4 rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <CreditCard className="w-5 h-5 mr-2" />
+                {t('cart.proceedToCheckout')}
+              </Button>
+            </Link>
           </div>
         </div>
 

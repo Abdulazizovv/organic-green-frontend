@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+import { getCartSessionKey, setCartSessionKey, getAccessToken } from './session';
 import type {
   Cart,
   CartSummary,
@@ -11,57 +12,70 @@ import type {
 
 const API_BASE_URL = 'http://api.organicgreen.uz/api';
 
-// Logger utility for debugging
+// Enhanced logger for session debugging
 const logger = {
-  info: (message: string, data?: any) => {
+  info: (message: string, data?: unknown) => {
     console.log(`[CART INFO] ${message}`, data || '');
   },
-  error: (message: string, error?: any) => {
+  error: (message: string, error?: unknown) => {
     console.error(`[CART ERROR] ${message}`, error || '');
   },
-  warn: (message: string, data?: any) => {
+  warn: (message: string, data?: unknown) => {
     console.warn(`[CART WARN] ${message}`, data || '');
   },
-  debug: (message: string, data?: any) => {
+  debug: (message: string, data?: unknown) => {
     if (process.env.NODE_ENV === 'development') {
       console.debug(`[CART DEBUG] ${message}`, data || '');
+    }
+  },
+  session: (message: string, sessionKey?: string | null) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[SESSION] ${message}`, {
+        hasKey: !!sessionKey,
+        keyLength: sessionKey?.length || 0,
+        keyPreview: sessionKey ? `${sessionKey.substring(0, 12)}...` : 'null',
+        fullKey: sessionKey // Show full key in development for debugging
+      });
     }
   }
 };
 
 class CartService {
   private api: AxiosInstance;
-  private pendingRequests: Map<string, Promise<any>> = new Map();
+  private pendingRequests: Map<string, Promise<unknown>> = new Map();
   private sessionInitialized: boolean = false;
 
   constructor() {
     this.api = axios.create({
       baseURL: `${API_BASE_URL}/cart`,
       headers: { 'Content-Type': 'application/json' },
-      withCredentials: true, // Enable cookies support
+      withCredentials: true,
     });
 
     this.setupInterceptors();
   }
 
   private setupInterceptors() {
-    // Request interceptor for auth/session
+    // Request interceptor - attach session key to every request
     this.api.interceptors.request.use(
       async (config) => {
         if (typeof window !== 'undefined') {
-          // Only try to ensure session for non-initialization requests
+          // Ensure session is initialized for non-initialization requests
           if (!config.headers['skip-session-init']) {
             await this.ensureSession();
           }
           
-          // Get stored session key
-          const sessionKey = this.getStoredSessionKey();
+          // Always attach session key if available
+          const sessionKey = getCartSessionKey();
           if (sessionKey) {
             config.headers['X-Session-Key'] = sessionKey;
+            logger.session('Attaching session key to request', sessionKey);
+          } else {
+            logger.warn('No session key available for request', { url: config.url });
           }
           
-          // JWT token if authenticated
-          const token = localStorage.getItem('accessToken');
+          // Attach JWT token for authenticated users
+          const token = getAccessToken();
           if (token) {
             config.headers.Authorization = `Bearer ${token}`;
           }
@@ -71,18 +85,46 @@ class CartService {
       (error) => Promise.reject(error)
     );
 
-    // Response interceptor for error handling and session management
+    // Response interceptor - extract and store session key
     this.api.interceptors.response.use(
       (response) => {
-        logger.debug('API Response', { 
+        logger.debug('API Response received', { 
           url: response.config.url, 
-          status: response.status,
-          data: response.data 
+          status: response.status
         });
         
-        // Extract and store session key from response if available
+        // Extract session key from multiple possible locations
+        let sessionKey: string | null = null;
+        
+        // Priority order: owner.session_key > data.session_key > headers
         if (response.data?.owner?.session_key) {
-          this.storeSessionKey(response.data.owner.session_key);
+          sessionKey = response.data.owner.session_key;
+          logger.session('Found session key in response.data.owner.session_key', sessionKey);
+        } else if (response.data?.session_key) {
+          sessionKey = response.data.session_key;
+          logger.session('Found session key in response.data.session_key', sessionKey);
+        } else if (response.headers?.['x-session-key']) {
+          sessionKey = response.headers['x-session-key'];
+          logger.session('Found session key in response headers (x-session-key)', sessionKey);
+        } else if (response.headers?.['X-Session-Key']) {
+          sessionKey = response.headers['X-Session-Key'];
+          logger.session('Found session key in response headers (X-Session-Key)', sessionKey);
+        }
+        
+        // Store the full session key without any modification
+        if (sessionKey && typeof sessionKey === 'string' && sessionKey.length > 0) {
+          const currentStoredKey = getCartSessionKey();
+          
+          // Only update if it's different or missing
+          if (!currentStoredKey || currentStoredKey !== sessionKey) {
+            setCartSessionKey(sessionKey);
+            logger.info('Session key updated from response', {
+              source: response.data?.owner?.session_key ? 'owner.session_key' : 
+                     response.data?.session_key ? 'data.session_key' : 'headers',
+              keyLength: sessionKey.length,
+              previousKeyLength: currentStoredKey?.length || 0
+            });
+          }
         }
         
         return response;
@@ -115,17 +157,6 @@ class CartService {
     );
   }
 
-  private getStoredSessionKey(): string | null {
-    if (typeof window === 'undefined') return null;
-    return localStorage.getItem('cart_session_key');
-  }
-
-  private storeSessionKey(sessionKey: string): void {
-    if (typeof window === 'undefined') return;
-    localStorage.setItem('cart_session_key', sessionKey);
-    logger.info('Stored session key', { sessionKey });
-  }
-
   // Public method to reset session state (useful for debugging or manual retry)
   resetSession(): void {
     this.sessionInitialized = false;
@@ -135,19 +166,43 @@ class CartService {
     logger.info('Session state reset');
   }
 
+  // Public method to force session reinitialization (useful for guest checkout)
+  async forceSessionRefresh(): Promise<void> {
+    this.sessionInitialized = false;
+    await this.ensureSession();
+    logger.info('Session refreshed');
+  }
+
+  // Public method to get current session status
+  getSessionStatus(): { 
+    initialized: boolean; 
+    hasStoredKey: boolean; 
+    keyLength: number;
+    keyPreview: string | null;
+  } {
+    const storedKey = getCartSessionKey();
+    return {
+      initialized: this.sessionInitialized,
+      hasStoredKey: !!storedKey,
+      keyLength: storedKey?.length || 0,
+      keyPreview: storedKey ? `${storedKey.substring(0, 12)}...${storedKey.substring(-4)}` : null
+    };
+  }
+
   private async ensureSession(): Promise<void> {
     if (this.sessionInitialized) return;
     
-    const existingSessionKey = this.getStoredSessionKey();
-    if (existingSessionKey) {
+    const existingSessionKey = getCartSessionKey();
+    if (existingSessionKey && existingSessionKey.length > 0) {
       this.sessionInitialized = true;
-      logger.debug('Using existing session key', { sessionKey: existingSessionKey });
+      logger.session('Using existing session key', existingSessionKey);
       return;
     }
 
     try {
       logger.debug('Initializing new session by fetching current cart');
-      // Create a temporary request without session to initialize one
+      
+      // Create a clean axios instance for session initialization
       const tempApi = axios.create({
         baseURL: `${API_BASE_URL}/cart`,
         headers: { 
@@ -155,24 +210,44 @@ class CartService {
           'skip-session-init': 'true' // Prevent infinite loops
         },
         withCredentials: true,
-        timeout: 5000, // 5 second timeout
+        timeout: 10000, // 10 second timeout for initial request
       });
 
       const { data } = await tempApi.get<Cart>('/current/');
       
-      if (data.owner?.session_key) {
-        this.storeSessionKey(data.owner.session_key);
+      logger.info('Session initialization response received', {
+        hasOwner: !!data.owner,
+        ownerType: data.owner?.type,
+        hasSessionKey: !!data.owner?.session_key,
+        sessionKeyLength: data.owner?.session_key?.length || 0
+      });
+      
+      // Extract and validate session key
+      if (data.owner?.session_key && typeof data.owner.session_key === 'string' && data.owner.session_key.length > 0) {
+        const sessionKey = data.owner.session_key.trim();
+        setCartSessionKey(sessionKey);
         this.sessionInitialized = true;
-        logger.info('Initialized new session', { sessionKey: data.owner.session_key });
+        
+        logger.session('Session initialized successfully', sessionKey);
+        logger.info('New session created', {
+          keyLength: sessionKey.length,
+          ownerType: data.owner.type
+        });
       } else {
-        logger.warn('No session key received from backend');
+        logger.warn('Invalid or missing session key in response', {
+          hasOwner: !!data.owner,
+          sessionKeyType: typeof data.owner?.session_key,
+          sessionKeyValue: data.owner?.session_key
+        });
         this.sessionInitialized = true; // Prevent infinite loops
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       logger.error('Failed to initialize session', {
-        message: error.message,
-        code: error.code,
-        status: error.response?.status
+        message: error instanceof Error ? error.message : 'Unknown error',
+        code: error && typeof error === 'object' && 'code' in error ? error.code : undefined,
+        status: error && typeof error === 'object' && 'response' in error && 
+                error.response && typeof error.response === 'object' && 'status' in error.response ? 
+                error.response.status : undefined
       });
       
       // Mark as initialized to prevent infinite retry loops
@@ -201,7 +276,7 @@ class CartService {
   private async debounceRequest<T>(key: string, requestFn: () => Promise<T>): Promise<T> {
     if (this.pendingRequests.has(key)) {
       logger.debug('Request already pending, reusing promise', { key });
-      return this.pendingRequests.get(key)!;
+      return this.pendingRequests.get(key)! as Promise<T>;
     }
 
     const promise = requestFn().finally(() => {
@@ -222,14 +297,15 @@ class CartService {
         ...data,
         total_price: this.normalizePrice(data.total_price)
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       logger.error('Failed to fetch current cart', {
-        message: error.message,
-        code: error.code
+        message: error instanceof Error ? error.message : 'Unknown error',
+        code: error && typeof error === 'object' && 'code' in error ? error.code : undefined
       });
       
       // Return empty cart structure on network errors
-      if (error.message.includes('connect to server') || error.message.includes('CORS')) {
+      const errorMessage = error instanceof Error ? error.message : '';
+      if (errorMessage.includes('connect to server') || errorMessage.includes('CORS')) {
         logger.warn('Returning empty cart due to connection issues');
         return {
           id: '',

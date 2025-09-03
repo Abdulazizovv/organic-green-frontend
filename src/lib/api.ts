@@ -1,5 +1,6 @@
 // API configuration
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import { getCartSessionKey, getAccessToken } from './session';
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://api.organicgreen.uz/api';
 
@@ -24,20 +25,29 @@ export const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // Enable cookies for session handling
 });
 
-// Request interceptor to add auth token
+// Request interceptor to add auth token and session key
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = authServiceInstance?.getAccessToken();
+    // Add access token if available
+    const token = authServiceInstance?.getAccessToken() || getAccessToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     
-    // Add session key for cart operations if available
-    const sessionKey = typeof window !== 'undefined' ? localStorage.getItem('cart_session_key') : null;
+    // Add session key for cart/order operations if no token (guest users)
+    const sessionKey = getCartSessionKey();
     if (sessionKey && !token) {
       config.headers['X-Session-Key'] = sessionKey;
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.debug('[API] Adding session key to request:', {
+          url: config.url,
+          sessionKey: sessionKey.substring(0, 8) + '...'
+        });
+      }
     }
     
     return config;
