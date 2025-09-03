@@ -2,11 +2,12 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, Plus, Minus, Trash2, Package } from 'lucide-react';
+import { ShoppingCart, Plus, Minus, Trash2, Package, Heart } from 'lucide-react';
 
 import { Product } from '@/api/products';
 import { useCart } from '@/hooks/useProducts';
 import { useLanguage, getLocalizedName } from '@/lib/language';
+import { useToast } from '@/context/ToastContext';
 import FavoriteButtonNew from './FavoriteButtonNew';
 
 interface AddToCartPanelProps {
@@ -16,13 +17,14 @@ interface AddToCartPanelProps {
 
 export default function AddToCartPanel({ product, className = '' }: AddToCartPanelProps) {
   const { t, language } = useLanguage();
+  const { showSuccess, showError } = useToast();
   const { addItem, updateQuantity, removeItem, getItemQuantity, isInCart, loading, cart } = useCart();
   const [selectedQuantity, setSelectedQuantity] = useState(1);
 
   const currentCartQuantity = getItemQuantity(product.id);
-  const maxQuantity = Math.min(product.stock, 10); // Limit to 10 or available stock
-  const isOutOfStock = product.stock <= 0;
-  const isLowStock = product.stock > 0 && product.stock <= 5;
+  const maxQuantity = Math.min(product.available_stock, 10); // Limit to 10 or available stock
+  const isOutOfStock = product.available_stock <= 0;
+  const isLowStock = product.available_stock > 0 && product.available_stock <= 5;
   const productInCart = isInCart(product.id);
 
   // Get cart item for this product
@@ -134,7 +136,7 @@ export default function AddToCartPanel({ product, className = '' }: AddToCartPan
           <div className="flex items-center gap-2 text-amber-600">
             <Package className="w-5 h-5" />
             <span className="font-medium">
-              {t('products.low_stock') || 'Low Stock'} - {product.stock} {t('products.left') || 'left'}
+              {t('products.low_stock') || 'Low Stock'} - {product.available_stock} {t('products.left') || 'left'}
             </span>
           </div>
         ) : (

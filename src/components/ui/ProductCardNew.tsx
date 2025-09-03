@@ -7,6 +7,7 @@ import { ShoppingCart, Heart, Plus, Minus, Loader2, Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { useCart } from '@/context/CartContext';
+import { useFavorites } from '@/hooks/useFavorites';
 import { useLanguage } from '@/lib/language';
 import type { Product } from '@/lib/api';
 
@@ -39,15 +40,20 @@ function useDebounceQuantityUpdate(callback: (quantity: number) => Promise<void>
 }
 
 function ProductCard({ product, className = '', viewMode = 'grid' }: ProductCardProps) {
-  const [isLiked, setIsLiked] = useState(false);
   const [localQuantity, setLocalQuantity] = useState(1);
   const [isUpdating, setIsUpdating] = useState(false);
   const { addItem, updateItem, removeItem, cart, getItemQuantity } = useCart();
+  const { isFavorited, toggleFavorite, loading: favoritesLoading, checkFavorite } = useFavorites();
   const { language, t } = useLanguage();
   
   // Get current quantity in cart
   const cartQuantity = getItemQuantity(product.id);
   const cartItem = cart?.items.find(item => item.product.id === product.id);
+  
+  // Check if product is favorited on mount
+  useEffect(() => {
+    checkFavorite(product.id);
+  }, [product.id, checkFavorite]);
 
   // Get localized product name
   const getLocalizedName = (product: Product) => {
@@ -163,15 +169,20 @@ function ProductCard({ product, className = '', viewMode = 'grid' }: ProductCard
                 </div>
               )}
               
-              {/* Heart icon */}
+              {/* Favorites heart button */}
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  setIsLiked(!isLiked);
+                  toggleFavorite(product.id);
                 }}
-                className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-md hover:bg-white transition-colors z-10"
+                disabled={favoritesLoading}
+                className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-md hover:bg-white transition-colors z-10 disabled:opacity-50"
               >
-                <Heart className={`w-4 h-4 ${isLiked ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
+                {favoritesLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin text-gray-600" />
+                ) : (
+                  <Heart className={`w-4 h-4 ${isFavorited(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
+                )}
               </button>
               
               {/* Sale badge */}

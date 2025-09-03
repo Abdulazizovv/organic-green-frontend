@@ -3,7 +3,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useCart as useCartContext } from '@/context/CartContext';
 import { useLanguage } from '@/lib/language';
 import { useToast } from '@/context/ToastContext';
-import { type AddItemRequest, type UpdateItemRequest } from '@/api/cart';
+import cartAPI, { type AddItemRequest, type UpdateItemRequest } from '@/api/cart';
+import favoritesAPI, { type FavoriteCheckResponse, type FavoriteToggleResponse } from '@/api/favorites';
 import productsAPI, { type Product } from '@/api/products';
 
 // Enhanced Cart Hook
@@ -21,22 +22,17 @@ export function useCart() {
         t('cart.added_success') || `Added ${quantity} item(s) to cart!`,
         '🛒'
       );
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error('Add to cart failed:', error);
       
-      if (error && typeof error === 'object' && 'response' in error) {
-        const axiosError = error as { response: { status: number; data?: { quantity?: string[]; message?: string } } };
-        if (axiosError.response?.status === 429) {
-          showThrottleWarning();
-        } else if (axiosError.response?.status === 400) {
-          const errorData = axiosError.response.data;
-          if (errorData?.quantity) {
-            showError(errorData.quantity[0] || 'Invalid quantity', 'Cart Error');
-          } else {
-            showError(errorData?.message || 'Cannot add item to cart', 'Cart Error');
-          }
+      if (error?.response?.status === 429) {
+        showThrottleWarning();
+      } else if (error?.response?.status === 400) {
+        const errorData = error.response.data;
+        if (errorData.quantity) {
+          showError(errorData.quantity[0] || 'Invalid quantity', 'Cart Error');
         } else {
-          showError(t('cart.add_error') || 'Failed to add item to cart', 'Cart Error');
+          showError(errorData.message || 'Cannot add item to cart', 'Cart Error');
         }
       } else {
         showError(t('cart.add_error') || 'Failed to add item to cart', 'Cart Error');
@@ -54,19 +50,14 @@ export function useCart() {
         t('cart.updated_success') || 'Cart updated successfully!',
         '✅'
       );
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error('Update cart failed:', error);
       
-      if (error && typeof error === 'object' && 'response' in error) {
-        const axiosError = error as { response: { status: number; data?: { message?: string } } };
-        if (axiosError.response?.status === 429) {
-          showThrottleWarning();
-        } else if (axiosError.response?.status === 400) {
-          const errorData = axiosError.response.data;
-          showError(errorData?.message || 'Cannot update cart item', 'Cart Error');
-        } else {
-          showError(t('cart.update_error') || 'Failed to update cart', 'Cart Error');
-        }
+      if (error?.response?.status === 429) {
+        showThrottleWarning();
+      } else if (error?.response?.status === 400) {
+        const errorData = error.response.data;
+        showError(errorData.message || 'Cannot update cart item', 'Cart Error');
       } else {
         showError(t('cart.update_error') || 'Failed to update cart', 'Cart Error');
       }
@@ -81,16 +72,11 @@ export function useCart() {
         t('cart.removed_success') || 'Item removed from cart',
         '🗑️'
       );
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error('Remove from cart failed:', error);
       
-      if (error && typeof error === 'object' && 'response' in error) {
-        const axiosError = error as { response: { status: number } };
-        if (axiosError.response?.status === 429) {
-          showThrottleWarning();
-        } else {
-          showError(t('cart.remove_error') || 'Failed to remove item', 'Cart Error');
-        }
+      if (error?.response?.status === 429) {
+        showThrottleWarning();
       } else {
         showError(t('cart.remove_error') || 'Failed to remove item', 'Cart Error');
       }
@@ -116,6 +102,83 @@ export function useCart() {
   };
 }
 
+// Favorites Hook
+export function useFavorites() {
+  const { showSuccess, showError, showThrottleWarning } = useToast();
+  const { t } = useLanguage();
+  const [loading, setLoading] = useState(false);
+
+  const checkFavorite = useCallback(async (productId: string): Promise<FavoriteCheckResponse> => {
+    try {
+      return await favoritesAPI.check(productId);
+    } catch (error: any) {
+      console.error('Check favorite failed:', error);
+      
+      if (error?.response?.status === 401) {
+        return { is_favorited: false }; // Not authenticated
+      }
+      
+      throw error;
+    }
+  }, []);
+
+  const toggleFavorite = useCallback(async (productId: string): Promise<FavoriteToggleResponse> => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+    
+    if (!token) {
+      showError(
+        t('auth.login_required_favorites') || 'Please login to save favorites ❤️',
+        'Login Required'
+      );
+      throw new Error('Authentication required');
+    }
+
+    try {
+      setLoading(true);
+      const response = await favoritesAPI.toggle(productId);
+      
+      if (response.action === 'added') {
+        showSuccess(
+          t('favorites.added_success') || 'Added to favorites ❤️',
+          '❤️'
+        );
+      } else {
+        showSuccess(
+          t('favorites.removed_success') || 'Removed from favorites',
+          '💔'
+        );
+      }
+      
+      return response;
+    } catch (error: any) {
+      console.error('Toggle favorite failed:', error);
+      
+      if (error?.response?.status === 401) {
+        showError(
+          t('auth.login_required_favorites') || 'Please login to save favorites ❤️',
+          'Login Required'
+        );
+      } else if (error?.response?.status === 429) {
+        showThrottleWarning();
+      } else {
+        showError(
+          t('favorites.toggle_error') || 'Failed to update favorites',
+          'Favorites Error'
+        );
+      }
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, [showSuccess, showError, showThrottleWarning, t]);
+
+  return {
+    loading,
+    checkFavorite,
+    toggleFavorite,
+  };
+}
+
 // Product Detail Hook
 export function useProductDetail(slug: string) {
   const [product, setProduct] = useState<Product | null>(null);
@@ -132,31 +195,24 @@ export function useProductDetail(slug: string) {
       
       const productData = await productsAPI.getBySlug(slug, language);
       setProduct(productData);
-    } catch (err: unknown) {
+    } catch (err: any) {
       console.error('Failed to fetch product:', err);
       
-      if (err && typeof err === 'object' && 'response' in err) {
-        const axiosError = err as { response: { status: number; data?: { message?: string } } };
-        if (axiosError.response?.status === 429) {
-          showThrottleWarning();
-          // Auto retry with exponential backoff
-          setTimeout(() => {
-            if (retryCount < 3) {
-              setRetryCount(prev => prev + 1);
-            }
-          }, 2000 + (retryCount * 1000));
-          return;
-        }
-        
-        if (axiosError.response?.status === 404) {
-          setError('Product not found');
-        } else {
-          const errorMessage = axiosError.response?.data?.message || 'Failed to load product';
-          setError(errorMessage);
-          showError(errorMessage, 'Product Error');
-        }
+      if (err?.response?.status === 429) {
+        showThrottleWarning();
+        // Auto retry with exponential backoff
+        setTimeout(() => {
+          if (retryCount < 3) {
+            setRetryCount(prev => prev + 1);
+          }
+        }, 2000 + (retryCount * 1000));
+        return;
+      }
+      
+      if (err?.response?.status === 404) {
+        setError('Product not found');
       } else {
-        const errorMessage = err instanceof Error ? err.message : 'Failed to load product';
+        const errorMessage = err?.response?.data?.message || err.message || 'Failed to load product';
         setError(errorMessage);
         showError(errorMessage, 'Product Error');
       }

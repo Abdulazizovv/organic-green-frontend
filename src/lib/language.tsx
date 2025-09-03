@@ -31,11 +31,11 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   const t = (key: string): string => {
     // Support nested keys like "navigation.home" or "products.add_to_cart"
     const keys = key.split('.')
-    let value: any = translations[language]
+    let value: unknown = translations[language]
     
     for (const k of keys) {
       if (value && typeof value === 'object' && k in value) {
-        value = value[k]
+        value = (value as Record<string, unknown>)[k]
       } else {
         return key // Return the key if translation not found
       }
@@ -94,5 +94,29 @@ export function getLocalizedDescription(item: { description_uz?: string; descrip
       return item.description_en || item.description || ''
     default:
       return item.description || ''
+  }
+}
+
+// Generic helper function to get localized field with fallback to Uzbek
+export function getLocalizedField<T extends Record<string, unknown>>(
+  item: T, 
+  fieldName: string, 
+  language: Language
+): string {
+  if (!item) return ''
+  
+  const uzField = `${fieldName}_uz`
+  const ruField = `${fieldName}_ru`
+  const enField = `${fieldName}_en`
+  
+  switch (language) {
+    case 'uz':
+      return (item[uzField] as string) || (item[fieldName] as string) || ''
+    case 'ru':
+      return (item[ruField] as string) || (item[uzField] as string) || (item[fieldName] as string) || ''
+    case 'en':
+      return (item[enField] as string) || (item[uzField] as string) || (item[fieldName] as string) || ''
+    default:
+      return (item[uzField] as string) || (item[fieldName] as string) || ''
   }
 }

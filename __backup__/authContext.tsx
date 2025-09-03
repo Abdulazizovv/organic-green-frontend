@@ -5,13 +5,10 @@ import { authService, User, LoginRequest, RegisterRequest } from './auth';
 
 interface AuthContextType {
   user: User | null;
-  accessToken: string | null;
-  refreshToken: string | null;
   isAuthenticated: boolean;
   login: (credentials: LoginRequest) => Promise<void>;
   register: (userData: RegisterRequest) => Promise<void>;
   logout: () => void;
-  refreshAccessToken: () => Promise<void>;
   loading: boolean;
 }
 
@@ -68,16 +65,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  const refreshAccessToken = async () => {
-    try {
-      await authService.refreshToken();
-    } catch (error) {
-      // If refresh fails, logout user
-      logout();
-      throw error;
-    }
-  };
-
   const logout = () => {
     authService.logout();
     setUser(null);
@@ -87,13 +74,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const value = {
     user,
-    accessToken: authService.getAccessToken(),
-    refreshToken: authService.getRefreshToken(),
     isAuthenticated,
     login,
     register,
     logout,
-    refreshAccessToken,
     loading,
   };
 

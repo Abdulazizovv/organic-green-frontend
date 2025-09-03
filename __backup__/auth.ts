@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { setAuthService } from './api';
 
 const API_BASE_URL = 'http://api.organicgreen.uz/api';
 
@@ -44,7 +43,7 @@ export interface AuthResponse {
 export type LoginResponse = AuthResponse;
 export type RegisterResponse = AuthResponse;
 
-// Create axios instance for auth (doesn't use the main API instance to avoid circular dependencies)
+// Create axios instance for auth
 const authApi = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -81,81 +80,38 @@ export const authService = {
     }
   },
 
-  // Refresh access token
-  async refreshToken(): Promise<{ access: string }> {
-    try {
-      const refreshToken = this.getRefreshToken();
-      if (!refreshToken) {
-        throw new Error('No refresh token available');
-      }
-
-      const response = await authApi.post<{ access: string }>('/auth/refresh/', {
-        refresh: refreshToken,
-      });
-      
-      // Update stored access token
-      this.saveTokens({
-        access: response.data.access,
-        refresh: refreshToken,
-      });
-
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.data) {
-        throw new Error(error.response.data.message || 'Token refresh failed');
-      }
-      throw new Error('Network error occurred');
-    }
-  },
-
   // Logout user (clear tokens from storage)
   logout(): void {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('user');
-      localStorage.removeItem('cart_session_key'); // Clear cart session when logging out
-    }
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
   },
 
   // Save tokens to localStorage
   saveTokens(tokens: AuthTokens): void {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('accessToken', tokens.access);
-      localStorage.setItem('refreshToken', tokens.refresh);
-    }
+    localStorage.setItem('accessToken', tokens.access);
+    localStorage.setItem('refreshToken', tokens.refresh);
   },
 
   // Get access token from localStorage
   getAccessToken(): string | null {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('accessToken');
-    }
-    return null;
+    return localStorage.getItem('accessToken');
   },
 
   // Get refresh token from localStorage
   getRefreshToken(): string | null {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('refreshToken');
-    }
-    return null;
+    return localStorage.getItem('refreshToken');
   },
 
   // Save user data to localStorage
   saveUser(user: User): void {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('user', JSON.stringify(user));
-    }
+    localStorage.setItem('user', JSON.stringify(user));
   },
 
   // Get user data from localStorage
   getUser(): User | null {
-    if (typeof window !== 'undefined') {
-      const userData = localStorage.getItem('user');
-      return userData ? JSON.parse(userData) : null;
-    }
-    return null;
+    const userData = localStorage.getItem('user');
+    return userData ? JSON.parse(userData) : null;
   },
 
   // Check if user is authenticated
@@ -164,25 +120,6 @@ export const authService = {
     return !!token;
   },
 };
-
-// Set the auth service instance for the API client
-setAuthService(authService);
-
-// Add request interceptor to add auth token
-authApi.interceptors.request.use(
-  (config) => {
-    const token = authService.getAccessToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-export default authService;
 
 // Add request interceptor to add auth token
 authApi.interceptors.request.use(

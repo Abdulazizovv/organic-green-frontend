@@ -1,22 +1,7 @@
 // API configuration
-import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import axios from 'axios';
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://api.organicgreen.uz/api';
-
-// Auth service interface for API client
-interface AuthService {
-  getAccessToken(): string | null;
-  getRefreshToken(): string | null;
-  saveTokens(tokens: { access: string; refresh: string }): void;
-  logout(): void;
-}
-
-let authServiceInstance: AuthService | null = null;
-
-// Method to set auth service instance
-export const setAuthService = (authService: AuthService) => {
-  authServiceInstance = authService;
-};
 
 // Create axios instance
 export const api = axios.create({
@@ -25,64 +10,6 @@ export const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
-
-// Request interceptor to add auth token
-api.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const token = authServiceInstance?.getAccessToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    
-    // Add session key for cart operations if available
-    const sessionKey = typeof window !== 'undefined' ? localStorage.getItem('cart_session_key') : null;
-    if (sessionKey && !token) {
-      config.headers['X-Session-Key'] = sessionKey;
-    }
-    
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-// Response interceptor for token refresh
-api.interceptors.response.use(
-  (response) => response,
-  async (error: AxiosError) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
-
-    if (error.response?.status === 401 && !originalRequest._retry && authServiceInstance) {
-      originalRequest._retry = true;
-
-      try {
-        const refreshToken = authServiceInstance.getRefreshToken();
-        if (refreshToken) {
-          const response = await axios.post(`${API_BASE_URL}/auth/refresh/`, {
-            refresh: refreshToken,
-          });
-
-          const { access } = response.data;
-          authServiceInstance.saveTokens({ 
-            access, 
-            refresh: refreshToken 
-          });
-
-          // Retry original request with new token
-          originalRequest.headers.Authorization = `Bearer ${access}`;
-          return api(originalRequest);
-        }
-      } catch {
-        // Refresh failed, logout user
-        authServiceInstance.logout();
-        if (typeof window !== 'undefined') {
-          window.location.href = '/login';
-        }
-      }
-    }
-
-    return Promise.reject(error);
-  }
-);
 
 export interface ProductImage {
   id: string;

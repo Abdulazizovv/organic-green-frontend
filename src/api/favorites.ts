@@ -1,145 +1,125 @@
-// Favorites API - Production Ready
-import axios from 'axios';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://api.organicgreen.uz/api';
-
-// Create axios instance
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Add auth interceptor
-api.interceptors.request.use((config) => {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-// Response interceptor for error handling
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      // Handle unauthorized
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-      }
-    }
-    return Promise.reject(error);
-  }
-);
-
-export interface FavoriteProduct {
-  id: string;
-  name_uz: string;
-  name_ru: string;
-  name_en: string;
-  slug: string;
-  price: string;
-  sale_price?: string;
-  final_price: string;
-  stock: number;
-  is_active: boolean;
-  is_featured: boolean;
-  image: string;
-  category_name: string;
-  is_on_sale: boolean;
-  created_at: string;
-}
-
-export interface Favorite {
-  id: number;
-  product: FavoriteProduct;
-  created_at: string;
-}
+import api from '@/lib/api';
 
 export interface FavoriteCheckResponse {
   is_favorited: boolean;
   favorite_id?: number;
-  created_at?: string;
 }
 
 export interface FavoriteToggleResponse {
-  action: 'added' | 'removed';
+  is_favorited: boolean;
+  favorite_id?: number;
   message: string;
-  favorite?: {
-    id: number;
-    product: FavoriteProduct;
-    created_at: string;
-  };
+  action?: 'added' | 'removed';
 }
 
-export interface FavoritesResponse {
+export interface FavoriteAddResponse {
+  is_favorited: boolean;
+  favorite_id: number;
+  message: string;
+}
+
+export interface FavoriteRemoveResponse {
+  is_favorited: boolean;
+  message: string;
+}
+
+export interface Favorite {
+  id: number;
+  product: {
+    id: string;
+    name_en: string;
+    name_ru: string;
+    name_uz: string;
+    description_en: string;
+    description_ru: string;
+    description_uz: string;
+    price: string;
+    stock: number;
+    category: string;
+    image: string;
+    slug: string;
+    is_featured: boolean;
+    is_available: boolean;
+    created_at: string;
+    updated_at: string;
+  };
+  created_at: string;
+}
+
+export interface FavoriteListResponse {
+  results: Favorite[];
   count: number;
   next: string | null;
   previous: string | null;
-  results: Favorite[];
 }
 
-// Favorites API
-export const favoritesAPI = {
-  // Get all favorites
-  getAll: async (page = 1, pageSize = 20): Promise<FavoritesResponse> => {
+/**
+ * Favorites API service
+ */
+class FavoritesAPI {
+  /**
+   * Get all favorites for the authenticated user
+   */
+  async getFavorites(): Promise<FavoriteListResponse> {
+    const response = await api.get<FavoriteListResponse>('/favorites/');
+    return response.data;
+  }
+
+  /**
+   * Check if a product is favorited by the authenticated user
+   */
+  async checkFavorite(productId: string): Promise<FavoriteCheckResponse> {
     try {
-      const response = await api.get('/favorites/', {
-        params: { page, page_size: pageSize }
-      });
+      const response = await api.get<FavoriteCheckResponse>(`/favorites/check/?product_id=${productId}`);
       return response.data;
-    } catch (error) {
-      console.error('Failed to get favorites:', error);
+    } catch (error: unknown) {
+      const axiosError = error as { response?: { status?: number } };
+      if (axiosError.response?.status === 401) {
+        throw new Error('authentication_required');
+      }
+      if (axiosError.response?.status === 429) {
+        throw new Error('rate_limit_exceeded');
+      }
       throw error;
     }
-  },
+  }
 
-  // Add product to favorites
-  add: async (productId: string): Promise<{ message: string; favorite: Favorite }> => {
-    try {
-      const response = await api.post('/favorites/', { product_id: productId });
-      return response.data;
-    } catch (error) {
-      console.error('Failed to add to favorites:', error);
-      throw error;
-    }
-  },
+  /**
+   * Toggle favorite status for a product
+   */
+  async toggleFavorite(productId: string): Promise<FavoriteToggleResponse> {
+    const response = await api.post<FavoriteToggleResponse>('/favorites/toggle/', {
+      product_id: productId,
+    });
+    return response.data;
+  }
 
-  // Remove product from favorites
-  remove: async (favoriteId: number): Promise<{ message: string }> => {
-    try {
-      const response = await api.delete(`/favorites/${favoriteId}/`);
-      return response.data;
-    } catch (error) {
-      console.error('Failed to remove from favorites:', error);
-      throw error;
-    }
-  },
+  /**
+   * Add a product to favorites
+   */
+  async addFavorite(productId: string): Promise<FavoriteAddResponse> {
+    const response = await api.post<FavoriteAddResponse>('/favorites/', {
+      product_id: productId,
+    });
+    return response.data;
+  }
 
-  // Check if product is favorited
-  check: async (productId: string): Promise<FavoriteCheckResponse> => {
-    try {
-      const response = await api.get(`/favorites/check/?product_id=${productId}`);
-      return response.data;
-    } catch (error) {
-      console.error('Failed to check favorite status:', error);
-      throw error;
-    }
-  },
+  /**
+   * Remove a product from favorites by favorite ID
+   */
+  async removeFavorite(favoriteId: number): Promise<FavoriteRemoveResponse> {
+    const response = await api.delete<FavoriteRemoveResponse>(`/favorites/${favoriteId}/`);
+    return response.data;
+  }
 
-  // Toggle favorite status
-  toggle: async (productId: string): Promise<FavoriteToggleResponse> => {
-    try {
-      const response = await api.post('/favorites/toggle/', { product_id: productId });
-      return response.data;
-    } catch (error) {
-      console.error('Failed to toggle favorite:', error);
-      throw error;
-    }
-  },
-};
+  /**
+   * Remove a product from favorites by product ID
+   */
+  async removeFavoriteByProductId(productId: string): Promise<FavoriteRemoveResponse> {
+    const response = await api.delete<FavoriteRemoveResponse>(`/favorites/remove-by-product/?product_id=${productId}`);
+    return response.data;
+  }
+}
 
+const favoritesAPI = new FavoritesAPI();
 export default favoritesAPI;

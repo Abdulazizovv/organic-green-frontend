@@ -110,52 +110,37 @@ export const authService = {
 
   // Logout user (clear tokens from storage)
   logout(): void {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('user');
-      localStorage.removeItem('cart_session_key'); // Clear cart session when logging out
-    }
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+    localStorage.removeItem('cart_session_key'); // Clear cart session when logging out
   },
 
   // Save tokens to localStorage
   saveTokens(tokens: AuthTokens): void {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('accessToken', tokens.access);
-      localStorage.setItem('refreshToken', tokens.refresh);
-    }
+    localStorage.setItem('accessToken', tokens.access);
+    localStorage.setItem('refreshToken', tokens.refresh);
   },
 
   // Get access token from localStorage
   getAccessToken(): string | null {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('accessToken');
-    }
-    return null;
+    return localStorage.getItem('accessToken');
   },
 
   // Get refresh token from localStorage
   getRefreshToken(): string | null {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('refreshToken');
-    }
-    return null;
+    return localStorage.getItem('refreshToken');
   },
 
   // Save user data to localStorage
   saveUser(user: User): void {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('user', JSON.stringify(user));
-    }
+    localStorage.setItem('user', JSON.stringify(user));
   },
 
   // Get user data from localStorage
   getUser(): User | null {
-    if (typeof window !== 'undefined') {
-      const userData = localStorage.getItem('user');
-      return userData ? JSON.parse(userData) : null;
-    }
-    return null;
+    const userData = localStorage.getItem('user');
+    return userData ? JSON.parse(userData) : null;
   },
 
   // Check if user is authenticated

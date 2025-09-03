@@ -3,12 +3,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ShoppingCart, Heart, Plus, Minus, Loader2, AlertTriangle, Trash2 } from 'lucide-react';
+import { ShoppingCart, Heart, Plus, Minus, Loader2, Leaf, AlertTriangle, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { useCart } from '@/context/CartContext';
-import { useFavorites } from '@/hooks/useFavorites';
 import { useLanguage } from '@/lib/language';
 import { useToast } from '@/context/ToastContext';
 import { 
@@ -31,6 +30,7 @@ interface ProductCardProps {
 }
 
 function ProductCard({ product, className = '', viewMode = 'grid' }: ProductCardProps) {
+  const [isLiked, setIsLiked] = useState(false);
   const [localQuantity, setLocalQuantity] = useState(0);
   const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,8 +39,7 @@ function ProductCard({ product, className = '', viewMode = 'grid' }: ProductCard
 
   const { language, t } = useLanguage();
   const { cart, addItem, updateItem, removeItem } = useCart();
-  const { showThrottleWarning, showError, showSuccess } = useToast();
-  const { isFavorited, toggleFavorite, loading: favoritesLoading } = useFavorites();
+  const { showToast, showThrottleWarning, showError, showSuccess } = useToast();
 
   // Get cart item for this product
   const cartItem = cart?.items?.find(item => item.product.id === product.id);
@@ -55,7 +54,7 @@ function ProductCard({ product, className = '', viewMode = 'grid' }: ProductCard
       cartItem: cartItem?.id 
     });
     setLocalQuantity(cartQuantity);
-  }, [cartQuantity, product.id, cartItem, localQuantity]);
+  }, [cartQuantity, product.id, cartItem]);
 
   // Product display utilities
   const productName = getLocalizedName(product, language);
@@ -86,7 +85,6 @@ function ProductCard({ product, className = '', viewMode = 'grid' }: ProductCard
   });
 
   // Debounced cart update
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleQuantityUpdate = useCallback(async (newQuantity: number) => {
     try {
       console.log('🔄 Quantity update started:', { 
@@ -563,18 +561,9 @@ function ProductCard({ product, className = '', viewMode = 'grid' }: ProductCard
             variant="ghost"
             size="sm"
             className="absolute top-2 right-2 h-8 w-8 p-0 bg-white/80 hover:bg-white z-10"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              toggleFavorite(product.id);
-            }}
-            disabled={favoritesLoading}
+            onClick={() => setIsLiked(!isLiked)}
           >
-            {favoritesLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin text-gray-600" />
-            ) : (
-              <Heart className={`h-4 w-4 ${isFavorited(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
-            )}
+            <Heart className={`h-4 w-4 ${isLiked ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
           </Button>
 
           {/* Out of Stock Overlay */}
