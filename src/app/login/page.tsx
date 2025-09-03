@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { LogIn, Eye, EyeOff, Loader2 } from 'lucide-react';
@@ -19,10 +19,20 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [redirectMessage, setRedirectMessage] = useState('');
   
   const { t } = useLanguage();
   const { login } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Check for redirect parameter
+  useEffect(() => {
+    const nextUrl = searchParams.get('next');
+    if (nextUrl) {
+      setRedirectMessage(t('auth.redirect_message'));
+    }
+  }, [searchParams, t]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -41,7 +51,14 @@ export default function LoginPage() {
 
     try {
       await login(formData);
-      router.push('/'); // Redirect to home page after successful login
+      
+      // Check for redirect parameter
+      const nextUrl = searchParams.get('next');
+      if (nextUrl) {
+        router.push(decodeURIComponent(nextUrl));
+      } else {
+        router.push('/');
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
     } finally {
@@ -78,6 +95,16 @@ export default function LoginPage() {
           
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
+              {redirectMessage && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="bg-blue-50 border border-blue-200 text-blue-600 px-4 py-3 rounded-lg text-sm"
+                >
+                  {redirectMessage}
+                </motion.div>
+              )}
+              
               {error && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}

@@ -227,9 +227,9 @@ export default function OrderDetailPage() {
         >
           <div className="flex items-center space-x-4 mb-4">
             <Link href="/orders">
-              <Button variant="outline" size="sm" className="hover:bg-green-50">
+              <Button variant="outline" size="sm" className="hover:bg-green-50 border-green-200">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Orders
+                {t('order.detail.back_to_orders')}
               </Button>
             </Link>
           </div>
@@ -237,9 +237,9 @@ export default function OrderDetailPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
-                {t('order.order_details')}
+                {t('order.detail.title')}
               </h1>
-              <p className="font-mono text-lg text-gray-600">
+              <p className="font-mono text-lg text-gray-600 bg-gray-100 px-3 py-1 rounded-lg inline-block">
                 {order.order_number}
               </p>
             </div>
@@ -300,54 +300,68 @@ export default function OrderDetailPage() {
               <div className="flex items-center mb-6">
                 <Package className="w-5 h-5 text-green-600 mr-2" />
                 <h2 className="text-xl font-semibold text-gray-900">
-                  {t('order.order_items')}
+                  {t('order.detail.items')}
                 </h2>
               </div>
 
-              <div className="space-y-4">
-                {order.items.map((item) => {
-                  const productName = getLocalizedName({
-                    name_uz: item.product_name_uz,
-                    name_ru: item.product_name_ru,
-                    name_en: item.product_name_en
-                  }, language);
+              {order.items && order.items.length > 0 ? (
+                <div className="space-y-4">
+                  {order.items.map((item) => {
+                    const productName = getLocalizedName({
+                      name_uz: item.product_name_uz,
+                      name_ru: item.product_name_ru,
+                      name_en: item.product_name_en
+                    }, language);
 
-                  return (
-                    <div key={item.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                      <div className="w-16 h-16 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
-                        {item.product_image_url ? (
-                          <Image
-                            src={item.product_image_url}
-                            alt={productName}
-                            width={64}
-                            height={64}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <Package className="w-6 h-6 text-gray-400" />
+                    return (
+                      <div key={item.id} className="flex items-center space-x-4 p-6 bg-gradient-to-r from-green-50 to-white rounded-xl border border-green-100 hover:border-green-200 transition-colors">
+                        <div className="w-20 h-20 bg-gray-100 rounded-xl flex-shrink-0 overflow-hidden border border-gray-200">
+                          {item.product_image_url ? (
+                            <Image
+                              src={item.product_image_url}
+                              alt={productName || t('order.detail.product_image')}
+                              width={80}
+                              height={80}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-green-100 to-green-200">
+                              <Package className="w-8 h-8 text-green-600" />
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-gray-900 mb-2 text-lg">
+                            {productName}
+                          </h3>
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">
+                            <div className="flex items-center text-gray-600">
+                              <span className="font-medium mr-1">{t('order.detail.quantity')}:</span>
+                              <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full font-semibold">
+                                {item.quantity}
+                              </span>
+                            </div>
+                            <div className="flex items-center text-gray-600">
+                              <span className="font-medium mr-1">{t('order.detail.unit_price')}:</span>
+                              <span className="font-semibold">${item.unit_price.toLocaleString()}</span>
+                            </div>
+                            <div className="flex items-center text-gray-600">
+                              <span className="font-medium mr-1">{t('order.detail.total_price')}:</span>
+                              <span className="font-bold text-green-600">${item.total_price.toLocaleString()}</span>
+                            </div>
                           </div>
-                        )}
+                        </div>
                       </div>
-
-                      <div className="flex-1">
-                        <h3 className="font-medium text-gray-900 mb-1">
-                          {productName}
-                        </h3>
-                        <p className="text-sm text-gray-500">
-                          {item.unit_price.toLocaleString()} × {item.quantity}
-                        </p>
-                      </div>
-
-                      <div className="text-right">
-                        <p className="font-semibold text-gray-900">
-                          {item.total_price.toLocaleString()}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <Package className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-500">{t('order.detail.empty')}</p>
+                </div>
+              )}
             </motion.div>
 
             {/* Contact & Delivery Information */}

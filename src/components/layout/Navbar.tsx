@@ -2,14 +2,15 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Menu, X, ChevronDown, Globe, ShoppingBag, User, LogOut, Heart } from "lucide-react";
+// import { Menu, X, ChevronDown, Globe, ShoppingBag, User, LogOut, Heart, Package } from "lucide-react";
+import { Menu, X, ChevronDown, Globe, ShoppingBag, User, LogOut, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useCategories } from "@/lib/hooks";
 import { useLanguage, getLocalizedName, type Language } from "@/lib/language";
 import { useAuth } from "@/lib/authContext";
 import { useCart } from "@/context/CartContext";
-import { useFavorites } from "@/hooks/useFavorites";
+// import { useFavorites } from "@/hooks/useFavorites";
 
 const navigationItems = [
   { href: "/", key: "home" },
@@ -44,8 +45,8 @@ export function Navbar() {
   const { getTotalItems } = useCart();
   
   // Get favorites
-  const { favoriteStates } = useFavorites();
-  const favoritesCount = Object.values(favoriteStates).filter(Boolean).length;
+  // const { favoriteStates } = useFavorites();
+  // const favoritesCount = Object.values(favoriteStates).filter(Boolean).length;
   
   // Get categories from API
   const { data: categoriesData } = useCategories();
@@ -250,7 +251,7 @@ export function Navbar() {
                           onClick={() => setIsUserMenuOpen(false)}
                         >
                           <ShoppingBag className="w-4 h-4" />
-                          <span className="text-sm">{t('order.my_orders')}</span>
+                          <span className="text-sm">{t('orders')}</span>
                         </Link>
                         <button
                           onClick={() => {
@@ -290,7 +291,7 @@ export function Navbar() {
               </div>
 
               {/* Favorites - Visible on tablet and up */}
-              <Link 
+              {/* <Link 
                 href="/favorites"
                 className="relative p-2 rounded-lg hover:bg-red-50 transition-colors border border-transparent hover:border-red-200 group hidden sm:block"
               >
@@ -303,6 +304,15 @@ export function Navbar() {
                     {favoritesCount > 9 ? '9+' : favoritesCount}
                   </span>
                 )}
+              </Link> */}
+
+              {/* Orders - Visible for all users */}
+              <Link 
+                href="/orders"
+                className="relative p-2 rounded-lg hover:bg-blue-50 transition-colors border border-transparent hover:border-blue-200 group hidden sm:block"
+                title={t('orders')}
+              >
+                <Package className="w-4 h-4 lg:w-5 lg:h-5 text-gray-700 group-hover:text-blue-600" />
               </Link>
 
               {/* Cart - Always visible */}
@@ -390,7 +400,7 @@ export function Navbar() {
                   </div>
 
                   {/* Mobile Favorites */}
-                  <Link 
+                  {/* <Link 
                     href="/favorites"
                     className="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-red-50 transition-colors border border-gray-200"
                     onClick={() => setIsMobileMenuOpen(false)}
@@ -407,6 +417,16 @@ export function Navbar() {
                         {favoritesCount > 9 ? '9+' : favoritesCount}
                       </span>
                     )}
+                  </Link> */}
+
+                  {/* Mobile Orders */}
+                  <Link 
+                    href="/orders"
+                    className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-blue-50 transition-colors border border-gray-200"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Package className="w-4 h-4 text-gray-700" />
+                    <span className="text-sm font-medium text-gray-700">{t('orders')}</span>
                   </Link>
 
                   {/* Mobile Auth */}
@@ -420,14 +440,14 @@ export function Navbar() {
                         <User className="w-4 h-4" />
                         <span className="text-sm">{t('profile')}</span>
                       </Link>
-                      <Link
+                      {/* <Link
                         href="/orders"
                         className="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-green-50 hover:text-green-600 transition-colors rounded-lg border border-gray-200"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
-                        <ShoppingBag className="w-4 h-4" />
-                        <span className="text-sm">{t('order.my_orders')}</span>
-                      </Link>
+                        <Package className="w-4 h-4" />
+                        <span className="text-sm">{t('orders')}</span>
+                      </Link> */}
                       <button
                         onClick={() => {
                           logout();

@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { useLanguage, getLocalizedName } from "@/lib/language";
 import { useToast } from "@/context/ToastContext";
+import { useAuth } from "@/lib/authContext";
 import orderService from "@/lib/api/orderService";
 import type { CreateOrderRequest } from "@/types/order";
 
@@ -40,6 +41,7 @@ export default function CheckoutPage() {
   const { cart, summary, loading: cartLoading, clearCart } = useCart();
   const { language, t } = useLanguage();
   const { showSuccess, showError } = useToast();
+  const { user, isAuthenticated } = useAuth();
 
   const [formData, setFormData] = useState<CheckoutFormData>({
     full_name: '',
@@ -51,22 +53,26 @@ export default function CheckoutPage() {
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showGuestWarning, setShowGuestWarning] = useState(false);
 
   // Check if cart is empty and redirect if necessary
   useEffect(() => {
     if (!cartLoading && (!cart || cart.is_empty)) {
-      router.push('/cart');
+      router.push('/orders');
     }
   }, [cart, cartLoading, router]);
 
   // Pre-fill form with user data if authenticated
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      // In a real app, you would fetch user profile data here
-      // For now, we'll just leave it empty for authenticated users to fill
+    if (isAuthenticated && user) {
+      setFormData(prev => ({
+        ...prev,
+        full_name: user.first_name && user.last_name 
+          ? `${user.first_name} ${user.last_name}` 
+          : user.username || ''
+      }));
     }
-  }, []);
+  }, [isAuthenticated, user]);
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -108,6 +114,16 @@ export default function CheckoutPage() {
       return;
     }
 
+    // Show guest warning for non-authenticated users
+    if (!isAuthenticated) {
+      setShowGuestWarning(true);
+      return;
+    }
+
+    await processOrder();
+  };
+
+  const processOrder = async () => {
     setIsSubmitting(true);
 
     try {
@@ -140,8 +156,8 @@ export default function CheckoutPage() {
       // Show success message
       showSuccess(t('order.order_success'));
 
-      // Redirect to order confirmation page
-      router.push(`/checkout/success?order=${response.order.order_number}`);
+      // Redirect to order detail page instead of success page
+      router.push(`/orders/${response.order.id}`);
 
     } catch (error) {
       console.error('Order creation failed:', error);
@@ -477,6 +493,70 @@ export default function CheckoutPage() {
             </motion.div>
           </div>
         </div>
+
+        {/* Guest Warning Modal */}
+        {showGuestWarning && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-white rounded-lg shadow-xl max-w-md w-full p-6"
+            >
+              <div className="text-center">
+                <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <User className="w-6 h-6 text-amber-600" />
+                </div>
+                
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  {t('checkout.guest_warning_title')}
+                </h3>
+                
+                <p className="text-gray-600 mb-6 text-sm leading-relaxed">
+                  {t('checkout.guest_warning_message')}
+                </p>
+                
+                <div className="space-y-3">
+                  <Button
+                    onClick={async () => {
+                      setShowGuestWarning(false);
+                      await processOrder();
+                    }}
+                    className="w-full bg-green-600 hover:bg-green-700"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        {t('checkout.processing_order')}
+                      </>
+                    ) : (
+                      t('checkout.guest_warning_accept')
+                    )}
+                  </Button>
+                  
+                  <Link href={`/login?next=${encodeURIComponent(typeof window !== 'undefined' ? window.location.pathname : '/checkout')}`} className="block">
+                    <Button
+                      variant="outline"
+                      className="w-full border-green-200 text-green-700 hover:bg-green-50"
+                    >
+                      <User className="w-4 h-4 mr-2" />
+                      {t('checkout.guest_warning_login')}
+                    </Button>
+                  </Link>
+                  
+                  <Button
+                    variant="ghost"
+                    onClick={() => setShowGuestWarning(false)}
+                    className="w-full text-gray-500 hover:text-gray-700"
+                    disabled={isSubmitting}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -8,6 +8,7 @@
     "contact": "Contact",
     "education": "Education",
     "franchise": "Franchise",
+    "orders": "Orders",
     "cart": "Cart",
     "search_placeholder": "Search products...",
     "language": "Language",
@@ -35,7 +36,8 @@
     "password_min_length": "Password must be at least 4 characters long",
     "passwords_not_match": "Passwords do not match",
     "required_field": "Required field",
-    "login_required_favorites": "Please login to save favorites ❤️"
+    "login_required_favorites": "Please login to save favorites ❤️",
+    "redirect_message": "Redirecting you back to where you left off..."
   },
   "hero": {
     "title": "For Healthy and Natural Lifestyle",
@@ -372,6 +374,10 @@
     "items": "items",
     "empty_cart_message": "Your cart is empty. Add some products before checkout.",
     "go_shopping": "Go Shopping",
+    "guest_warning_title": "Guest Order Warning",
+    "guest_warning_message": "Warning! You are placing an order without logging in. Such orders are temporary, stored only on this device, and may be deleted at any time.",
+    "guest_warning_accept": "I understand and want to continue",
+    "guest_warning_login": "Login to save my orders",
     "form_validation": {
       "full_name_required": "Full name is required",
       "phone_required": "Contact phone is required",
@@ -414,7 +420,29 @@
     "loading_orders": "Loading orders...",
     "loading_order_details": "Loading order details...",
     "order_not_found": "Order not found",
-    "unauthorized_order": "You do not have permission to view this order"
+    "unauthorized_order": "You do not have permission to view this order",
+    "detail": {
+      "title": "Order Details",
+      "items": "Order Items",
+      "unit_price": "Unit Price",
+      "total_price": "Total Price",
+      "quantity": "Quantity",
+      "empty": "No items found in this order",
+      "product_image": "Product Image",
+      "back_to_orders": "Back to Orders",
+      "order_info": "Order Information",
+      "customer_info": "Customer Information",
+      "payment_info": "Payment Information"
+    },
+    "guest": {
+      "warning": "Guest orders are stored temporarily on this device only",
+      "notice_title": "Guest Orders Notice",
+      "notice_message": "These orders are stored temporarily on your device only. To save your orders permanently and access them from any device, please create an account.",
+      "create_account": "Create Account",
+      "no_orders_guest": "You haven't placed any orders yet as a guest user.",
+      "start_shopping": "Start Shopping",
+      "login_to_view": "Login to View Saved Orders"
+    }
   },
   "loading": {
     "product": "Loading product details...",
