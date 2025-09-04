@@ -23,6 +23,8 @@
   "all_products": "All",
   "currency": "UZS",
   "shoppingCart": "Shopping Cart",
+  "tagline": "Microgreens",
+
   "navigation": {
     "home": "Home",
     "about": "About Us",
@@ -676,6 +678,7 @@
     "empty_description": "Save products you love to see them here"
   },
   "checkout": {
+    "items_count": "items",
     "title": "Checkout",
     "contact_information": "Contact Information",
     "delivery_information": "Delivery Information",
@@ -925,6 +928,83 @@
       "description": "Partner with us in our mission to promote healthy living",
       "contact_button": "Contact Us",
       "partner_button": "Become a Partner"
+    }
+  },
+  "courses": {
+    "hero": {
+      "title": "Professional Courses",
+      "subtitle": "Master microgreens cultivation and organic farming with our comprehensive training programs"
+    },
+    "stats": {
+      "courses": "Courses Available",
+      "students": "Students Trained",
+      "completion": "Completion Rate",
+      "rating": "Average Rating"
+    },
+    "section": {
+      "title": "Available Courses",
+      "subtitle": "Choose from our range of professional training programs designed to help you succeed in organic agriculture"
+    },
+    "levels": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "formats": {
+      "online": "Online",
+      "offline": "In-Person",
+      "hybrid": "Hybrid"
+    },
+    "card": {
+      "applyButton": "Apply Now",
+      "students": "students",
+      "duration": {
+        "default": "4-6 weeks"
+      }
+    },
+    "search": {
+      "placeholder": "Search courses..."
+    },
+    "filters": {
+      "label": "Filter",
+      "clear": "Clear Filters"
+    },
+    "results": {
+      "found": "courses found"
+    },
+    "loading": "Loading courses...",
+    "error": {
+      "title": "Failed to Load Courses",
+      "retry": "Try Again"
+    },
+    "empty": {
+      "title": "No Courses Found",
+      "noCourses": "We're working on adding new courses. Check back soon!",
+      "withFilters": "Try adjusting your search criteria or filters."
+    },
+    "application": {
+      "title": "Apply for Course",
+      "form": {
+        "fullName": "Full Name",
+        "phone": "Phone Number",
+        "email": "Email Address (Optional)",
+        "city": "City",
+        "message": "Additional Message (Optional)",
+        "submit": "Submit Application",
+        "submitting": "Submitting...",
+        "cancel": "Cancel"
+      },
+      "success": {
+        "title": "Application Submitted!",
+        "message": "Thank you for your interest. We'll contact you within 24 hours.",
+        "autoClose": "This window will close automatically in 3 seconds."
+      }
+    },
+    "cta": {
+      "title": "Ready to Start Your Journey?",
+      "subtitle": "Join thousands of successful farmers and entrepreneurs who have transformed their careers with our training",
+      "browse": "Browse Courses",
+      "contact": "Contact Us"
     }
   }
 }

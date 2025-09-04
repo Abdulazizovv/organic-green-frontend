@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { EducationApplicationModal } from "@/components/EducationApplicationModal";
 import { 
   BookOpen, 
   Users, 
@@ -20,6 +22,7 @@ import {
 } from "lucide-react";
 
 export default function EducationPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const stats = [
     {
       icon: Users,
@@ -309,6 +312,7 @@ export default function EducationPage() {
                       </div>
                       <Button 
                         className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl"
+                        onClick={() => setIsModalOpen(true)}
                       >
                         Рўйхатдан ўтиш
                       </Button>
@@ -479,6 +483,7 @@ export default function EducationPage() {
                     
                     <Button 
                       className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-4 text-lg font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                      onClick={() => setIsModalOpen(true)}
                     >
                       Консультация олиш
                     </Button>
@@ -489,6 +494,12 @@ export default function EducationPage() {
           </div>
         </div>
       </section>
+
+      {/* Education Application Modal */}
+      <EducationApplicationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }
