@@ -73,6 +73,9 @@
     "learn_more": "Learn More"
   },
   "products": {
+    "showing": "Showing",
+    "of": "of",
+    "products": "products",
     "subtitle": "The purest and most natural products for a healthy lifestyle",
     "featured_products": "Featured Products",
     "featured_products_title": "Featured Products",
@@ -703,7 +706,8 @@
     "newsletter": {
       "title": "Subscribe to Our Newsletter",
       "description": "Be the first to know about our latest products and special offers",
-      "placeholder": "Enter your email address"
+      "placeholder": "Enter your email address",
+      "subscribe": "Subscribe"
     },
     "company": {
       "description": "Leading microgreen company in Uzbekistan. Developing healthy lifestyle through natural and organic products."
