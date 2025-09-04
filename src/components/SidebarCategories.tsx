@@ -118,8 +118,8 @@ export function SidebarCategories({
               <Leaf className="w-4 h-4 text-green-600" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-900">100% Organic</p>
-              <p className="text-xs text-gray-600">Certified organic produce</p>
+              <p className="text-sm font-medium text-gray-900">{t('features.organic.title')}</p>
+              <p className="text-xs text-gray-600">{t('features.organic.description')}</p>
             </div>
           </motion.div>
 
@@ -133,8 +133,8 @@ export function SidebarCategories({
               <Shield className="w-4 h-4 text-blue-600" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-900">Certified Fresh</p>
-              <p className="text-xs text-gray-600">Daily harvest guarantee</p>
+              <p className="text-sm font-medium text-gray-900">{t('features.fresh.title')}</p>
+              <p className="text-xs text-gray-600">{t('features.fresh.description')}</p>
             </div>
           </motion.div>
 
@@ -148,8 +148,8 @@ export function SidebarCategories({
               <Award className="w-4 h-4 text-amber-600" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-900">Premium Quality</p>
-              <p className="text-xs text-gray-600">Hand-picked selection</p>
+              <p className="text-sm font-medium text-gray-900">{t('features.quality.title')}</p>
+              <p className="text-xs text-gray-600">{t('features.quality.description')}</p>
             </div>
           </motion.div>
         </div>

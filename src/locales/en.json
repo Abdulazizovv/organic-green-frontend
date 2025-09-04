@@ -1,4 +1,26 @@
 {
+  "tagline_fresh_and_healthy": "Uzbekistan's #1 Microgreens Company",
+  "hero_title": "For a natural and healthy lifestyle",
+  "hero_description": "Start a healthy lifestyle with the highest quality microgreens and natural products grown in Uzbekistan",
+  "shop_now": "Shop Now",
+  "learn_more": "Learn More",
+  "happy_customers": "Happy Customers",
+  "product_types": "Product Types",
+  "years_experience": "Years of Experience",
+  "quality_certificates": "Quality Certificates",
+  "featured_products": "Featured Products",
+  "featured_products_title": "Featured Products",
+  "featured_products_description": "Our highest quality and most popular products",
+  "featured_products_subtitle": "Our highest quality and most popular products",
+  "view_all_products": "View All Products",
+  "add_to_cart": "Add to Cart",
+  "set_quantity": "Set Quantity",
+  "in_cart": "in cart",
+  "adding": "Adding...",
+  "no_products": "No products found",
+  "filter_by_category": "Filter by Category",
+  "all_categories": "All Categories",
+  "all_products": "All",
   "navigation": {
     "home": "Home",
     "about": "About Us",
@@ -184,58 +206,63 @@
     "quality_certificates": "Quality Certificates"
   },
   "directions": {
-    "title": "Our Production Directions",
-    "subtitle": "Discover our wide range of healthy and natural products",
-    "microgreens": {
-      "title": "Microgreens",
-      "description": "Young plants packed with nutrients and vitamins"
-    },
-    "herbs": {
-      "title": "Fresh Herbs",
-      "description": "Aromatic herbs for cooking and health"
-    },
-    "vegetables": {
-      "title": "Organic Vegetables",
-      "description": "Fresh vegetables grown with love and care"
-    },
-    "fruits": {
-      "title": "Natural Fruits",
-      "description": "Sweet and healthy fruits from our garden"
-    }
+    "title": "Наши направления",
+    "description": "Познакомьтесь с нашими высококачественными продуктами и услугами в разных сферах",
+    "microgreens_title": "Микрозелень",
+    "microgreens_description": "Выращивание чистой и натуральной микрозелени",
+    "microgreens_benefit1": "100% органик",
+    "microgreens_benefit2": "Высокая питательность",
+    "microgreens_benefit3": "Свежая доставка",
+    "supplements_title": "БАД Добавки",
+    "supplements_description": "Натуральные витамины и пищевые добавки",
+    "supplements_benefit1": "Натуральный состав",
+    "supplements_benefit2": "Сертификат качества",
+    "supplements_benefit3": "Безопасное употребление",
+    "franchise_title": "Франшиза",
+    "franchise_description": "Начните свой бизнес",
+    "franchise_benefit1": "Низкие инвестиции",
+    "franchise_benefit2": "Полная поддержка",
+    "franchise_benefit3": "Высокий доход",
+    "education_title": "Образование",
+    "education_description": "Профессиональные образовательные программы",
+    "education_benefit1": "Онлайн курсы",
+    "education_benefit2": "Сертификат",
+    "education_benefit3": "Практические занятия",
+    "details": "Подробнее"
   },
   "testimonials": {
-    "title": "What Our Customers Say",
-    "subtitle": "Read reviews from our satisfied customers",
-    "customer1": {
-      "name": "Aziza Karimova",
-      "text": "The quality of products is amazing! I've been buying microgreens for 6 months and I'm very satisfied.",
-      "rating": "5"
-    },
-    "customer2": {
-      "name": "Jasur Abdullayev",
-      "text": "Fast delivery and fresh products. I recommend to everyone who cares about their health.",
-      "rating": "5"
-    },
-    "customer3": {
-      "name": "Dilnoza Rahimova",
-      "text": "Great variety of products. Especially love the herbs - always fresh and aromatic.",
-      "rating": "5"
-    }
+    "title": "Customer",
+    "highlight": "Reviews",
+    "description": "What our customers say about us",
+    "items": [
+      {
+        "name": "Aziza Karimova",
+        "role": "Customer",
+        "content": "Organic Green products are truly high quality. The microgreens are very fresh and tasty!"
+      },
+      {
+        "name": "Sherzod Akhmedov",
+        "role": "Franchise Owner",
+        "content": "After buying the franchise, my income tripled. I’m very satisfied!"
+      },
+      {
+        "name": "Malika Rustamova",
+        "role": "Course Graduate",
+        "content": "The training course was very useful. Now I grow microgreens myself!"
+      }
+    ]
   },
   "certificates": {
-    "title": "Quality Certificates",
-    "subtitle": "Our products meet international quality standards",
-    "organic": "Organic Certificate",
-    "haccp": "HACCP Certificate",
-    "iso": "ISO 9001:2015",
-    "halal": "Halal Certificate"
+    "title": "Quality",
+    "highlight": "Guarantee",
+    "description": "Our products are certified according to international standards"
   },
   "cta": {
-    "title": "Start Your Healthy Journey Today",
-    "subtitle": "Join thousands of customers who chose quality and health",
-    "description": "Order fresh and organic products now and feel the difference",
-    "button": "Order Now",
-    "phone": "Call us: +998 90 123 45 67"
+    "title": "Start a healthy lifestyle",
+    "highlight": "today!",
+    "description": "Explore our natural products or get a franchise and start your own business",
+    "products": "Products",
+    "franchise": "Get a Franchise"
   },
   "footer": {
     "newsletter_title": "Subscribe to Newsletter",
@@ -249,7 +276,31 @@
     "description": "Leading microgreen company in Uzbekistan. Developing healthy lifestyle through natural and organic products.",
     "company_links": "Company",
     "products_section": "Products",
-    "support_section": "Support"
+    "support_section": "Support",
+    "newsletter": {
+      "title": "Subscribe to Our Newsletter",
+      "description": "Be the first to know about our latest products and special offers",
+      "placeholder": "Enter your email address"
+    },
+    "company": {
+      "description": "Leading microgreen company in Uzbekistan. Developing healthy lifestyle through natural and organic products."
+    },
+    "sections": {
+      "company": "Company",
+      "products": "Products",
+      "support": "Support"
+    },
+    "contact": {
+      "phone": "Phone",
+      "email": "Email",
+      "address": "Address"
+    },
+    "copyright": "© 2024 Organic Green Uzbekistan. All rights reserved.",
+    "links": {
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "cookies": "Cookie Policy"
+    }
   },
   "company": {
     "about": "About Us",
@@ -308,13 +359,25 @@
     "fast_delivery": "Fast Delivery",
     "delivery_description": "We deliver fresh products to your door within 24 hours",
     "fresh_products": "Always Fresh",
-    "freshness_description": "Our products are harvested daily to ensure maximum freshness"
+    "freshness_description": "Our products are harvested daily to ensure maximum freshness",
+    "organic": {
+      "title": "100% Organic",
+      "description": "Certified organic produce"
+    },
+    "fresh": {
+      "title": "Certified Fresh",
+      "description": "Daily harvest guarantee"
+    },
+    "quality": {
+      "title": "Premium Quality",
+      "description": "Hand-picked selection"
+    }
   },
   "cart": {
     "title": "Cart",
     "loading": "Loading cart...",
     "empty_title": "Your cart is empty",
-    "empty_description": "No items in your cart yet",
+    "empty_description": "There are no items in your cart yet",
     "start_shopping": "Start Shopping",
     "clear_cart": "Clear Cart",
     "items": "Items",
@@ -332,13 +395,27 @@
     "items_count": "items",
     "updating": "Updating...",
     "removing": "Removing...",
-    "added_success": "Added to cart successfully!",
-    "updated_success": "Cart updated successfully!",
-    "removed_success": "Item removed from cart",
-    "add_error": "Failed to add item to cart",
-    "update_error": "Failed to update cart",
-    "remove_error": "Failed to remove item",
-    "remove": "Remove from cart"
+    "removeFromCart": "Remove from cart",
+    "outOfStock": "Out of stock",
+    "updateFailed": "Failed to update quantity",
+    "removeFailed": "Failed to remove item",
+    "decreaseQuantity": "Decrease quantity",
+    "increaseQuantity": "Increase quantity",
+    "maxStockReached": "Maximum quantity reached",
+    "maxStock": "Max",
+    "currency": "UZS",
+    "orderSummary": "Order Details",
+    "delivery": "Delivery",
+    "free": "Free",
+    "freeDeliveryEligible": "Eligible for free delivery",
+    "securePayment": "Secure Payment",
+    "fastDelivery": "Fast Delivery",
+    "cartEmpty": "Your cart is empty",
+    "cartEmptyDescription": "You haven’t added any products yet. Explore our products and fill your cart.",
+    "startShopping": "Start Shopping",
+    "continueShopping": "Continue Shopping",
+    "shoppingCart": "Shopping Cart",
+    "itemsInCart": "items in cart"
   },
   "favorites": {
     "title": "Favorites",
@@ -388,8 +465,12 @@
     "errors": {
       "cart_empty_retry": "Your cart appears to be empty. Please refresh the page and try again."
     },
-    "phone_note": "If you register on our Telegram bot with this phone number, order details and status updates will be sent to you.",
-    "telegram_bot_link": "Go to Telegram Bot"
+    "phone_note": "If you register with this phone number in our Telegram bot, order details and statuses will be sent to you.",
+    "telegram_bot_link": "Go to Telegram Bot",
+    "full_name_placeholder": "Enter your full name",
+    "phone_placeholder": "+998 90 123 45 67",
+    "delivery_address_placeholder": "Enter your full delivery address",
+    "notes_placeholder": "Any special instructions for delivery..."
   },
   "order": {
     "order_success": "Order Placed Successfully!",
@@ -410,6 +491,18 @@
     "cannot_cancel": "This order cannot be canceled",
     "download_receipt": "Download Receipt",
     "downloading_receipt": "Preparing receipt...",
+    "auto_refresh": "Auto-refresh",
+    "refresh": "Refresh",
+    "customer": "Customer",
+    "contact_phone": "Contact Phone",
+    "notes": "Notes",
+    "order_summary": "Order Summary",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "delivery": "Delivery",
+    "delivery_free": "Free",
+    "total": "Total",
+    "contact_delivery_info": "Contact & Delivery Information",
     "receipt": {
       "title": "PAYMENT RECEIPT",
       "order_info": "Order Information",
@@ -429,7 +522,7 @@
     },
     "status": {
       "pending": "Pending",
-      "paid": "Paid", 
+      "paid": "Paid",
       "processing": "Processing",
       "shipped": "Shipped",
       "delivered": "Delivered",
@@ -475,5 +568,113 @@
     "product_not_found_desc": "The product you are looking for does not exist or has been removed.",
     "something_went_wrong": "Something Went Wrong",
     "failed_to_load": "Failed to load product details. Please try again."
+  },
+  "about": {
+    "hero": {
+      "title": "About Us",
+      "description": "Leading company in microgreens and natural products in Uzbekistan since 2021",
+      "stats": {
+        "customers": "Happy Customers",
+        "products": "Product Types",
+        "certificates": "International Certificates"
+      }
+    },
+    "mission": {
+      "title": "Our Mission",
+      "description": "To promote healthy living by providing the people of Uzbekistan with natural and high-quality microgreens and dietary supplements.",
+      "quality_statement": "We produce only high-quality, eco-friendly products that meet international standards.",
+      "goal_title": "Our Goal",
+      "goal_description": "To provide 10,000+ families with healthy products by 2025"
+    },
+    "values": {
+      "section_title": "Our Values",
+      "section_description": "The principles that guide every activity of our company",
+      "healthy_lifestyle": {
+        "title": "Healthy Lifestyle",
+        "description": "Improving people's health and quality of life through natural and organic products"
+      },
+      "nature_protection": {
+        "title": "Environmental Protection",
+        "description": "Commitment to eco-friendly production and environmental conservation"
+      },
+      "reliability": {
+        "title": "Reliability",
+        "description": "Building long-term and mutually beneficial relationships with customers"
+      },
+      "innovation": {
+        "title": "Innovation",
+        "description": "Development based on scientific research and modern technologies"
+      }
+    },
+    "timeline": {
+      "section_title": "Our Journey",
+      "section_description": "Key milestones in our company's development",
+      "2021": {
+        "title": "Company Foundation",
+        "description": "First microgreens laboratory opened in Tashkent"
+      },
+      "2022": {
+        "title": "Production Expansion",
+        "description": "Started production of 50+ microgreens varieties"
+      },
+      "2023": {
+        "title": "International Certifications",
+        "description": "Obtained ISO 9001, HALAL, and ORGANIC certificates"
+      },
+      "2024": {
+        "title": "Franchise Program",
+        "description": "Started partnerships with first franchise partners"
+      }
+    },
+    "team": {
+      "section_title": "Our Team",
+      "section_description": "Experienced professionals and industry experts",
+      "aziz": {
+        "name": "Aziz Karimov",
+        "position": "CEO",
+        "description": "Agribusiness specialist with over 10 years of experience"
+      },
+      "malika": {
+        "name": "Malika Usmanova",
+        "position": "Scientific Director",
+        "description": "PhD holder in biotechnology and microgreens"
+      },
+      "sherzod": {
+        "name": "Sherzod Akhmedov",
+        "position": "Marketing Director",
+        "description": "International marketing and sales specialist"
+      },
+      "nigora": {
+        "name": "Nigora Rustamova",
+        "position": "Production Manager",
+        "description": "Quality control and production process specialist"
+      }
+    },
+    "social_projects": {
+      "section_title": "Our Social Projects",
+      "section_description": "Our contribution to society's wellbeing",
+      "impact_label": "Impact:",
+      "school_nutrition": {
+        "title": "Healthy School Nutrition",
+        "description": "Program providing microgreens and natural products to children in 100+ schools",
+        "impact": "5000+ children"
+      },
+      "farmer_support": {
+        "title": "Farmer Support",
+        "description": "Free training and technical assistance to farmers in rural areas",
+        "impact": "200+ farmers"
+      },
+      "eco_cleanliness": {
+        "title": "Environmental Cleanliness",
+        "description": "Nature conservation and plastic waste recycling projects",
+        "impact": "50 tons of waste"
+      }
+    },
+    "cta": {
+      "title": "Join Us!",
+      "description": "Partner with us in our mission to promote healthy living",
+      "contact_button": "Contact Us",
+      "partner_button": "Become a Partner"
+    }
   }
 }

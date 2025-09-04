@@ -1,0 +1,554 @@
+{
+  "en": {
+    "home": {
+      "hero": {
+        "title": "For a Natural and Healthy Lifestyle",
+        "description": "Start your healthy lifestyle with the highest quality microgreens and natural products grown in Uzbekistan",
+        "shop_now": "Shop Now",
+        "learn_more": "Learn More"
+      },
+      "stats": {
+        "happy_customers": "Happy Customers",
+        "product_types": "Product Types",
+        "years_experience": "Years of Experience",
+        "quality_certificates": "Quality Certificates"
+      },
+      "featured_products": {
+        "title": "Featured Products",
+        "description": "Our highest quality and most popular products",
+        "view_all": "View All Products"
+      },
+      "directions": {
+        "microgreens": {
+          "title": "Microgreens Production",
+          "description": "Growing and selling high-quality microgreens varieties",
+          "benefit1": "100% organic and natural",
+          "benefit2": "Rich in vitamins and minerals",
+          "benefit3": "Fresh and nutritious"
+        },
+        "supplements": {
+          "title": "Supplements",
+          "description": "Natural dietary supplements and health products",
+          "benefit1": "Certified quality",
+          "benefit2": "Scientifically proven formulas",
+          "benefit3": "International standards"
+        },
+        "franchise": {
+          "title": "Franchise Program",
+          "description": "Partner with us and start your own business",
+          "benefit1": "Established brand",
+          "benefit2": "Complete support",
+          "benefit3": "High profitability"
+        }
+      }
+    },
+    "about": {
+      "hero": {
+        "title": "About Us",
+        "description": "Leading company in microgreens and natural products in Uzbekistan since 2021",
+        "stats": {
+          "customers": "Happy Customers",
+          "products": "Product Types",
+          "certificates": "International Certificates"
+        }
+      },
+      "mission": {
+        "title": "Our Mission",
+        "description": "To promote healthy living by providing the people of Uzbekistan with natural and high-quality microgreens and dietary supplements.",
+        "quality_statement": "We produce only high-quality, eco-friendly products that meet international standards.",
+        "goal_title": "Our Goal",
+        "goal_description": "To provide 10,000+ families with healthy products by 2025"
+      },
+      "values": {
+        "section_title": "Our Values",
+        "section_description": "The principles that guide every activity of our company",
+        "healthy_lifestyle": {
+          "title": "Healthy Lifestyle",
+          "description": "Improving people's health and quality of life through natural and organic products"
+        },
+        "nature_protection": {
+          "title": "Environmental Protection",
+          "description": "Commitment to eco-friendly production and environmental conservation"
+        },
+        "reliability": {
+          "title": "Reliability",
+          "description": "Building long-term and mutually beneficial relationships with customers"
+        },
+        "innovation": {
+          "title": "Innovation",
+          "description": "Development based on scientific research and modern technologies"
+        }
+      },
+      "timeline": {
+        "section_title": "Our Journey",
+        "section_description": "Key milestones in our company's development",
+        "2021": {
+          "title": "Company Foundation",
+          "description": "First microgreens laboratory opened in Tashkent"
+        },
+        "2022": {
+          "title": "Production Expansion",
+          "description": "Started production of 50+ microgreens varieties"
+        },
+        "2023": {
+          "title": "International Certifications",
+          "description": "Obtained ISO 9001, HALAL, and ORGANIC certificates"
+        },
+        "2024": {
+          "title": "Franchise Program",
+          "description": "Started partnerships with first franchise partners"
+        }
+      },
+      "team": {
+        "section_title": "Our Team",
+        "section_description": "Experienced professionals and industry experts",
+        "aziz": {
+          "name": "Aziz Karimov",
+          "position": "CEO",
+          "description": "Agribusiness specialist with over 10 years of experience"
+        },
+        "malika": {
+          "name": "Malika Usmanova",
+          "position": "Scientific Director",
+          "description": "PhD holder in biotechnology and microgreens"
+        },
+        "sherzod": {
+          "name": "Sherzod Akhmedov",
+          "position": "Marketing Director",
+          "description": "International marketing and sales specialist"
+        },
+        "nigora": {
+          "name": "Nigora Rustamova",
+          "position": "Production Manager",
+          "description": "Quality control and production process specialist"
+        }
+      },
+      "social_projects": {
+        "section_title": "Our Social Projects",
+        "section_description": "Our contribution to society's wellbeing",
+        "impact_label": "Impact:",
+        "school_nutrition": {
+          "title": "Healthy School Nutrition",
+          "description": "Program providing microgreens and natural products to children in 100+ schools",
+          "impact": "5000+ children"
+        },
+        "farmer_support": {
+          "title": "Farmer Support",
+          "description": "Free training and technical assistance to farmers in rural areas",
+          "impact": "200+ farmers"
+        },
+        "eco_cleanliness": {
+          "title": "Environmental Cleanliness",
+          "description": "Nature conservation and plastic waste recycling projects",
+          "impact": "50 tons of waste"
+        }
+      },
+      "cta": {
+        "title": "Join Us!",
+        "description": "Partner with us in our mission to promote healthy living",
+        "contact_button": "Contact Us",
+        "partner_button": "Become a Partner"
+      }
+    },
+    "products": {
+      "hero": {
+        "title": "We Provide the Highest Quality Products",
+        "description": "Natural and organic products, microgreens, and dietary supplements",
+        "browse_categories": "Browse Categories"
+      },
+      "categories": {
+        "all": "All Categories",
+        "microgreens": "Microgreens",
+        "supplements": "Supplements",
+        "powders": "Powders",
+        "kits": "Kits"
+      },
+      "filters": {
+        "filter_by": "Filter by:",
+        "price_range": "Price Range",
+        "availability": "Availability",
+        "sort_by": "Sort by:",
+        "newest": "Newest",
+        "price_low_high": "Price: Low to High",
+        "price_high_low": "Price: High to Low",
+        "popular": "Popular"
+      },
+      "product_card": {
+        "add_to_cart": "Add to Cart",
+        "in_stock": "In Stock",
+        "out_of_stock": "Out of Stock",
+        "sale": "Sale",
+        "new": "New",
+        "view_details": "View Details"
+      },
+      "no_products": "No products found",
+      "loading": "Loading products..."
+    },
+    "franchise": {
+      "hero": {
+        "title": "Partner with Us and Build a Successful Business",
+        "description": "Start selling healthy products in your region through Organic Green franchise",
+        "cta_button": "Get Franchise",
+        "learn_more": "Learn More"
+      },
+      "stats": {
+        "franchises": {
+          "title": "Franchise Locations",
+          "value": "50+",
+          "description": "Across Uzbekistan"
+        },
+        "revenue": {
+          "title": "Annual Revenue",
+          "value": "$100K+",
+          "description": "Average franchise income"
+        },
+        "partners": {
+          "title": "Partners",
+          "value": "200+",
+          "description": "Successful partners"
+        },
+        "roi": {
+          "title": "ROI",
+          "value": "35%",
+          "description": "Return on investment"
+        }
+      },
+      "benefits": {
+        "section_title": "Franchise Benefits",
+        "recognized_brand": {
+          "title": "Recognized Brand",
+          "description": "Well-known and trusted organic brand in Uzbekistan"
+        },
+        "stable_income": {
+          "title": "Stable Income",
+          "description": "Sustainable and growing business model"
+        },
+        "full_support": {
+          "title": "Complete Support",
+          "description": "Marketing, training, and operational support"
+        },
+        "location_help": {
+          "title": "Location Assistance",
+          "description": "Help with selecting the most suitable locations"
+        },
+        "quick_start": {
+          "title": "Quick Start",
+          "description": "Launch your business within 30 days"
+        },
+        "guaranteed_result": {
+          "title": "Guaranteed Results",
+          "description": "Profit guarantee in the first year"
+        }
+      },
+      "requirements": {
+        "section_title": "Franchise Requirements",
+        "capital": "Minimum startup capital $25,000",
+        "experience": "Business experience (recommended)",
+        "interest": "Interest in organic products",
+        "teamwork": "Ability to work in a team",
+        "location": "Prime city location",
+        "licenses": "Local permits and licenses"
+      },
+      "process": {
+        "section_title": "Franchise Process",
+        "step1": {
+          "title": "Application",
+          "description": "Fill out online application and choose franchise package"
+        },
+        "step2": {
+          "title": "Meeting",
+          "description": "Discuss business plan and terms"
+        },
+        "step3": {
+          "title": "Contract Signing",
+          "description": "Complete franchise agreement paperwork"
+        },
+        "step4": {
+          "title": "Training",
+          "description": "Comprehensive training program for staff"
+        },
+        "step5": {
+          "title": "Launch",
+          "description": "Official opening of franchise location"
+        }
+      },
+      "packages": {
+        "section_title": "Franchise Packages",
+        "starter": {
+          "title": "Starter",
+          "price": "$25,000",
+          "description": "Perfect for small cities",
+          "features": [
+            "Brand license",
+            "Starter product inventory",
+            "Marketing materials",
+            "30-day training"
+          ]
+        },
+        "premium": {
+          "title": "Premium",
+          "price": "$50,000",
+          "description": "Designed for major cities",
+          "features": [
+            "Extended brand rights",
+            "Full product range",
+            "Professional marketing",
+            "60-day training",
+            "Technical support"
+          ]
+        },
+        "enterprise": {
+          "title": "Enterprise",
+          "price": "$100,000",
+          "description": "For regional hubs",
+          "features": [
+            "Exclusive territorial rights",
+            "Complete product line",
+            "Dedicated marketing manager",
+            "90-day training",
+            "24/7 support",
+            "Production assistance"
+          ]
+        }
+      },
+      "testimonials": {
+        "section_title": "Franchisee Testimonials",
+        "testimonial1": {
+          "text": "Organic Green franchise changed my life. I recovered my investment in the first year and now have a stable income.",
+          "author": "Akmal Karimov",
+          "location": "Tashkent"
+        },
+        "testimonial2": {
+          "text": "The company's support is excellent. They're always ready to help and provide new products.",
+          "author": "Nilufar Usmanova",
+          "location": "Samarkand"
+        }
+      },
+      "contact_form": {
+        "title": "Apply for Franchise",
+        "name": "Full Name",
+        "phone": "Phone Number",
+        "email": "Email Address",
+        "city": "City",
+        "experience": "Business Experience",
+        "investment": "Investment Amount",
+        "message": "Additional Information",
+        "submit": "Submit Application",
+        "success": "Application submitted successfully! We will contact you soon."
+      }
+    },
+    "education": {
+      "hero": {
+        "title": "Learn About Healthy Living and Microgreens",
+        "description": "Free lessons from expert specialists and comprehensive courses",
+        "browse_courses": "Browse Courses",
+        "free_resources": "Free Resources"
+      },
+      "courses": {
+        "section_title": "Available Courses",
+        "microgreens_basics": {
+          "title": "Microgreens Basics",
+          "description": "Fundamental principles of growing and caring for microgreens",
+          "duration": "4 weeks",
+          "price": "Free",
+          "level": "Beginner"
+        },
+        "business_setup": {
+          "title": "Microgreens Business",
+          "description": "How to start a microgreens production business",
+          "duration": "6 weeks",
+          "price": "500,000 UZS",
+          "level": "Intermediate"
+        },
+        "advanced_growing": {
+          "title": "Professional Growing",
+          "description": "Advanced techniques for high-quality microgreens production",
+          "duration": "8 weeks",
+          "price": "800,000 UZS",
+          "level": "Advanced"
+        }
+      },
+      "resources": {
+        "section_title": "Free Resources",
+        "guides": {
+          "title": "Guides",
+          "description": "Detailed guides on microgreens and healthy living"
+        },
+        "videos": {
+          "title": "Video Tutorials",
+          "description": "Practical video lessons and masterclasses"
+        },
+        "articles": {
+          "title": "Articles",
+          "description": "Scientific articles about health and natural products"
+        },
+        "recipes": {
+          "title": "Recipes",
+          "description": "Recipes using microgreens and natural products"
+        }
+      },
+      "instructors": {
+        "section_title": "Expert Instructors",
+        "dr_malika": {
+          "name": "Dr. Malika Usmanova",
+          "title": "Biotechnology Specialist",
+          "description": "Microgreens expert with 10 years of experience"
+        },
+        "aziz_karimov": {
+          "name": "Aziz Karimov",
+          "title": "Business Consultant",
+          "description": "Extensive experience in agribusiness and franchising"
+        }
+      }
+    },
+    "blog": {
+      "hero": {
+        "title": "Health and Natural Living Blog",
+        "description": "Helpful articles about microgreens, healthy nutrition, and natural products",
+        "latest_posts": "Latest Posts"
+      },
+      "categories": {
+        "all": "All Posts",
+        "health": "Health",
+        "nutrition": "Nutrition",
+        "growing": "Growing",
+        "recipes": "Recipes",
+        "business": "Business"
+      },
+      "featured_post": {
+        "title": "10 Amazing Benefits of Microgreens",
+        "excerpt": "Discover why microgreens are so beneficial and how to consume them properly...",
+        "read_more": "Read More",
+        "author": "Dr. Malika Usmanova",
+        "date": "December 15, 2024",
+        "read_time": "5 min read"
+      },
+      "recent_posts": {
+        "section_title": "Recent Posts",
+        "post1": {
+          "title": "Growing Microgreens at Home: Step-by-Step Guide",
+          "excerpt": "Simple and effective ways to grow microgreens at home",
+          "category": "Growing",
+          "date": "December 12, 2024"
+        },
+        "post2": {
+          "title": "Microgreens Recipes for Healthy Breakfast",
+          "excerpt": "Nutritious and delicious recipes for an energetic start to your day",
+          "category": "Recipes",
+          "date": "December 10, 2024"
+        },
+        "post3": {
+          "title": "Microgreens Business: Where to Start?",
+          "excerpt": "Essential information for starting a microgreens production business",
+          "category": "Business",
+          "date": "December 8, 2024"
+        }
+      },
+      "newsletter": {
+        "title": "Newsletter Subscription",
+        "description": "Be the first to know about new articles and helpful tips",
+        "placeholder": "Your email address",
+        "subscribe": "Subscribe"
+      }
+    },
+    "contact": {
+      "hero": {
+        "title": "Contact Us",
+        "description": "You can contact us about any matter. We're always ready to help!",
+        "quick_response": "Quick Response",
+        "professional_team": "Professional Team"
+      },
+      "contact_info": {
+        "address": {
+          "title": "Address",
+          "value": "Tashkent city, Yunusabad district, Abdulla Qadiri street 12",
+          "description": "Main office and production facility"
+        },
+        "phone": {
+          "title": "Phone",
+          "value": "+998 90 123 45 67",
+          "description": "24/7 customer support"
+        },
+        "email": {
+          "title": "Email",
+          "value": "info@organicgreen.uz",
+          "description": "For all inquiries"
+        },
+        "hours": {
+          "title": "Working Hours",
+          "value": "Monday - Friday: 9:00 AM - 6:00 PM",
+          "description": "Saturday: 9:00 AM - 2:00 PM"
+        }
+      },
+      "departments": {
+        "section_title": "Departments",
+        "sales": {
+          "title": "Sales Department",
+          "phone": "+998 90 123 45 67",
+          "email": "sales@organicgreen.uz",
+          "description": "Product purchases and pricing"
+        },
+        "franchise": {
+          "title": "Franchise Department",
+          "phone": "+998 90 123 45 68",
+          "email": "franchise@organicgreen.uz",
+          "description": "Franchise opportunities and partnerships"
+        },
+        "education": {
+          "title": "Education Center",
+          "phone": "+998 90 123 45 69",
+          "email": "education@organicgreen.uz",
+          "description": "Courses and training programs"
+        },
+        "support": {
+          "title": "Technical Support",
+          "phone": "+998 90 123 45 70",
+          "email": "support@organicgreen.uz",
+          "description": "Technical issues and assistance"
+        }
+      },
+      "contact_form": {
+        "title": "Send Message",
+        "name": "Full Name",
+        "email": "Email Address",
+        "phone": "Phone Number",
+        "subject": "Subject",
+        "message": "Message",
+        "send": "Send Message",
+        "sending": "Sending...",
+        "success": "Your message has been sent successfully! We'll respond soon.",
+        "error": "An error occurred while sending the message. Please try again."
+      },
+      "stats": {
+        "inquiries": {
+          "title": "Inquiries",
+          "value": "500+",
+          "description": "Monthly inquiries handled"
+        },
+        "response_time": {
+          "title": "Response Time",
+          "value": "< 2 hours",
+          "description": "Average response time"
+        },
+        "resolved": {
+          "title": "Resolved",
+          "value": "98%",
+          "description": "Successfully resolved issues"
+        },
+        "satisfaction": {
+          "title": "Satisfaction",
+          "value": "4.9/5",
+          "description": "Customer rating"
+        }
+      },
+      "map": {
+        "title": "Find Us on Map",
+        "directions": "Get Directions"
+      },
+      "social": {
+        "title": "Social Media",
+        "follow_us": "Follow Us"
+      }
+    }
+  }
+}

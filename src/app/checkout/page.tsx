@@ -273,7 +273,7 @@ export default function CheckoutPage() {
                       className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors ${
                         errors.full_name ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="Enter your full name"
+                      placeholder={t('checkout.full_name_placeholder')}
                     />
                     {errors.full_name && (
                       <p className="text-sm text-red-600 mt-1">{errors.full_name}</p>
@@ -291,7 +291,7 @@ export default function CheckoutPage() {
                       className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors ${
                         errors.contact_phone ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="+998 90 123 45 67"
+                      placeholder={t('checkout.phone_placeholder')}
                     />
                     {errors.contact_phone && (
                       <p className="text-sm text-red-600 mt-1">{errors.contact_phone}</p>
@@ -334,7 +334,7 @@ export default function CheckoutPage() {
                       className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors resize-none ${
                         errors.delivery_address ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="Enter your full delivery address"
+                      placeholder={t('checkout.delivery_address_placeholder')}
                     />
                     {errors.delivery_address && (
                       <p className="text-sm text-red-600 mt-1">{errors.delivery_address}</p>
@@ -350,7 +350,7 @@ export default function CheckoutPage() {
                       onChange={(e) => handleInputChange('notes', e.target.value)}
                       rows={2}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors resize-none"
-                      placeholder="Any special instructions for delivery..."
+                      placeholder={t('checkout.notes_placeholder')}
                     />
                   </div>
                 </div>

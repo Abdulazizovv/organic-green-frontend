@@ -227,7 +227,7 @@ export default function OrderDetailPage() {
             </p>
             <Link href="/orders">
               <Button>
-                Back to Orders
+                {t('order.detail.back_to_orders')}
               </Button>
             </Link>
           </div>
@@ -269,7 +269,7 @@ export default function OrderDetailPage() {
               {autoRefreshEnabled && (
                 <div className="flex items-center space-x-2 text-sm text-gray-500">
                   <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-                  <span>Auto-refresh</span>
+                  <span>{t('order.auto_refresh')}</span>
                 </div>
               )}
               
@@ -281,7 +281,7 @@ export default function OrderDetailPage() {
                 disabled={loading}
               >
                 <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                Refresh
+                {t('order.refresh')}
               </Button>
               
               <span className={`px-4 py-2 rounded-full text-sm font-medium border ${getStatusColor(order.status)}`}>
@@ -417,7 +417,7 @@ export default function OrderDetailPage() {
               className="bg-white rounded-2xl p-6 shadow-sm border border-green-100"
             >
               <h2 className="text-xl font-semibold text-gray-900 mb-6">
-                Contact & Delivery Information
+                {t('order.contact_delivery_info')}
               </h2>
 
               <div className="grid md:grid-cols-2 gap-6">
@@ -425,7 +425,7 @@ export default function OrderDetailPage() {
                   <div className="flex items-start space-x-3">
                     <User className="w-5 h-5 text-green-600 mt-0.5" />
                     <div>
-                      <p className="text-sm text-gray-500">Customer</p>
+                      <p className="text-sm text-gray-500">{t('order.customer')}</p>
                       <p className="font-medium text-gray-900">{order.full_name}</p>
                     </div>
                   </div>
@@ -433,7 +433,7 @@ export default function OrderDetailPage() {
                   <div className="flex items-start space-x-3">
                     <Phone className="w-5 h-5 text-green-600 mt-0.5" />
                     <div>
-                      <p className="text-sm text-gray-500">Contact Phone</p>
+                      <p className="text-sm text-gray-500">{t('order.contact_phone')}</p>
                       <p className="font-medium text-gray-900">{order.contact_phone}</p>
                     </div>
                   </div>
@@ -462,7 +462,7 @@ export default function OrderDetailPage() {
 
               {order.notes && (
                 <div className="mt-6 pt-6 border-t border-gray-200">
-                  <p className="text-sm text-gray-500 mb-2">Notes</p>
+                  <p className="text-sm text-gray-500 mb-2">{t('order.notes')}</p>
                   <p className="text-gray-900">{order.notes}</p>
                 </div>
               )}
@@ -478,7 +478,7 @@ export default function OrderDetailPage() {
               className="bg-white rounded-2xl p-6 shadow-lg border border-green-100 sticky top-24"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-6">
-                Order Summary
+                {t('order.order_summary')}
               </h3>
 
               <div className="space-y-4 mb-6">
@@ -507,13 +507,13 @@ export default function OrderDetailPage() {
 
               <div className="space-y-3 border-t border-gray-200 pt-4">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Subtotal</span>
+                  <span className="text-gray-600">{t('order.subtotal')}</span>
                   <span className="font-medium">{Number(order.subtotal).toLocaleString()} UZS</span>
                 </div>
                 
                 {Number(order.discount_total) > 0 && (
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Discount</span>
+                    <span className="text-gray-600">{t('order.discount')}</span>
                     <span className="font-medium text-green-600">
                       -{Number(order.discount_total).toLocaleString()} UZS
                     </span>
@@ -521,12 +521,12 @@ export default function OrderDetailPage() {
                 )}
                 
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Delivery</span>
-                  <span className="font-medium text-green-600">Free</span>
+                  <span className="text-gray-600">{t('order.delivery')}</span>
+                  <span className="font-medium text-green-600">{t('order.delivery_free')}</span>
                 </div>
                 
                 <div className="flex justify-between text-lg font-bold border-t border-gray-200 pt-3">
-                  <span>Total</span>
+                  <span>{t('order.total')}</span>
                   <span className="text-green-600">{Number(order.total_price).toLocaleString()} UZS</span>
                 </div>
               </div>

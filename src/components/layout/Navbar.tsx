@@ -13,13 +13,13 @@ import { useCart } from "@/context/CartContext";
 // import { useFavorites } from "@/hooks/useFavorites";
 
 const navigationItems = [
-  { href: "/", key: "home" },
-  { href: "/about", key: "about" },
-  { href: "/products", key: "products" },
-  { href: "/franchise", key: "franchise" },
-  { href: "/education", key: "education" },
-  { href: "/blog", key: "blog" },
-  { href: "/contact", key: "contact" },
+  { href: "/", key: "navigation.home" },
+  { href: "/about", key: "navigation.about" },
+  { href: "/products", key: "navigation.products" },
+  { href: "/franchise", key: "navigation.franchise" },
+  { href: "/education", key: "navigation.education" },
+  { href: "/blog", key: "navigation.blog" },
+  { href: "/contact", key: "navigation.contact" },
 ];
 
 const languages = [

@@ -39,17 +39,17 @@ const socialLinks = [
 const contactInfo = [
   {
     icon: Phone,
-    title: "Телефон",
+    titleKey: "footer.contact.phone",
     details: ["+998 90 123 45 67", "+998 91 234 56 78"],
   },
   {
     icon: Mail,
-    title: "Email",
+    titleKey: "footer.contact.email",
     details: ["info@organicgreen.uz", "sales@organicgreen.uz"],
   },
   {
     icon: MapPin,
-    title: "Манзил",
+    titleKey: "footer.contact.address",
     details: ["Тошкент, Чилонзор тумани", "Фарғона, Қўқон шаҳри"],
   },
 ];
@@ -64,19 +64,19 @@ export function Footer() {
         <div className="container py-12">
           <div className="max-w-2xl mx-auto text-center">
             <h3 className="text-2xl font-bold mb-4 font-heading">
-              Янгиликларимизга обуна бўлинг
+              {t('footer.newsletter.title')}
             </h3>
             <p className="text-gray-300 mb-6">
-              Энг сўнгги маҳсулотлар ва махсус таклифлардан биринчи бўлиб хабардор бўлинг
+              {t('footer.newsletter.description')}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
               <Input
                 type="email"
-                placeholder="Email манзилингизни киритинг"
+                placeholder={t('footer.newsletter.placeholder')}
                 className="flex-1 bg-gray-800 border-gray-700 text-white placeholder:text-gray-400"
               />
               <Button variant="default" className="whitespace-nowrap">
-                Обуна бўлиш
+                {t('footer.newsletter.subscribe')}
               </Button>
             </div>
           </div>
@@ -103,8 +103,7 @@ export function Footer() {
             </Link>
             
             <p className="text-gray-300 mb-6 max-w-md">
-              Ўзбекистонда микрозелень бўйича етакчи компания. Табиий ва органик 
-              маҳсулотлар орқали соғлом турмуш тарзини ривожлантирамиз.
+              {t('footer.company.description')}
             </p>
 
             {/* Social Links */}
@@ -125,7 +124,7 @@ export function Footer() {
 
           {/* Company Links */}
           <div>
-            <h4 className="text-lg font-semibold mb-4 font-heading">Компания</h4>
+            <h4 className="text-lg font-semibold mb-4 font-heading">{t('footer.sections.company')}</h4>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.href}>
@@ -142,7 +141,7 @@ export function Footer() {
 
           {/* Products */}
           <div>
-            <h4 className="text-lg font-semibold mb-4 font-heading">Маҳсулотлар</h4>
+            <h4 className="text-lg font-semibold mb-4 font-heading">{t('footer.sections.products')}</h4>
             <ul className="space-y-3">
               {footerLinks.products.map((link) => (
                 <li key={link.href}>
@@ -159,7 +158,7 @@ export function Footer() {
 
           {/* Support */}
           <div>
-            <h4 className="text-lg font-semibold mb-4 font-heading">Ёрдам</h4>
+            <h4 className="text-lg font-semibold mb-4 font-heading">{t('footer.sections.support')}</h4>
             <ul className="space-y-3">
               {footerLinks.support.map((link) => (
                 <li key={link.href}>
@@ -179,10 +178,10 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t border-gray-800">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {contactInfo.map((contact) => (
-              <div key={contact.title} className="flex items-start space-x-3">
+              <div key={contact.titleKey} className="flex items-start space-x-3">
                 <contact.icon className="w-5 h-5 text-organic-green-400 mt-1 flex-shrink-0" />
                 <div>
-                  <h5 className="font-semibold mb-1">{contact.title}</h5>
+                  <h5 className="font-semibold mb-1">{t(contact.titleKey)}</h5>
                   {contact.details.map((detail, index) => (
                     <p key={index} className="text-gray-300 text-sm">
                       {detail}
@@ -200,17 +199,17 @@ export function Footer() {
         <div className="container py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-gray-400 text-sm">
-              © 2024 Organic Green Uzbekistan. Барча ҳуқуқлар ҳимояланган.
+              {t('footer.copyright')}
             </p>
             <div className="flex space-x-6 text-sm">
               <Link href="/privacy" className="text-gray-400 hover:text-organic-green-400 transition-colors">
-                Махфийлик сиёсати
+                {t('footer.links.privacy')}
               </Link>
               <Link href="/terms" className="text-gray-400 hover:text-organic-green-400 transition-colors">
-                Фойдаланиш шартлари
+                {t('footer.links.terms')}
               </Link>
               <Link href="/cookies" className="text-gray-400 hover:text-organic-green-400 transition-colors">
-                Cookie файллар
+                {t('footer.links.cookies')}
               </Link>
             </div>
           </div>

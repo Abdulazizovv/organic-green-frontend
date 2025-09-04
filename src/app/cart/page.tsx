@@ -117,7 +117,7 @@ const CartItemCard = ({
     
     // Check stock limit
     if (newQuantity > item.product.stock) {
-      showError(t('outOfStock'));
+      showError(t('cart.outOfStock'));
       return;
     }
 
@@ -127,7 +127,7 @@ const CartItemCard = ({
       await onQuantityChange({ item_id: item.id, quantity: newQuantity });
     } catch (error) {
       console.error('Failed to update quantity:', error);
-      showError(t('updateFailed'));
+      showError(t('cart.updateFailed'));
     } finally {
       setQuantityLoading(null);
     }
@@ -139,7 +139,7 @@ const CartItemCard = ({
       await onRemove(item.id);
     } catch (error) {
       console.error('Failed to remove item:', error);
-      showError(t('removeFailed'));
+      showError(t('cart.removeFailed'));
       setIsRemoving(false);
     }
   };
@@ -197,7 +197,7 @@ const CartItemCard = ({
               onClick={handleRemove}
               disabled={isRemoving}
               className="self-start p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
-              aria-label={t('removeFromCart')}
+              aria-label={t('cart.removeFromCart')}
             >
               {isRemoving ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -258,7 +258,7 @@ const CartItemCard = ({
               {/* Stock Warning */}
               {isAtMaxStock && (
                 <span className="text-xs text-orange-600 font-medium">
-                  {t('maxStock')}: {item.product.stock}
+                  {t('cart.maxStock')}: {item.product.stock}
                 </span>
               )}
             </div>
@@ -266,7 +266,7 @@ const CartItemCard = ({
             {/* Item Total Price */}
             <div className="text-right">
               <p className="text-lg font-bold text-gray-900">
-                {formattedPrice} {t('currency')}
+                {formattedPrice} {t('cart.currency')}
               </p>
             </div>
           </div>
@@ -305,34 +305,34 @@ const CartSummary = ({
       }}
       className={`bg-white rounded-2xl p-6 shadow-lg border border-green-100 ${isSticky ? 'sticky top-24' : ''} ${className}`}
     >
-      <h3 className="text-xl font-bold text-gray-900 mb-6">{t('orderSummary')}</h3>
+      <h3 className="text-xl font-bold text-gray-900 mb-6">{t('cart.orderSummary')}</h3>
       
       <div className="space-y-4 mb-6">
         <div className="flex justify-between items-center">
-          <span className="text-gray-600">{t('subtotal')} ({totalItems} {t('items')})</span>
-          <span className="font-medium">{subtotal.toLocaleString()} {t('currency')}</span>
+          <span className="text-gray-600">{t('cart.subtotal')} ({totalItems} {t('cart.items')})</span>
+          <span className="font-medium">{subtotal.toLocaleString()} {t('cart.currency')}</span>
         </div>
         
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <Truck className="w-4 h-4 text-green-600" />
-            <span className="text-gray-600">{t('delivery')}</span>
+            <span className="text-gray-600">{t('cart.delivery')}</span>
           </div>
           <span className="font-medium text-green-600">
-            {t('free')}
+            {t('cart.free')}
           </span>
         </div>
         
         <div className="flex items-center space-x-2 text-green-600 text-sm">
           <ShieldCheck className="w-4 h-4" />
-          <span>{t('freeDeliveryEligible')}</span>
+          <span>{t('cart.freeDeliveryEligible')}</span>
         </div>
         
         <hr className="border-gray-200" />
         
         <div className="flex justify-between items-center text-lg font-bold">
-          <span>{t('total')}</span>
-          <span className="text-green-600">{total.toLocaleString()} {t('currency')}</span>
+          <span>{t('cart.total')}</span>
+          <span className="text-green-600">{total.toLocaleString()} {t('cart.currency')}</span>
         </div>
       </div>
       
@@ -354,11 +354,11 @@ const CartSummary = ({
       <div className="mt-4 flex items-center justify-center space-x-4 text-xs text-gray-500">
         <div className="flex items-center space-x-1">
           <ShieldCheck className="w-3 h-3" />
-          <span>{t('securePayment')}</span>
+          <span>{t('cart.securePayment')}</span>
         </div>
         <div className="flex items-center space-x-1">
           <Truck className="w-3 h-3" />
-          <span>{t('fastDelivery')}</span>
+          <span>{t('cart.fastDelivery')}</span>
         </div>
       </div>
     </motion.div>
@@ -383,9 +383,9 @@ const EmptyCart = () => {
         >
           <ShoppingBag className="w-12 h-12 text-green-600" />
         </motion.div>
-        
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('cartEmpty')}</h2>
-        <p className="text-gray-600 mb-8">{t('cartEmptyDescription')}</p>
+
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('cart.cartEmpty')}</h2>
+        <p className="text-gray-600 mb-8">{t('cart.cartEmptyDescription')}</p>
         
         <Link href="/products">
           <Button 
@@ -393,7 +393,7 @@ const EmptyCart = () => {
             className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95"
           >
             <Leaf className="w-5 h-5 mr-2" />
-            {t('startShopping')}
+            {t('cart.startShopping')}
           </Button>
         </Link>
       </div>
@@ -475,7 +475,7 @@ export default function CartPage() {
             <Link href="/products">
               <Button variant="outline" size="sm" className="hover:bg-green-50">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                {t('continueShopping')}
+                {t('cart.continueShopping')}
               </Button>
             </Link>
           </div>
@@ -484,7 +484,7 @@ export default function CartPage() {
             {t('shoppingCart')}
           </h1>
           <p className="text-gray-600">
-            {cart.total_items} {t('itemsInCart')}
+            {cart.total_items} {t('cart.itemsInCart')}
           </p>
         </motion.div>
 
@@ -524,7 +524,7 @@ export default function CartPage() {
               onClick={() => setIsCollapsed(!isCollapsed)}
               className="w-full flex items-center justify-between mb-4"
             >
-              <span className="font-semibold text-gray-900">{t('orderSummary')}</span>
+              <span className="font-semibold text-gray-900">{t('cart.orderSummary')}</span>
               <motion.div
                 animate={{ rotate: isCollapsed ? 180 : 0 }}
                 transition={{ duration: 0.2 }}
@@ -549,7 +549,7 @@ export default function CartPage() {
             
             {isCollapsed && (
               <div className="flex justify-between items-center mb-4">
-                <span className="font-medium">{t('total')}</span>
+                <span className="font-medium">{t('cart.total')}</span>
                 <span className="font-bold text-green-600">
                   {(summary ? Number(summary.total_price) : Number(cart.total_price || 0)).toLocaleString()} {t('currency')}
                 </span>
