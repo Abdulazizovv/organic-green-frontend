@@ -16,101 +16,105 @@ import {
   CheckCircle 
 } from "lucide-react";
 
+import { useLanguage } from "@/lib/language";
+
+
 export default function FranchisePage() {
+  const { t } = useLanguage();
   const stats = [
     {
       icon: Building,
-      title: "Франшиза филиаллари",
+      title: t("franchise.stats.branches.title"),
       value: "50+",
-      description: "Бутун Ўзбекистон бўйлаб"
+      description: t("franchise.stats.branches.description")
     },
     {
       icon: TrendingUp,
-      title: "Йиллик даромад",
+      title: t("franchise.stats.revenue.title"),
       value: "$100K+",
-      description: "Ўртача франшиза даромади"
+      description: t("franchise.stats.revenue.description")
     },
     {
       icon: Users,
-      title: "Ҳамкорлар",
+      title: t("franchise.stats.partners.title"),
       value: "200+",
-      description: "Муваффақиятли ҳамкорлар"
+      description: t("franchise.stats.partners.description")
     },
     {
       icon: DollarSign,
-      title: "ROI",
+      title: t("franchise.stats.roi.title"),
       value: "35%",
-      description: "Қайтариш кўрсаткичи"
+      description: t("franchise.stats.roi.description")
     }
   ];
 
   const benefits = [
     {
       icon: Star,
-      title: "Тан олинган бренд",
-      description: "Ўзбекистонда танилган ва ишонилган organic бренд"
+      title: t("franchise.benefits.brand.title"),
+      description: t("franchise.benefits.brand.description")
     },
     {
       icon: TrendingUp,
-      title: "Мунтазам даромад",
-      description: "Барқарор ва ривожланувчи бизнес модели"
+      title: t("franchise.benefits.income.title"),
+      description: t("franchise.benefits.income.description")
     },
     {
       icon: Users,
-      title: "Тўлиқ қўллаб-қувватлаш",
-      description: "Маркетинг, тренинг ва операцион қўллаб-қувватлаш"
+      title: t("franchise.benefits.support.title"),
+      description: t("franchise.benefits.support.description")
     },
     {
       icon: Building,
-      title: "Локация ёрдами",
-      description: "Энг муносиб жойларни танлашда ёрдам"
+      title: t("franchise.benefits.location.title"),
+      description: t("franchise.benefits.location.description")
     },
     {
       icon: Clock,
-      title: "Тез бошлаш",
-      description: "30 кунда бизнесни ишга туширинг"
+      title: t("franchise.benefits.startFast.title"),
+      description: t("franchise.benefits.startFast.description")
     },
     {
       icon: CheckCircle,
-      title: "Кафолатли натижа",
-      description: "Биринчи йилда фойда кафолати"
+      title: t("franchise.benefits.guarantee.title"),
+      description: t("franchise.benefits.guarantee.description")
     }
   ];
 
   const requirements = [
-    "Минимум $25,000 бошланғич капитал",
-    "Бизнес тажрибаси (тавсия этилади)",
-    "Organic маҳсулотларга қизиқиш",
-    "Жамоа билан ишлаш қобилияти",
-    "Шаҳар марказида жой",
-    "Локал лицензиялар"
+    t("franchise.requirements.capital"),
+    t("franchise.requirements.experience"),
+    t("franchise.requirements.interest"),
+    t("franchise.requirements.teamwork"),
+    t("franchise.requirements.location"),
+    t("franchise.requirements.license")
   ];
 
   const steps = [
     {
       step: 1,
-      title: "Ариза бериш",
-      description: "Онлайн ариза тўлдиринг ва франшиза пакетини танланг"
+      title: t("franchise.steps.apply.title"),
+      description: t("franchise.steps.apply.description")
     },
     {
       step: 2,
-      title: "Учрашув",
-      description: "Бизнес режа ва шартларни муҳокама қиламиз"
+      title: t("franchise.steps.meeting.title"),
+      description: t("franchise.steps.meeting.description")
     },
     {
       step: 3,
-      title: "Шартнома",
-      description: "Франшиза шартномасини имзолаймиз"
+      title: t("franchise.steps.contract.title"),
+      description: t("franchise.steps.contract.description")
     },
     {
       step: 4,
-      title: "Тренинг",
-      description: "Тўлиқ тренинг дастури ва қўллаб-қувватлаш"
+      title: t("franchise.steps.training.title"),
+      description: t("franchise.steps.training.description")
     },
     {
       step: 5,
-      title: "Очилиш",
-      description: "Франшиза филиалини расмий очиш"
+      title: t("franchise.steps.opening.title"),
+      description: t("franchise.steps.opening.description")
     }
   ];
 
@@ -151,7 +155,7 @@ export default function FranchisePage() {
               transition={{ duration: 0.8 }}
             >
               Organic Green{" "}
-              <span className="text-green-600">Франшизаси</span>
+              <span className="text-green-600">{t("franchise.hero.title")}</span>
             </motion.h1>
             
             <motion.p 
@@ -160,8 +164,7 @@ export default function FranchisePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              Ўзбекистонда энг муваффақиятли organic маҳсулотлар франшизасига 
-              қўшилинг ва барқарор даромад олинг
+              {t("franchise.hero.subtitle")}
             </motion.p>
             
             <motion.div 
@@ -174,14 +177,14 @@ export default function FranchisePage() {
                 size="lg" 
                 className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-4 text-lg font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                Ҳозироқ бошлаш
+                {t("franchise.hero.startNow")}
               </Button>
               <Button 
                 variant="outline" 
                 size="lg" 
                 className="border-green-200 text-green-700 hover:bg-green-50 px-8 py-4 text-lg font-medium rounded-xl"
               >
-                Бизнес режани кўринг
+                {t("franchise.hero.viewPlan")}
               </Button>
             </motion.div>
           </div>
@@ -221,11 +224,10 @@ export default function FranchisePage() {
         <div className="container">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4 font-heading">
-              Франшиза <span className="text-green-600">афзалликлари</span>
+              {t("franchise.benefits.title")} <span className="text-green-600">{t("franchise.benefits.highlight")}</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Бизнинг франшиза дастуримиз сизга муваффақиятли бизнес бошлаш учун 
-              барча зарур воситаларни таqdim етади
+              {t("franchise.benefits.subtitle")}
             </p>
           </div>
 
@@ -258,10 +260,10 @@ export default function FranchisePage() {
         <div className="container">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4 font-heading">
-              Қандай <span className="text-green-600">бошлаш</span>
+              {t("franchise.steps.title")} <span className="text-green-600">{t("franchise.steps.highlight")}</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              5 та оддий қадамда франшиза филиалини очинг
+              {t("franchise.steps.subtitle")}
             </p>
           </div>
 
@@ -301,10 +303,10 @@ export default function FranchisePage() {
               viewport={{ once: true }}
             >
               <h2 className="text-4xl font-bold text-gray-900 mb-6 font-heading">
-                Франшиза <span className="text-green-600">талаблари</span>
+                {t("franchise.requirements.title")} <span className="text-green-600">{t("franchise.requirements.highlight")}</span>
               </h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Муваффақиятли ҳамкорлик учун қуйидаги талабларни қондириш зарур
+                {t("franchise.requirements.subtitle")}
               </p>
               
               <div className="space-y-4">
@@ -333,14 +335,14 @@ export default function FranchisePage() {
               <Card className="border-green-100 shadow-xl">
                 <CardHeader className="bg-gradient-to-r from-green-600 to-green-700 text-white rounded-t-lg">
                   <CardTitle className="text-2xl font-bold text-center">
-                    Ҳозироқ ариза беринг
+                    {t("franchise.requirements.contactTitle")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-8">
                   <div className="space-y-6">
                     <div className="text-center">
                       <div className="text-3xl font-bold text-green-600 mb-2">$25,000</div>
-                      <p className="text-gray-600">Бошланғич инвестиция</p>
+                      <p className="text-gray-600">{t("franchise.requirements.investment")}</p>
                     </div>
                     
                     <div className="space-y-4">
@@ -361,7 +363,7 @@ export default function FranchisePage() {
                     <Button 
                       className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-4 text-lg font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                     >
-                      Ариза бериш
+                      {t("franchise.requirements.applyNow")}
                     </Button>
                   </div>
                 </CardContent>

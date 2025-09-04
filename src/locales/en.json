@@ -235,6 +235,102 @@
     "years_experience": "Years Experience",
     "quality_certificates": "Quality Certificates"
   },
+
+  "franchise": {
+    "hero": {
+      "title": "Franchise",
+      "subtitle": "Join the most successful organic franchise in Uzbekistan and earn stable income",
+      "startNow": "Start Now",
+      "viewPlan": "View Business Plan"
+    },
+    "stats": {
+      "branches": {
+        "title": "Franchise Branches",
+        "description": "Across Uzbekistan"
+      },
+      "revenue": {
+        "title": "Annual Revenue",
+        "description": "Average franchise income"
+      },
+      "partners": {
+        "title": "Partners",
+        "description": "Successful partners"
+      },
+      "roi": {
+        "title": "ROI",
+        "description": "Return on investment"
+      }
+    },
+    "benefits": {
+      "title": "Franchise",
+      "highlight": "Benefits",
+      "subtitle": "Our franchise program gives you all the tools needed to start a successful business",
+      "brand": {
+        "title": "Recognized Brand",
+        "description": "Well-known and trusted organic brand in Uzbekistan"
+      },
+      "income": {
+        "title": "Regular Income",
+        "description": "Stable and growing business model"
+      },
+      "support": {
+        "title": "Full Support",
+        "description": "Marketing, training, and operational assistance"
+      },
+      "location": {
+        "title": "Location Help",
+        "description": "Support in choosing the best location"
+      },
+      "startFast": {
+        "title": "Fast Start",
+        "description": "Launch your business in 30 days"
+      },
+      "guarantee": {
+        "title": "Guaranteed Results",
+        "description": "Profit guaranteed in the first year"
+      }
+    },
+    "steps": {
+      "title": "How to",
+      "highlight": "Start",
+      "subtitle": "Open a franchise in 5 simple steps",
+      "apply": {
+        "title": "Application",
+        "description": "Fill out an online application and choose a package"
+      },
+      "meeting": {
+        "title": "Meeting",
+        "description": "We discuss the business plan and conditions"
+      },
+      "contract": {
+        "title": "Contract",
+        "description": "Sign the franchise agreement"
+      },
+      "training": {
+        "title": "Training",
+        "description": "Comprehensive training program and support"
+      },
+      "opening": {
+        "title": "Opening",
+        "description": "Official launch of your franchise branch"
+      }
+    },
+    "requirements": {
+      "title": "Franchise",
+      "highlight": "Requirements",
+      "subtitle": "The following requirements must be met for successful partnership",
+      "capital": "Minimum $25,000 initial capital",
+      "experience": "Business experience (recommended)",
+      "interest": "Interest in organic products",
+      "teamwork": "Ability to work with a team",
+      "location": "Location in city center",
+      "license": "Local licenses",
+      "contactTitle": "Apply Now",
+      "investment": "Initial Investment",
+      "applyNow": "Submit Application"
+    }
+  },
+
   "directions": {
     "title": "Наши направления",
     "description": "Познакомьтесь с нашими высококачественными продуктами и услугами в разных сферах",
