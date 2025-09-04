@@ -328,6 +328,104 @@
       "contactTitle": "Apply Now",
       "investment": "Initial Investment",
       "applyNow": "Submit Application"
+    },
+    "application": {
+      "title": "Franchise Application",
+      "description": "Fill out the form below to apply for an Organic Green franchise.",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Enter your full name",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+998 90 123 45 67",
+      "email": "Email (Optional)",
+      "emailPlaceholder": "your.email@example.com",
+      "city": "City",
+      "cityPlaceholder": "Enter your city",
+      "investmentAmount": "Investment Amount (USD)",
+      "investmentAmountPlaceholder": "25000.00",
+      "experience": "Business Experience (Optional)",
+      "experiencePlaceholder": "Describe your business experience...",
+      "message": "Additional Message (Optional)",
+      "messagePlaceholder": "Any additional information...",
+      "required": "*",
+      "cancel": "Cancel",
+      "submit": "Submit Application",
+      "submitting": "Submitting...",
+      "successMessage": "Application submitted successfully",
+      "errorMessage": "Failed to submit application. Please try again.",
+      "networkError": "Network error. Please check your connection and try again.",
+      "validation": {
+        "fullNameRequired": "Full name is required",
+        "fullNameMin": "Full name must be at least 2 characters",
+        "fullNameMax": "Full name must not exceed 255 characters",
+        "phoneRequired": "Phone number is required",
+        "phoneMin": "Phone number must be at least 10 digits",
+        "emailInvalid": "Please enter a valid email address",
+        "cityRequired": "City is required",
+        "cityMin": "City must be at least 2 characters",
+        "cityMax": "City must not exceed 100 characters",
+        "investmentRequired": "Investment amount is required",
+        "investmentMin": "Investment amount must be at least $0.01",
+        "investmentMax": "Investment amount must not exceed $10,000,000"
+      }
+    },
+    "roiCalculator": {
+      "title": "ROI Calculator",
+      "description": "Calculate your potential return on investment and payback period for your Organic Green franchise.",
+      "inputs": {
+        "title": "Investment Calculator",
+        "initialInvestment": "Initial Investment (USD)",
+        "initialInvestmentPlaceholder": "25000",
+        "monthlyRevenue": "Expected Monthly Revenue (USD)",
+        "monthlyRevenuePlaceholder": "8000",
+        "monthlyExpenses": "Monthly Expenses (USD)",
+        "monthlyExpensesPlaceholder": "5000",
+        "perMonth": "per month"
+      },
+      "results": {
+        "roi": {
+          "title": "Estimated ROI",
+          "description": "Annual return on investment",
+          "excellent": "Excellent",
+          "good": "Good",
+          "belowAverage": "Below Average"
+        },
+        "payback": {
+          "title": "Payback Period",
+          "description": "Time to recover investment",
+          "fast": "Fast",
+          "moderate": "Moderate",
+          "long": "Long"
+        },
+        "profit": {
+          "title": "Monthly Profit",
+          "description": "Revenue - Expenses = Profit"
+        }
+      },
+      "tips": {
+        "title": "💡 Investment Tips",
+        "goodROI": {
+          "title": "Good ROI",
+          "description": "Target 20%+ annual ROI for franchise investments"
+        },
+        "paybackPeriod": {
+          "title": "Payback Period",
+          "description": "Aim for 2-3 years to recover your initial investment"
+        },
+        "monthlyProfit": {
+          "title": "Monthly Profit",
+          "description": "Higher profit margins lead to faster payback periods"
+        },
+        "consider": {
+          "title": "Consider",
+          "description": "Include all costs: rent, staff, supplies, and fees"
+        }
+      },
+      "formatTime": {
+        "months": "months",
+        "years": "years",
+        "year": "year",
+        "month": "month"
+      }
     }
   },
 

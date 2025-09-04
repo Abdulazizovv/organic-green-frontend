@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,10 +18,21 @@ import {
 } from "lucide-react";
 
 import { useLanguage } from "@/lib/language";
+import { FranchiseApplicationModal } from "@/components/FranchiseApplicationModal";
+import { ROICalculator } from "@/components/ROICalculator";
 
 
 export default function FranchisePage() {
   const { t } = useLanguage();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const roiCalculatorRef = useRef<HTMLDivElement>(null);
+
+  const scrollToROICalculator = () => {
+    roiCalculatorRef.current?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    });
+  };
   const stats = [
     {
       icon: Building,
@@ -174,12 +186,14 @@ export default function FranchisePage() {
               transition={{ duration: 0.8, delay: 0.4 }}
             >
               <Button 
+                onClick={() => setIsModalOpen(true)}
                 size="lg" 
                 className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-4 text-lg font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 {t("franchise.hero.startNow")}
               </Button>
               <Button 
+                onClick={scrollToROICalculator}
                 variant="outline" 
                 size="lg" 
                 className="border-green-200 text-green-700 hover:bg-green-50 px-8 py-4 text-lg font-medium rounded-xl"
@@ -361,6 +375,7 @@ export default function FranchisePage() {
                     </div>
                     
                     <Button 
+                      onClick={() => setIsModalOpen(true)}
                       className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-4 text-lg font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                     >
                       {t("franchise.requirements.applyNow")}
@@ -372,6 +387,17 @@ export default function FranchisePage() {
           </div>
         </div>
       </section>
+
+      {/* ROI Calculator Section */}
+      <div ref={roiCalculatorRef}>
+        <ROICalculator />
+      </div>
+
+      {/* Franchise Application Modal */}
+      <FranchiseApplicationModal 
+        open={isModalOpen} 
+        onOpenChange={setIsModalOpen} 
+      />
     </div>
   );
 }
