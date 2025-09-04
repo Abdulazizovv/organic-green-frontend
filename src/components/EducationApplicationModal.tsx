@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { educationAPI } from '@/api/education';
 import { useToast } from '@/context/ToastContext';
+import { useLanguage } from '@/hooks/useLanguage';
 import type { EducationApplicationRequest } from '@/api/education';
 
 interface Course {
@@ -29,6 +30,7 @@ interface EducationApplicationModalProps {
 
 export function EducationApplicationModal({ isOpen, onClose }: EducationApplicationModalProps) {
   const { showSuccess, showError, showWarning } = useToast();
+  const { t } = useLanguage();
   
   const [step, setStep] = useState<'course-selection' | 'form' | 'success'>('course-selection');
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
@@ -48,31 +50,31 @@ export function EducationApplicationModal({ isOpen, onClose }: EducationApplicat
     {
       id: 'organic-farming',
       slug: 'organic-farming-basics',
-      title: 'Organic Фермерчилик',
-      description: 'Замонавий organic фермерчилик усуллари ва технологиялари',
-      duration: '3 ой',
-      level: 'Бошланғич',
-      price: '2,500,000 сўм',
+      title: t('education_courses.organic_farming'),
+      description: t('education_courses.organic_farming_description'),
+      duration: `3 ${t('education_modal.months')}`,
+      level: t('education_modal.beginner'),
+      price: `2,500,000 ${t('education_modal.som')}`,
       icon: GraduationCap
     },
     {
       id: 'business-management',
       slug: 'organic-business-management',
-      title: 'Бизнес бошқаруви',
-      description: 'Organic маҳсулотлар бизнесини бошқариш санъати',
-      duration: '2 ой',
-      level: 'Ўрта',
-      price: '3,000,000 сўм',
+      title: t('education_courses.business_management'),
+      description: t('education_courses.business_management_description'),
+      duration: `2 ${t('education_modal.months')}`,
+      level: t('education_modal.intermediate'),
+      price: `3,000,000 ${t('education_modal.som')}`,
       icon: BookOpen
     },
     {
       id: 'expert-level',
       slug: 'advanced-organic-technologies',
-      title: 'Мутахассис даражаси',
-      description: 'Илғор технологиялар ва тадқиқот усуллари',
-      duration: '4 ой',
-      level: 'Юқори',
-      price: '4,500,000 сўм',
+      title: t('education_courses.expert_level'),
+      description: t('education_courses.expert_level_description'),
+      duration: `4 ${t('education_modal.months')}`,
+      level: t('education_modal.advanced'),
+      price: `4,500,000 ${t('education_modal.som')}`,
       icon: Award
     }
   ];
@@ -101,21 +103,21 @@ export function EducationApplicationModal({ isOpen, onClose }: EducationApplicat
     const newErrors: Record<string, string> = {};
     
     if (!formData.full_name.trim()) {
-      newErrors.full_name = 'Исм ва фамилия киритиш мажбурий';
+      newErrors.full_name = t('education_modal.full_name_required');
     }
     
     if (!formData.phone.trim()) {
-      newErrors.phone = 'Телефон рақами киритиш мажбурий';
+      newErrors.phone = t('education_modal.phone_required');
     } else if (!/^\+998\d{9}$/.test(formData.phone.replace(/\s/g, ''))) {
-      newErrors.phone = 'Тўғри телефон рақами киритинг (+998xxxxxxxxx)';
+      newErrors.phone = t('education_modal.phone_invalid');
     }
     
     if (!formData.city.trim()) {
-      newErrors.city = 'Шаҳар номини киритиш мажбурий';
+      newErrors.city = t('education_modal.city_required');
     }
     
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Тўғри email манзил киритинг';
+      newErrors.email = t('education_modal.email_invalid');
     }
     
     setErrors(newErrors);
@@ -127,8 +129,8 @@ export function EducationApplicationModal({ isOpen, onClose }: EducationApplicat
     
     if (!validateForm()) {
       showError(
-        'Илтимос, барча мажбурий майдонларни тўғри тўлдиринг.',
-        '❌ Форма хатоси'
+        t('education_toasts.form_error'),
+        t('education_toasts.form_error_title')
       );
       return;
     }
@@ -155,8 +157,8 @@ export function EducationApplicationModal({ isOpen, onClose }: EducationApplicat
       // Success - agar response kelgan bo'lsa (status 200/201)
       // Success notification
       showSuccess(
-        `${selectedCourse?.title} курсига ариза муваффақиятли юборилди! Сиз билан 24 соат ичида алоқага чиқамиз.`,
-        '✅ Ариза қабул қилинди'
+        `${selectedCourse?.title} ${t('education_toasts.success_message')} ${t('education_modal.success_description')}`,
+        `✅ ${t('education_toasts.success_title')}`
       );
       
       // Modal success step ko'rsatish
@@ -211,46 +213,46 @@ export function EducationApplicationModal({ isOpen, onClose }: EducationApplicat
           if (errorText.includes('14') || errorText.includes('duplicate') || errorText.includes('already') || 
               errorText.includes('exist') || errorText.includes('период') || errorText.includes('time')) {
             showWarning(
-              'Сиз бу курсга яқин вақтда ариза берган экансиз. Қайтадан ариза бериш учун бир неча кун кутинг.',
-              '⚠️ Такрорий ариза'
+              t('education_toasts.duplicate_warning'),
+              `⚠️ ${t('education_toasts.duplicate_title')}`
             );
           } else if (errorText.includes('full') || errorText.includes('тўлди') || errorText.includes('seats')) {
             showError(
-              'Афсуски, бу курсга барча ўринлар банд. Бошқа курсларни кўриб чиқинг.',
-              '❌ Курс тўлди'
+              t('education_toasts.course_full'),
+              `❌ ${t('education_toasts.course_full_title')}`
             );
           } else {
             // Generic validation error
             showError(
-              errorData?.detail || errorData?.message || errorData?.error || 'Маълумотларни тўғри киритинг ва қайта уриниб кўринг.',
-              '❌ Маълумот хатоси'
+              errorData?.detail || errorData?.message || errorData?.error || t('education_toasts.validation_error'),
+              `❌ ${t('education_toasts.validation_error_title')}`
             );
           }
         } else if (status === 429) {
           // Rate limiting
           showWarning(
-            'Жуда кўп сўров юборяпсиз. Бир оз кутиб, қайта уриниб кўринг.',
-            '⚠️ Жуда кўп сўров'
+            t('education_toasts.rate_limit'),
+            `⚠️ ${t('education_toasts.rate_limit_title')}`
           );
         } else if (status === 500) {
           // Server error
           showError(
-            'Сервер хатоси юз берди. Илтимос, бир оз кутиб қайта уриниб кўринг.',
-            '❌ Сервер хатоси'
+            t('education_toasts.server_error'),
+            `❌ ${t('education_toasts.server_error_title')}`
           );
         } else {
           // Generic error
           showError(
-            'Ариза юборишда хатолик юз берди. Интернет алоқангизни текширинг ва қайта уриниб кўринг.',
-            '❌ Алоқа хатоси'
+            t('education_toasts.generic_error'),
+            `❌ ${t('education_toasts.generic_error_title')}`
           );
         }
       } else {
         console.error('🚫 Network or other error:', error);
         // Network error
         showError(
-          'Интернет алоқаси билан муаммо. Алоқангизни текширинг ва қайта уриниб кўринг.',
-          '❌ Алоқа хатоси'
+          t('education_toasts.network_error'),
+          `❌ ${t('education_toasts.network_error_title')}`
         );
       }
     } finally {
@@ -273,12 +275,16 @@ export function EducationApplicationModal({ isOpen, onClose }: EducationApplicat
   };
 
   const getLevelColor = (level: string) => {
+    const beginnerText = t('education_modal.beginner');
+    const intermediateText = t('education_modal.intermediate');
+    const advancedText = t('education_modal.advanced');
+    
     switch (level) {
-      case 'Бошланғич':
+      case beginnerText:
         return 'bg-green-100 text-green-800 border-green-200';
-      case 'Ўрта':
+      case intermediateText:
         return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'Юқори':
+      case advancedText:
         return 'bg-red-100 text-red-800 border-red-200';
       default:
         return 'bg-gray-100 text-gray-800 border-gray-200';
@@ -299,10 +305,10 @@ export function EducationApplicationModal({ isOpen, onClose }: EducationApplicat
             >
               <DialogHeader className="mb-6">
                 <DialogTitle className="text-2xl font-bold text-center">
-                  Курс танланг
+                  {t('education_modal.select_course')}
                 </DialogTitle>
                 <p className="text-gray-600 text-center mt-2">
-                  Қайси курсга ариза бермоқчисиз?
+                  {t('education_modal.select_course_description')}
                 </p>
               </DialogHeader>
 
@@ -338,7 +344,7 @@ export function EducationApplicationModal({ isOpen, onClose }: EducationApplicat
                           </div>
                           
                           <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                            Танлаш
+                            {t('education_modal.select')}
                           </Button>
                         </div>
                       </div>
@@ -359,7 +365,7 @@ export function EducationApplicationModal({ isOpen, onClose }: EducationApplicat
             >
               <DialogHeader className="mb-6">
                 <DialogTitle className="text-xl font-bold">
-                  Ариза берish - {selectedCourse.title}
+                  {t('education_modal.apply_form')} - {selectedCourse.title}
                 </DialogTitle>
                 <div className="flex items-center gap-2 mt-2">
                   <Badge className={getLevelColor(selectedCourse.level)}>
@@ -379,7 +385,7 @@ export function EducationApplicationModal({ isOpen, onClose }: EducationApplicat
                   transition={{ delay: 0.1 }}
                 >
                   <Label htmlFor="full_name">
-                    Исм ва фамилия *
+                    {t('education_modal.full_name')} *
                   </Label>
                   <Input
                     id="full_name"
@@ -407,12 +413,12 @@ export function EducationApplicationModal({ isOpen, onClose }: EducationApplicat
                   transition={{ delay: 0.2 }}
                 >
                   <Label htmlFor="phone">
-                    Телефон рақами *
+                    {t('education_modal.phone')} *
                   </Label>
                   <Input
                     id="phone"
                     type="tel"
-                    placeholder="+998 90 123 45 67"
+                    placeholder={t('education_modal.phone_placeholder')}
                     value={formData.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
                     className={errors.phone ? 'border-red-500' : ''}
@@ -437,7 +443,7 @@ export function EducationApplicationModal({ isOpen, onClose }: EducationApplicat
                   transition={{ delay: 0.3 }}
                 >
                   <Label htmlFor="email">
-                    Email (ихтиёрий)
+                    {t('education_modal.email')}
                   </Label>
                   <Input
                     id="email"
@@ -466,7 +472,7 @@ export function EducationApplicationModal({ isOpen, onClose }: EducationApplicat
                   transition={{ delay: 0.4 }}
                 >
                   <Label htmlFor="city">
-                    Шаҳар *
+                    {t('education_modal.city')} *
                   </Label>
                   <Input
                     id="city"
@@ -494,7 +500,7 @@ export function EducationApplicationModal({ isOpen, onClose }: EducationApplicat
                   transition={{ delay: 0.5 }}
                 >
                   <Label htmlFor="message">
-                    Қўшимча хабар (ихтиёрий)
+                    {t('education_modal.message')}
                   </Label>
                   <Textarea
                     id="message"
@@ -519,7 +525,7 @@ export function EducationApplicationModal({ isOpen, onClose }: EducationApplicat
                     className="flex-1"
                     disabled={isSubmitting}
                   >
-                    Ортга
+                    {t('education_modal.back')}
                   </Button>
                   <Button
                     type="submit"
@@ -529,12 +535,12 @@ export function EducationApplicationModal({ isOpen, onClose }: EducationApplicat
                     {isSubmitting ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Юборилмоқда...
+                        {t('education_modal.submitting')}
                       </>
                     ) : (
                       <>
                         <Send className="w-4 h-4 mr-2" />
-                        Ариза юбориш
+                        {t('education_modal.submit')}
                       </>
                     )}
                   </Button>
@@ -559,13 +565,13 @@ export function EducationApplicationModal({ isOpen, onClose }: EducationApplicat
                 <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
               </motion.div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">
-                Ариза муваффақиятли юборилди!
+                {t('education_modal.success_title')}
               </h3>
               <p className="text-gray-600 mb-4">
-                Сиз билан 24 соат ичида алоқага чиқамиз. Қизиқишингиз учун рахмат!
+                {t('education_modal.success_description')}
               </p>
               <p className="text-sm text-gray-500">
-                Бу ойна 2 сонияда автоматик равишда ёпилади.
+                {t('education_modal.auto_close')}
               </p>
             </motion.div>
           )}
