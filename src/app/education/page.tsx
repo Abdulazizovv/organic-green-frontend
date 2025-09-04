@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { EducationApplicationModal } from "@/components/EducationApplicationModal";
+import { useLanguage } from "@/hooks/useLanguage";
 import { 
   BookOpen, 
   Users, 
@@ -22,133 +23,140 @@ import {
 } from "lucide-react";
 
 export default function EducationPage() {
+  const { t } = useLanguage();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const stats = [
     {
       icon: Users,
-      title: "Ўқувчилар",
+      title: t('education_page.stats.students'),
       value: "1,200+",
-      description: "Муваффақиятли битирувчилар"
+      description: t('education_page.stats.students_description')
     },
     {
       icon: BookOpen,
-      title: "Курслар",
+      title: t('education_page.stats.courses'),
       value: "25+",
-      description: "Турли йўналишларда"
+      description: t('education_page.stats.courses_description')
     },
     {
       icon: Award,
-      title: "Сертификатлар",
+      title: t('education_page.stats.certificates'),
       value: "95%",
-      description: "Битирувчилар олган"
+      description: t('education_page.stats.certificates_description')
     },
     {
       icon: Clock,
-      title: "Дарс соатлари",
+      title: t('education_page.stats.hours'),
       value: "500+",
-      description: "Тўлиқ дастур"
+      description: t('education_page.stats.hours_description')
     }
+  ];
+
+  const organicFarmingFeatures = [
+    t('education_page.course_features.organic_farming.0'),
+    t('education_page.course_features.organic_farming.1'),
+    t('education_page.course_features.organic_farming.2'),
+    t('education_page.course_features.organic_farming.3')
+  ];
+
+  const businessManagementFeatures = [
+    t('education_page.course_features.business_management.0'),
+    t('education_page.course_features.business_management.1'),
+    t('education_page.course_features.business_management.2'),
+    t('education_page.course_features.business_management.3')
+  ];
+
+  const expertLevelFeatures = [
+    t('education_page.course_features.expert_level.0'),
+    t('education_page.course_features.expert_level.1'),
+    t('education_page.course_features.expert_level.2'),
+    t('education_page.course_features.expert_level.3')
   ];
 
   const courses = [
     {
       icon: GraduationCap,
-      title: "Organic Фермерчилик",
-      description: "Замонавий organic фермерчилик усуллари ва технологиялари",
-      duration: "3 ой",
-      level: "Бошланғич",
+      title: t('education_courses.organic_farming'),
+      description: t('education_courses.organic_farming_description'),
+      duration: `3 ${t('education_modal.months')}`,
+      level: t('education_modal.beginner'),
       price: "2,500,000",
-      features: [
-        "Тупроқ тайёрлаш ва бошқариш",
-        "Organic ўғитлар ишлаб чиқариш",
-        "Зараркунанда ва касалликлардан химёвий қўрғаниш",
-        "Ҳосилни сақлаш ва қадоқлаш"
-      ]
+      features: organicFarmingFeatures
     },
     {
       icon: BookOpen,
-      title: "Бизнес бошқаруви",
-      description: "Organic маҳсулотлар бизнесини бошқариш санъати",
-      duration: "2 ой",
-      level: "Ўрта",
+      title: t('education_courses.business_management'),
+      description: t('education_courses.business_management_description'),
+      duration: `2 ${t('education_modal.months')}`,
+      level: t('education_modal.intermediate'),
       price: "3,000,000",
-      features: [
-        "Молиявий режалаштириш",
-        "Маркетинг стратегиялари",
-        "Сифат назорати тизими",
-        "Халқаро сертификация"
-      ]
+      features: businessManagementFeatures
     },
     {
       icon: Award,
-      title: "Мутахассис даражаси",
-      description: "Илғор технологиялар ва тадқиқот усуллари",
-      duration: "4 ой",
-      level: "Юқори",
+      title: t('education_courses.expert_level'),
+      description: t('education_courses.expert_level_description'),
+      duration: `4 ${t('education_modal.months')}`,
+      level: t('education_modal.advanced'),
       price: "4,500,000",
-      features: [
-        "Илмий тадқиқот методлари",
-        "Биотехнология асослари",
-        "Экспорт бозорлари",
-        "Консалтинг кўникмалари"
-      ]
+      features: expertLevelFeatures
     }
   ];
 
   const features = [
     {
       icon: Play,
-      title: "Амалий машғулотлар",
-      description: "Ҳақиқий фермаларда амалий тажриба олиш имкони"
+      title: t('education_page.features.0.title'),
+      description: t('education_page.features.0.description')
     },
     {
       icon: Users,
-      title: "Кичик гуруҳлар",
-      description: "Ҳар бир ўқувчига индивидуал ёндашув"
+      title: t('education_page.features.1.title'),
+      description: t('education_page.features.1.description')
     },
     {
       icon: Award,
-      title: "Халқаро сертификат",
-      description: "Дунё миқёсида тан олинган сертификатлар"
+      title: t('education_page.features.2.title'),
+      description: t('education_page.features.2.description')
     },
     {
       icon: Download,
-      title: "Онлайн материаллар",
-      description: "Барча дарслик ва материалларга доимий кириш"
+      title: t('education_page.features.3.title'),
+      description: t('education_page.features.3.description')
     },
     {
       icon: Clock,
-      title: "Мослашувчан жадвал",
-      description: "Ишингизга мос келадиган ўқув жадвали"
+      title: t('education_page.features.4.title'),
+      description: t('education_page.features.4.description')
     },
     {
       icon: CheckCircle,
-      title: "Ишга жойлашув ёрдами",
-      description: "Курс якунлангандан кейин иш топишда қўллаб-қувватлаш"
+      title: t('education_page.features.5.title'),
+      description: t('education_page.features.5.description')
     }
   ];
 
   const testimonials = [
     {
-      name: "Азиз Раҳимов",
-      role: "Фермер - тадбиркор",
-      content: "Organic Green таълим маркази мени ҳақиқий мутахассисга айлантирди. Энди ўзимнинг муваффақиятли фермам бор.",
+      name: t('education_page.testimonials.0.name'),
+      role: t('education_page.testimonials.0.role'),
+      content: t('education_page.testimonials.0.content'),
       rating: 5,
-      avatar: "AR"
+      avatar: t('education_page.testimonials.0.avatar')
     },
     {
-      name: "Нилуфар Қаҳрамонова",
-      role: "Бизнес аёл",
-      content: "Бу ерда олган билимлар туфайли органик маҳсулотлар ишлаб чиқариш бизнесини бошладим.",
+      name: t('education_page.testimonials.1.name'),
+      role: t('education_page.testimonials.1.role'),
+      content: t('education_page.testimonials.1.content'),
       rating: 5,
-      avatar: "НК"
+      avatar: t('education_page.testimonials.1.avatar')
     },
     {
-      name: "Жавохир Усмонов",
-      role: "Йош фермер",
-      content: "Юқори сифатли таълим, амалий кўникмалар ва ишга жойлашишда қўллаб-қувватлаш - барчаси аъло!",
+      name: t('education_page.testimonials.2.name'),
+      role: t('education_page.testimonials.2.role'),
+      content: t('education_page.testimonials.2.content'),
       rating: 5,
-      avatar: "ЖУ"
+      avatar: t('education_page.testimonials.2.avatar')
     }
   ];
 
@@ -189,7 +197,7 @@ export default function EducationPage() {
               transition={{ duration: 0.8 }}
             >
               Organic Green{" "}
-              <span className="text-green-600">Таълим Маркази</span>
+              <span className="text-green-600">{t('education_page.title')}</span>
             </motion.h1>
             
             <motion.p 
@@ -198,8 +206,7 @@ export default function EducationPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              Organic фермерчилик ва табиий маҳсулотлар ишлаб чиқариш соҳасида 
-              профессионал таълим олинг
+              {t('education_page.subtitle')}
             </motion.p>
             
             <motion.div 
@@ -211,15 +218,16 @@ export default function EducationPage() {
               <Button 
                 size="lg" 
                 className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-4 text-lg font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                onClick={() => setIsModalOpen(true)}
               >
-                Курсларни кўринг
+                {t('education_page.cta_button')}
               </Button>
               <Button 
                 variant="outline" 
                 size="lg" 
                 className="border-green-200 text-green-700 hover:bg-green-50 px-8 py-4 text-lg font-medium rounded-xl"
               >
-                Бепул консультация
+                {t('education_page.contact_section.title')}
               </Button>
             </motion.div>
           </div>
@@ -259,10 +267,10 @@ export default function EducationPage() {
         <div className="container">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4 font-heading">
-              Популяр <span className="text-green-600">курслар</span>
+              {t('education_page.courses_section.title')}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Ҳар қил даражадаги ўқувчилар учун мўлжалланган профессионал курслар
+              {t('education_page.courses_section.subtitle')}
             </p>
           </div>
 
@@ -307,14 +315,14 @@ export default function EducationPage() {
                     <div className="border-t pt-4">
                       <div className="flex items-center justify-between mb-4">
                         <span className="text-2xl font-bold text-green-600">
-                          {course.price} сўм
+                          {course.price} {t('education_page.courses_section.currency')}
                         </span>
                       </div>
                       <Button 
                         className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl"
                         onClick={() => setIsModalOpen(true)}
                       >
-                        Рўйхатдан ўтиш
+                        {t('education_page.courses_section.enroll_button')}
                       </Button>
                     </div>
                   </CardContent>
@@ -330,10 +338,10 @@ export default function EducationPage() {
         <div className="container">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4 font-heading">
-              Nega айнан <span className="text-green-600">биз</span>?
+              {t('education_page.features_section.title')}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Бизнинг таълим марказини танлашингизга асосли сабаблар
+              {t('education_page.features_section.subtitle')}
             </p>
           </div>
 
@@ -366,10 +374,10 @@ export default function EducationPage() {
         <div className="container">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4 font-heading">
-              Ўқувчилар <span className="text-green-600">фикрлари</span>
+              {t('education_page.testimonials_section.title')}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Биздан таълим олган ўқувчиларнинг ҳақиқий фикрлари
+              {t('education_page.testimonials_section.subtitle')}
             </p>
           </div>
 
@@ -420,25 +428,30 @@ export default function EducationPage() {
               viewport={{ once: true }}
             >
               <h2 className="text-4xl font-bold text-gray-900 mb-6 font-heading">
-                Ҳозироқ <span className="text-green-600">бошлаш</span> вақти!
+                {t('education_page.cta_section.title').split(' ').map((word, index, array) => (
+                  index === array.length - 2 ? (
+                    <span key={index} className="text-green-600">{word} </span>
+                  ) : (
+                    <span key={index}>{word} </span>
+                  )
+                ))}
               </h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Organic фермерчилик соҳасида карьера қуринг ва табиий маҳсулотлар 
-                ишлаб чиқариш санъатини ўрганинг
+                {t('education_page.cta_section.subtitle')}
               </p>
               
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <CheckCircle className="w-6 h-6 text-green-600" />
-                  <span className="text-gray-700">Бепул синов дарси</span>
+                  <span className="text-gray-700">{t('education_page.cta_section.free_trial')}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="w-6 h-6 text-green-600" />
-                  <span className="text-gray-700">Халқаро сертификат</span>
+                  <span className="text-gray-700">{t('education_page.cta_section.international_certificate')}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="w-6 h-6 text-green-600" />
-                  <span className="text-gray-700">Ишга жойлашув кафолати</span>
+                  <span className="text-gray-700">{t('education_page.cta_section.lifetime_access')}</span>
                 </div>
               </div>
             </motion.div>
@@ -452,14 +465,14 @@ export default function EducationPage() {
               <Card className="border-green-100 shadow-xl">
                 <CardHeader className="bg-gradient-to-r from-green-600 to-green-700 text-white rounded-t-lg">
                   <CardTitle className="text-2xl font-bold text-center">
-                    Бепул консультация
+                    {t('education_page.contact_section.title')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-8">
                   <div className="space-y-6">
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-green-600 mb-2">Бепул</div>
-                      <p className="text-gray-600">Биринчи консультация</p>
+                      <div className="text-3xl font-bold text-green-600 mb-2">{t('education_page.contact_section.free_consultation')}</div>
+                      <p className="text-gray-600">{t('education_page.contact_section.first_consultation')}</p>
                     </div>
                     
                     <div className="space-y-4">
@@ -473,11 +486,11 @@ export default function EducationPage() {
                       </div>
                       <div className="flex items-center gap-3">
                         <MapPin className="w-5 h-5 text-green-600" />
-                        <span className="text-gray-700">Тошкент ш., Учтепа т.</span>
+                        <span className="text-gray-700">{t('education_page.contact_section.address')}</span>
                       </div>
                       <div className="flex items-center gap-3">
                         <Calendar className="w-5 h-5 text-green-600" />
-                        <span className="text-gray-700">Душанба - Жума: 9:00-18:00</span>
+                        <span className="text-gray-700">{t('education_page.contact_section.working_hours')}</span>
                       </div>
                     </div>
                     
@@ -485,7 +498,7 @@ export default function EducationPage() {
                       className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-4 text-lg font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                       onClick={() => setIsModalOpen(true)}
                     >
-                      Консультация олиш
+                      {t('education_page.contact_section.get_consultation')}
                     </Button>
                   </div>
                 </CardContent>

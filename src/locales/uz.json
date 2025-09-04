@@ -498,6 +498,128 @@
     "generic_error": "Ариза юборишда хатолик юз берди. Интернет алоқангизни текширинг ва қайта уриниб кўринг.",
     "generic_error_title": "Алоқа хатоси"
   },
+  "education_page": {
+    "page_title": "Таълим",
+    "page_description": "Organic фермерчилик ва агробизнес соҳасида профессионал билим олинг",
+    "title": "Таълим Маркази",
+    "subtitle": "Organic фермерчилик ва табиий маҳсулотлар ишлаб чиқариш соҳасида профессионал таълим олинг",
+    "cta_button": "Курсларга ёзилиш",
+    "stats": {
+      "students": "Ўқувчилар",
+      "students_description": "Муваффақиятли битирувчилар",
+      "courses": "Курслар", 
+      "courses_description": "Турли йўналишларда",
+      "certificates": "Сертификатлар",
+      "certificates_description": "Битирувчилар олган",
+      "hours": "Дарс соатлари",
+      "hours_description": "Тўлиқ дастур"
+    },
+    "features": {
+      "title": "Бизнинг таълим марказини танлашингизга асосли сабаблар",
+      "0": {
+        "title": "Амалий машғулотлар",
+        "description": "Ҳақиқий фермаларда амалий тажриба олиш имкони"
+      },
+      "1": {
+        "title": "Кичик гуруҳлар",
+        "description": "Ҳар бир ўқувчига индивидуал ёндашув"
+      },
+      "2": {
+        "title": "Халқаро сертификат",
+        "description": "Дунё миқёсида тан олинган сертификатлар"
+      },
+      "3": {
+        "title": "Онлайн материаллар",
+        "description": "Барча дарслик ва материалларга доимий кириш"
+      },
+      "4": {
+        "title": "Мослашувчан жадвал",
+        "description": "Ишингизга мос келадиган ўқув жадвали"
+      },
+      "5": {
+        "title": "Ишга жойлашув ёрдами",
+        "description": "Курс якунлангандан кейин иш топишда қўллаб-қувватлаш"
+      }
+    },
+    "testimonials": {
+      "title": "Биздан таълим олган ўқувчиларнинг ҳақиқий фикрлари",
+      "0": {
+        "name": "Азиз Раҳимов",
+        "role": "Фермер - тадбиркор",
+        "content": "Organic Green таълим маркази мени ҳақиқий мутахассисга айлантирди. Энди ўзимнинг муваффақиятли фермам бор.",
+        "avatar": "AR"
+      },
+      "1": {
+        "name": "Нилуфар Қаҳрамонова",
+        "role": "Бизнес аёл",
+        "content": "Бу ерда олган билимлар туфайли органик маҳсулотлар ишлаб чиқариш бизнесини бошладим.",
+        "avatar": "НК"
+      },
+      "2": {
+        "name": "Жавохир Усмонов",
+        "role": "Йош фермер",
+        "content": "Юқори сифатли таълим, амалий кўникмалар ва ишга жойлашишда қўллаб-қувватлаш - барчаси аъло!",
+        "avatar": "ЖУ"
+      }
+    },
+    "course_features": {
+      "organic_farming": {
+        "0": "Тупроқ тайёрлаш ва бошқариш",
+        "1": "Organic ўғитлар ишлаб чиқариш",
+        "2": "Зараркунанда ва касалликлардан химёвий қўрғаниш",
+        "3": "Ҳосилни сақлаш ва қадоқлаш"
+      },
+      "business_management": {
+        "0": "Молиявий режалаштириш",
+        "1": "Маркетинг стратегиялари",
+        "2": "Сифат назорати тизими",
+        "3": "Халқаро сертификация"
+      },
+      "expert_level": {
+        "0": "Илмий тадқиқот методлари",
+        "1": "Биотехнология асослари",
+        "2": "Экспорт бозорлари",
+        "3": "Консалтинг кўникмалари"
+      }
+    },
+    "courses_section": {
+      "title": "Популяр курслар",
+      "subtitle": "Bizning kurslarimiz sizni professional darajada o'qitishga qaratilgan",
+      "currency": "so'm",
+      "enroll_button": "Kursga yozilish"
+    },
+    "features_section": {
+      "title": "Nega aynan biz?",
+      "subtitle": "Bizning ta'lim markazini tanlashingizga asosli sabablar"
+    },
+    "testimonials_section": {
+      "title": "O'quvchilar fikrlari",
+      "subtitle": "Bizdan ta'lim olgan o'quvchilarning haqiqiy fikrlari"
+    },
+    "cta_section": {
+      "title": "Organic Green bilan kelajagingizni boshlang",
+      "subtitle": "Professional ta'lim oling va muvaffaqiyatli karyera quring",
+      "free_trial": "Bepul sinov darsi",
+      "international_certificate": "Xalqaro sertifikat",
+      "lifetime_access": "Doimiy kirish huquqi"
+    },
+    "contact_section": {
+      "title": "Bepul konsultatsiya",
+      "free_consultation": "Bepul",
+      "first_consultation": "Birinchi konsultatsiya",
+      "address": "Toshkent sh., Uchtepa t.",
+      "working_hours": "Dushanba - Juma: 9:00-18:00",
+      "get_consultation": "Konsultatsiya olish"
+    },
+    "get_consultation": "Консультация олинг",
+    "contact_info": {
+      "title": "Алоқа маълумотлари",
+      "address": "Тошкент шаҳри, Юнусобод тумани",
+      "phone": "+998 90 123 45 67",
+      "email": "education@organicgreen.uz",
+      "working_hours": "Душ-Жума: 09:00-18:00"
+    }
+  },
   "testimonials": {
     "title": "Мижозлар",
     "highlight": "фикирлари",

@@ -517,6 +517,142 @@
     "generic_error": "An error occurred while submitting the application. Check your internet connection and try again.",
     "generic_error_title": "Connection Error"
   },
+  "education_page": {
+    "page_title": "Education",
+    "page_description": "Get professional knowledge in organic farming and agribusiness",
+    "title": "Education Center",
+    "subtitle": "Get professional education in organic farming and natural product production",
+    "cta_button": "Enroll in Courses",
+    "stats": {
+      "students": "Students",
+      "students_description": "Successful graduates",
+      "courses": "Courses",
+      "courses_description": "In various directions",
+      "certificates": "Certificates",
+      "certificates_description": "Received by graduates",
+      "hours": "Study Hours",
+      "hours_description": "Complete program"
+    },
+    "features": {
+      "title": "Compelling reasons to choose our education center",
+      "0": {
+        "title": "Practical training",
+        "description": "Opportunity to gain practical experience on real farms"
+      },
+      "1": {
+        "title": "Small groups",
+        "description": "Individual approach to each student"
+      },
+      "2": {
+        "title": "International certificate",
+        "description": "Worldwide recognized certificates"
+      },
+      "3": {
+        "title": "Online materials",
+        "description": "Permanent access to all textbooks and materials"
+      },
+      "4": {
+        "title": "Flexible schedule",
+        "description": "Study schedule that fits your work"
+      },
+      "5": {
+        "title": "Job placement assistance",
+        "description": "Support in finding work after course completion"
+      }
+    },
+    "testimonials": {
+      "title": "Real reviews from students who studied with us",
+      "0": {
+        "name": "Aziz Rahimov",
+        "role": "Farmer-entrepreneur",
+        "content": "Organic Green education center made me a real specialist. Now I have my own successful farm.",
+        "avatar": "AR"
+      },
+      "1": {
+        "name": "Nilufar Kahramonova",
+        "role": "Business woman",
+        "content": "Thanks to the knowledge gained here, I started a business in organic product production.",
+        "avatar": "NK"
+      },
+      "2": {
+        "name": "Javohir Usmonov",
+        "role": "Young farmer",
+        "content": "High-quality education, practical skills and job placement support - everything is excellent!",
+        "avatar": "JU"
+      }
+    },
+    "courses_section1": {
+      "title": "Popular Courses",
+      "subtitle": "Our courses are designed for professional training",
+      "currency": "sum",
+      "enroll_button": "Enroll in Course"
+    },
+    "features_section": {
+      "title": "Why choose us?",
+      "subtitle": "Strong reasons to choose our educational center"
+    },
+    "testimonials_section": {
+      "title": "Student Reviews",
+      "subtitle": "Real reviews from students who studied with us"
+    },
+    "cta_section1": {
+      "title": "Start your future with Organic Green",
+      "subtitle": "Get professional education and build a successful career",
+      "free_trial": "Free trial lesson",
+      "international_certificate": "International certificate",
+      "lifetime_access": "Lifetime access"
+    },
+    "contact_section": {
+      "title": "Free Consultation",
+      "free_consultation": "Free",
+      "first_consultation": "First consultation",
+      "address": "Tashkent city, Uchtepa district",
+      "working_hours": "Monday - Friday: 9:00-18:00",
+      "get_consultation": "Get Consultation"
+    },
+    "courses_section": {
+      "title": "Courses we offer",
+      "subtitle": "Professional courses designed for students of all levels",
+      "enroll_button": "Enroll",
+      "currency": "sum"
+    },
+    "cta_section": {
+      "title": "Time to start now!",
+      "subtitle": "Build a career in organic farming and learn the art of natural product production",
+      "international_certificate": "International certificate",
+      "free_trial": "Free trial lesson",
+      "lifetime_access": "Lifetime access"
+    },
+    "course_features": {
+      "organic_farming": {
+        "0": "Soil preparation and management",
+        "1": "Organic fertilizer production",
+        "2": "Chemical protection from pests and diseases",
+        "3": "Crop storage and packaging"
+      },
+      "business_management": {
+        "0": "Financial planning",
+        "1": "Marketing strategies",
+        "2": "Quality control system",
+        "3": "International certification"
+      },
+      "expert_level": {
+        "0": "Scientific research methods",
+        "1": "Biotechnology basics",
+        "2": "Export markets",
+        "3": "Consulting skills"
+      }
+    },
+    "apply_now": "Apply Now",
+    "get_consultation": "Get Consultation",
+    "contact_info": {
+      "title": "Contact Information",
+      "address": "Tashkent city, Yunusabad district",
+      "phone": "+998 90 123 45 67",
+      "email": "education@organicgreen.uz",
+      "working_hours": "Mon-Fri: 09:00-18:00"
+    }
+  },
   "testimonials": {
     "title": "Customer",
     "highlight": "Reviews",
