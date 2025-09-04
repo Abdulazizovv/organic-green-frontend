@@ -21,6 +21,8 @@
   "filter_by_category": "Filter by Category",
   "all_categories": "All Categories",
   "all_products": "All",
+  "currency": "UZS",
+  "shoppingCart": "Shopping Cart",
   "navigation": {
     "home": "Home",
     "about": "About Us",
@@ -69,6 +71,7 @@
     "learn_more": "Learn More"
   },
   "products": {
+    "subtitle": "The purest and most natural products for a healthy lifestyle",
     "featured_products": "Featured Products",
     "featured_products_title": "Featured Products",
     "featured_products_description": "Our highest quality and most popular products",

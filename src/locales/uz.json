@@ -21,6 +21,8 @@
   "filter_by_category": "Категория бўйича филтрлаш",
   "all_categories": "Барча категориялар",
   "all_products": "Барчаси",
+  "currency": "сўм",
+  "shoppingCart": "Сават",
 
   "navigation": {
     "home": "Бош саҳифа",
@@ -69,6 +71,7 @@
     "learn_more": "Батафсил"
   },
   "products": {
+    "subtitle": "Соғлом ҳаёт учун энг тоза ва табиий маҳсулотлар",
     "featured_products": "Танланган маҳсулотлар",
     "featured_products_title": "Танланган маҳсулотлар",
     "featured_products_description": "Энг сифатли ва оммабоп маҳсулотларимиз",

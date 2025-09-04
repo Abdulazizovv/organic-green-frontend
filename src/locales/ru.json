@@ -21,7 +21,8 @@
   "filter_by_category": "Фильтровать по категории",
   "all_categories": "Все категории",
   "all_products": "Все",
-
+  "currency": "сум",
+  "shoppingCart": "Корзина",
 
   "navigation": {
     "home": "Главная",
@@ -70,6 +71,7 @@
     "learn_more": "Подробнее"
   },
   "products": {
+    "subtitle": "Самые чистые и натуральные продукты для здорового образа жизни",
     "featured_products": "Популярные товары",
     "featured_products_title": "Популярные товары",
     "featured_products_description": "Наши самые качественные и востребованные товары",
