@@ -194,7 +194,37 @@
     "sort_name_za": "Name: Z-A",
     "sort_discount_high": "Highest Discount",
     "sort_stock_high": "Highest Stock",
-    "sort_featured": "Featured"
+    "sort_featured": "Featured",
+    "sort": {
+      "name_asc": "Name (A-Z)",
+      "name_asc_desc": "Products are sorted alphabetically from A to Z",
+
+      "name_desc": "Name (Z-A)",
+      "name_desc_desc": "Products are sorted alphabetically from Z to A",
+
+      "price_asc": "Price (Low to High)",
+      "price_asc_desc": "Cheapest products are shown first",
+
+      "price_desc": "Price (High to Low)",
+      "price_desc_desc": "Most expensive products are shown first",
+
+      "newest": "Newest First",
+      "newest_desc": "Recently added products appear first",
+
+      "oldest": "Oldest First",
+      "oldest_desc": "Oldest products are displayed first",
+
+      "stock_high": "Stock (High → Low)",
+      "stock_high_desc": "Products with higher stock levels appear first",
+
+      "stock_low": "Stock (Low → High)",
+      "stock_low_desc": "Products with lower stock levels appear first",
+
+      "popularity": "Most Popular",
+      "popularity_desc": "Products with the highest views and purchases",
+
+      "total_options": "All filters"
+    }
   },
   "statistics": {
     "products": "Products",
@@ -320,6 +350,8 @@
     "email": "info@organicgreen.uz"
   },
   "common": {
+    "refresh": "Refresh",
+    "remove_filter": "Remove filter",
     "currency": "UZS",
     "loading": "Loading...",
     "error": "An error occurred",
@@ -371,7 +403,26 @@
     "quality": {
       "title": "Premium Quality",
       "description": "Hand-picked selection"
-    }
+    },
+    "organic_fresh": "Organic & Fresh",
+    "organic_desc": "Certified organic products",
+    "delivery_desc": "Same-day delivery available",
+    "certified_quality": "Certified Quality",
+    "quality_desc": "Premium quality guaranteed",
+    "fresh_harvest": "Fresh Harvest",
+    "harvest_desc": "Directly from farmers"
+  },
+  "search": {
+    "placeholder": "Search products..."
+  },
+  "categories": {
+    "title": "Categories",
+    "all": "All Products"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page"
   },
   "cart": {
     "title": "Cart",
@@ -561,7 +612,9 @@
   },
   "loading": {
     "product": "Loading product details...",
-    "please_wait": "Please wait a moment"
+    "please_wait": "Please wait a moment",
+    "products": "Loading products...",
+    "refreshing": "Refreshing..."
   },
   "error": {
     "product_not_found": "Product Not Found",

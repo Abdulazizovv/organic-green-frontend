@@ -6,8 +6,8 @@ import { useState, useEffect } from "react";
 import { Menu, X, ChevronDown, Globe, ShoppingBag, User, LogOut, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useCategories } from "@/lib/hooks";
-import { useLanguage, getLocalizedName, type Language } from "@/lib/language";
+// import { useCategories } from "@/lib/hooks";
+import { useLanguage, type Language } from "@/lib/language";
 import { useAuth } from "@/lib/authContext";
 import { useCart } from "@/context/CartContext";
 // import { useFavorites } from "@/hooks/useFavorites";
@@ -49,8 +49,8 @@ export function Navbar() {
   // const favoritesCount = Object.values(favoriteStates).filter(Boolean).length;
   
   // Get categories from API
-  const { data: categoriesData } = useCategories();
-  const categories = categoriesData?.results || [];
+  // const { data: categoriesData } = useCategories();
+  // const categories = categoriesData?.results || [];
 
   // Handle scroll effect
   useEffect(() => {
@@ -83,12 +83,12 @@ export function Navbar() {
     setIsProductsOpen(false);
     setIsUserMenuOpen(false);
   };
-  const toggleProductsMenu = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsProductsOpen(!isProductsOpen);
-    setIsLangOpen(false);
-    setIsUserMenuOpen(false);
-  };
+  // const toggleProductsMenu = (e: React.MouseEvent) => {
+  //   e.stopPropagation();
+  //   setIsProductsOpen(!isProductsOpen);
+  //   setIsLangOpen(false);
+  //   setIsUserMenuOpen(false);
+  // };
   const toggleUserMenu = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsUserMenuOpen(!isUserMenuOpen);
@@ -134,7 +134,7 @@ export function Navbar() {
               ))}
 
               {/* Products Dropdown */}
-              <div className="relative">
+              {/* <div className="relative">
                 <button
                   onClick={toggleProductsMenu}
                   className="flex items-center space-x-1 px-3 lg:px-4 py-2 text-sm lg:text-base font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all duration-200 border border-transparent hover:border-green-200"
@@ -168,15 +168,15 @@ export function Navbar() {
                       </Link>
                     </div>
                   </div>
-                )}
-              </div>
+                )} */}
+              {/* </div> */}
 
               {/* Contact Link */}
               <Link
                 href="/contact"
                 className="px-3 lg:px-4 py-2 text-sm lg:text-base font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all duration-200 border border-transparent hover:border-green-200"
               >
-                {t('contact')}
+                {t('navigation.contact')}
               </Link>
             </div>
 
