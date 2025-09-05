@@ -301,7 +301,7 @@ export default function CheckoutPage() {
                         💡 {t('checkout.phone_note')}
                       </p>
                       <a
-                        href="https://t.me/organic_green_bot"
+                        href="https://t.me/organicgreenuz_bot"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center text-green-600 hover:text-green-700 font-medium"
