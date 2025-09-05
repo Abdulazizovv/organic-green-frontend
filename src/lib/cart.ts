@@ -10,7 +10,7 @@ import type {
   APIError
 } from '@/types/cart';
 
-const API_BASE_URL = 'http://api.organicgreen.uz/api';
+const API_BASE_URL = 'https:/api.organicgreen.uz/api';
 
 // Enhanced logger for session debugging
 const logger = {

@@ -114,7 +114,7 @@ export function FranchiseApplicationModal({ open, onOpenChange }: FranchiseAppli
     setErrors({});
 
     try {
-      const response = await fetch("http://api.organicgreen.uz/api/franchise/applications/", {
+      const response = await fetch("https:/api.organicgreen.uz/api/franchise/applications/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

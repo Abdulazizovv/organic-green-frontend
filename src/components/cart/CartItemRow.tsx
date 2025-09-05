@@ -39,12 +39,12 @@ export function CartItemRow({
     if (item.product.primary_image_url) {
       return item.product.primary_image_url.startsWith('http') 
         ? item.product.primary_image_url
-        : `http://api.organicgreen.uz${item.product.primary_image_url}`;
+        : `https:/api.organicgreen.uz${item.product.primary_image_url}`;
     }
     if (item.product.image_url) {
       return item.product.image_url.startsWith('http')
         ? item.product.image_url
-        : `http://api.organicgreen.uz${item.product.image_url}`;
+        : `https:/api.organicgreen.uz${item.product.image_url}`;
     }
     return null;
   };

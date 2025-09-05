@@ -6,7 +6,7 @@ Complete course management system with public and admin APIs supporting multilin
 
 ## Base URL
 ```
-http://api.organicgreen.uz/api/course/
+https:/api.organicgreen.uz/api/course/
 ```
 
 ## Authentication
@@ -41,7 +41,7 @@ Get list of active courses with filtering and search capabilities.
 
 #### Example Request:
 ```bash
-curl -X GET "http://api.organicgreen.uz/api/course/courses/?search=python&level=beginner&has_seats=true"
+curl -X GET "https:/api.organicgreen.uz/api/course/courses/?search=python&level=beginner&has_seats=true"
 ```
 
 #### Example Response:
@@ -82,7 +82,7 @@ Get detailed information about a specific course.
 
 #### Example Request:
 ```bash
-curl -X GET "http://api.organicgreen.uz/api/course/courses/python-programming-basics/"
+curl -X GET "https:/api.organicgreen.uz/api/course/courses/python-programming-basics/"
 ```
 
 #### Example Response:
@@ -144,7 +144,7 @@ Submit an application for a course.
 
 #### Example Request:
 ```bash
-curl -X POST "http://api.organicgreen.uz/api/course/applications/" \
+curl -X POST "https:/api.organicgreen.uz/api/course/applications/" \
   -H "Content-Type: application/json" \
   -d '{
     "course": "python-programming-basics",
@@ -196,7 +196,7 @@ Same as public API plus:
 
 #### Example Request:
 ```bash
-curl -X GET "http://api.organicgreen.uz/api/course/admin/courses/" \
+curl -X GET "https:/api.organicgreen.uz/api/course/admin/courses/" \
   -H "Authorization: Bearer <admin_token>"
 ```
 
@@ -265,7 +265,7 @@ Get all course applications with filtering.
 
 #### Example Request:
 ```bash
-curl -X GET "http://api.organicgreen.uz/api/course/admin/applications/?status=pending&course=python-programming-basics" \
+curl -X GET "https:/api.organicgreen.uz/api/course/admin/applications/?status=pending&course=python-programming-basics" \
   -H "Authorization: Bearer <admin_token>"
 ```
 
