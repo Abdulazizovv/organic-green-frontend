@@ -16,6 +16,7 @@ interface Toast {
     label: string;
     onClick: () => void;
   };
+  placement?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
 }
 
 interface ToastContextType {
@@ -53,10 +54,14 @@ export function ToastProvider({ children }: ToastProviderProps) {
     const newToast: Toast = {
       id,
       duration: 5000,
+      placement: 'top-right',
       ...toast,
     };
 
-    setToasts(prev => [...prev, newToast]);
+    setToasts(prev => {
+      const next = [...prev, newToast];
+      return next.slice(-6); // limit last 6
+    });
 
     if (newToast.duration && newToast.duration > 0) {
       setTimeout(() => {
@@ -113,14 +118,32 @@ interface ToastContainerProps {
 }
 
 function ToastContainer({ toasts, onRemove }: ToastContainerProps) {
+  const groups = toasts.reduce<Record<string, Toast[]>>((acc, t) => {
+    const key = t.placement || 'top-right';
+    acc[key] = acc[key] || [];
+    acc[key].push(t);
+    return acc;
+  }, {});
   return (
-    <div className="fixed top-4 right-4 z-50 space-y-2">
-      <AnimatePresence>
-        {toasts.map((toast) => (
-          <ToastComponent key={toast.id} toast={toast} onRemove={onRemove} />
-        ))}
-      </AnimatePresence>
-    </div>
+    <>
+      {Object.entries(groups).map(([place, list]) => {
+        const positionClasses = {
+          'top-right': 'top-4 right-4',
+          'top-left': 'top-4 left-4',
+          'bottom-right': 'bottom-4 right-4',
+          'bottom-left': 'bottom-4 left-4',
+        }[place];
+        return (
+          <div key={place} className={`fixed z-50 space-y-2 ${positionClasses}`}>
+            <AnimatePresence>
+              {list.map((toast) => (
+                <ToastComponent key={toast.id} toast={toast} onRemove={onRemove} />
+              ))}
+            </AnimatePresence>
+          </div>
+        );
+      })}
+    </>
   );
 }
 

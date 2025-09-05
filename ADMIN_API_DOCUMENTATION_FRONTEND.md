@@ -189,6 +189,9 @@ Foydalanuvchilar faolligi statistikasi.
             "is_featured": true,
             "orders_count": 25,
             "favorites_count": 12,
+            "image_url": "https://domain.com/media/products/550e.../img1.jpg",
+            "primary_image_url": "https://domain.com/media/products/550e.../img1.jpg",
+            "image_count": 2,
             "created_at": "2024-08-01T10:00:00Z",
             "updated_at": "2024-09-05T14:30:00Z"
         }
@@ -199,6 +202,8 @@ Foydalanuvchilar faolligi statistikasi.
 ### 2.2 Mahsulot tafsilotlari
 
 **GET** `/api/admin/products/{id}/`
+
+(Yangi qo'shilgan maydonlar: `images_list`, `primary_image_url`, `image_count`)
 
 #### Response (200 OK):
 ```json
@@ -220,6 +225,30 @@ Foydalanuvchilar faolligi statistikasi.
     "total_sold": 150,
     "revenue_generated": 1800000.0,
     "stock_status": "In Stock",
+    "images_list": [
+        {
+            "id": "770e8400-e29b-41d4-a716-446655440111",
+            "image_url": "https://domain.com/media/products/550e.../img1.jpg",
+            "alt_text_uz": "Pomidor",
+            "alt_text_ru": "Помидор",
+            "alt_text_en": "Tomato",
+            "is_primary": true,
+            "order": 0,
+            "created_at": "2024-09-05T10:00:00Z"
+        },
+        {
+            "id": "880e8400-e29b-41d4-a716-446655440222",
+            "image_url": "https://domain.com/media/products/550e.../img2.jpg",
+            "alt_text_uz": "Pomidor yon tomoni",
+            "alt_text_ru": "Помидор сбоку",
+            "alt_text_en": "Tomato side",
+            "is_primary": false,
+            "order": 1,
+            "created_at": "2024-09-05T10:05:00Z"
+        }
+    ],
+    "primary_image_url": "https://domain.com/media/products/550e.../img1.jpg",
+    "image_count": 2,
     "recent_orders": [
         {
             "order_id": "660e8400-e29b-41d4-a716-446655440001",
@@ -234,11 +263,13 @@ Foydalanuvchilar faolligi statistikasi.
 }
 ```
 
-### 2.3 Yangi mahsulot yaratish
+### 2.3 Yangi mahsulot yaratish (oddiy JSON, rasmsiz)
 
 **POST** `/api/admin/products/`
 
-#### Request Body:
+Content-Type: `application/json`
+
+#### Request Body (rasmsiz):
 ```json
 {
     "name_uz": "Yangi mahsulot",
@@ -254,10 +285,78 @@ Foydalanuvchilar faolligi statistikasi.
 }
 ```
 
-#### Response (201 Created):
-Yaratilgan mahsulot ma'lumotlari qaytariladi.
+### 2.4 Yangi mahsulot yaratish (rasmlar bilan multipart)
 
-### 2.4 Mahsulotni yangilash
+Agar bir vaqtning o'zida rasmlar yubormoqchi bo'lsangiz `Content-Type: multipart/form-data` dan foydalaning.
+
+Field nomlari (nested array): `images[0].image`, `images[0].alt_text_uz`, `images[0].is_primary`, `images[0].order`, va hokazo.
+
+#### Form-Data misol (kalitlar):
+```
+name_uz: Yangi mahsulot
+name_ru: Новый продукт
+name_en: New Product
+slug: yangi-mahsulot
+price: 20000.00
+sale_price: 18000.00
+stock: 50
+category: 1
+is_active: true
+is_featured: false
+images[0].image: <FILE>
+images[0].alt_text_uz: Asosiy rasm
+images[0].is_primary: true
+images[0].order: 0
+images[1].image: <FILE>
+images[1].alt_text_uz: Ikkinchi rasm
+images[1].order: 1
+```
+
+#### Response (201 Created) (asosiy maydonlar + images_list qaytadi):
+```json
+{
+  "id": "990e8400-e29b-41d4-a716-446655440999",
+  "name_uz": "Yangi mahsulot",
+  "slug": "yangi-mahsulot",
+  "price": "20000.00",
+  "sale_price": "18000.00",
+  "stock": 50,
+  "category": 1,
+  "category_name": "Sabzavotlar",
+  "is_active": true,
+  "is_featured": false,
+  "orders_count": 0,
+  "favorites_count": 0,
+  "created_at": "2025-09-05T12:00:00Z",
+  "updated_at": "2025-09-05T12:00:00Z",
+  "primary_image_url": "https://domain.com/media/products/990e.../main.jpg",
+  "image_count": 2,
+  "images_list": [
+    {
+      "id": "a70e8400-e29b-41d4-a716-446655440111",
+      "image_url": "https://domain.com/media/products/990e.../main.jpg",
+      "alt_text_uz": "Asosiy rasm",
+      "alt_text_ru": "",
+      "alt_text_en": "",
+      "is_primary": true,
+      "order": 0,
+      "created_at": "2025-09-05T12:00:00Z"
+    },
+    {
+      "id": "b80e8400-e29b-41d4-a716-446655440222",
+      "image_url": "https://domain.com/media/products/990e.../second.jpg",
+      "alt_text_uz": "Ikkinchi rasm",
+      "alt_text_ru": "",
+      "alt_text_en": "",
+      "is_primary": false,
+      "order": 1,
+      "created_at": "2025-09-05T12:00:00Z"
+    }
+  ]
+}
+```
+
+### 2.5 Mahsulotni yangilash
 
 **PUT/PATCH** `/api/admin/products/{id}/`
 
@@ -271,13 +370,13 @@ Yaratilgan mahsulot ma'lumotlari qaytariladi.
 }
 ```
 
-### 2.5 Mahsulotni o'chirish (soft delete)
+### 2.6 Mahsulotni o'chirish (soft delete)
 
 **DELETE** `/api/admin/products/{id}/`
 
 #### Response (204 No Content)
 
-### 2.6 Mahsulotlar statistikasi
+### 2.7 Mahsulotlar statistikasi
 
 **GET** `/api/admin/products/stats/`
 
@@ -291,6 +390,74 @@ Yaratilgan mahsulot ma'lumotlari qaytariladi.
     "deleted_products": 25
 }
 ```
+
+### 2.8 Mavjud mahsulotga rasm yuklash
+
+**POST** `/api/admin/products/{id}/upload-image/`
+
+Bir yoki bir nechta rasmni keyinchalik alohida jo'natish. Content-Type: `multipart/form-data`.
+
+#### Form-Data maydonlari:
+| Field | Majburiy | Izoh |
+|-------|----------|------|
+| `image` yoki `images` | Ha | Bitta yoki bir nechta file. `image` birinchi file sifatida, `images` list sifatida ham qo'llab-quvvatlanadi |
+| `alt_text_uz` | Yo'q | Alt matn (UZ) |
+| `alt_text_ru` | Yo'q | Alt matn (RU) |
+| `alt_text_en` | Yo'q | Alt text (EN) |
+| `is_primary` | Yo'q | `true/false` (birinchi file primariga qo'yiladi agar true bo'lsa) |
+
+#### Response (201 Created):
+```json
+{
+  "created": [
+    {
+      "id": "c90e8400-e29b-41d4-a716-446655440333",
+      "image_url": "https://domain.com/media/products/550e.../new1.jpg",
+      "is_primary": false,
+      "order": 2
+    }
+  ],
+  "count": 1
+}
+```
+
+#### Xatoliklar:
+- 400: `{"detail": "Rasm yuborilmadi (image yoki images field)."}`
+- 404: Mahsulot topilmadi
+
+### 2.9 Asosiy rasmni o'rnatish
+
+**PATCH** `/api/admin/products/{id}/set-primary-image/`
+
+#### Request Body:
+```json
+{ "image_id": "c90e8400-e29b-41d4-a716-446655440333" }
+```
+
+#### Response (200 OK):
+```json
+{ "detail": "Asosiy rasm yangilandi." }
+```
+
+#### Xatoliklar:
+- 400: `image_id talab qilinadi.`
+- 404: `Rasm topilmadi.`
+
+### 2.10 Rasmni o'chirish
+
+**DELETE** `/api/admin/products/{id}/delete-image/?image_id=<uuid>`
+
+Yoki body orqali:
+```json
+{ "image_id": "c90e8400-e29b-41d4-a716-446655440333" }
+```
+
+#### Response:
+- 204 No Content
+
+#### Xatoliklar:
+- 400: `image_id talab qilinadi.`
+- 404: `Rasm topilmadi.`
 
 ---
 
