@@ -18,7 +18,7 @@ interface ProductDetailViewProps {
 }
 
 export default function ProductDetailView({ product }: ProductDetailViewProps) {
-  const { t } = useLanguage();
+  useLanguage(); // keep context (t not used here)
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -61,7 +61,7 @@ export default function ProductDetailView({ product }: ProductDetailViewProps) {
             <StockBadge product={product} />
           </div>
 
-          {/* Add to Cart Panel */}
+            {/* Add to Cart Panel */}
           <AddToCartPanel product={product} />
         </motion.div>
 

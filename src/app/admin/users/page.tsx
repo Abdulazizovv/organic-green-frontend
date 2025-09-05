@@ -305,9 +305,9 @@ export default function UsersPage() {
           <AdminModal isOpen={editOpen} onClose={closeEdit} title={editUser ? `Tahrirlash #${editUser.id}` : 'Tahrirlash'} size="md" footer={<div className="flex justify-end gap-2"><button className="px-4 py-2 rounded bg-gray-100 text-gray-600 text-sm hover:bg-gray-200" onClick={closeEdit} disabled={saving}>Bekor</button><button className="px-4 py-2 rounded bg-green-600 text-white text-sm hover:bg-green-700" onClick={submitEdit} disabled={saving}>{saving ? 'Saqlanmoqda...' : 'Saqlash'}</button></div>}>
             <form onSubmit={submitEdit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <FormInput label="Ism" placeholder="Ism" value={editUser?.first_name} onChange={(v) => setEditUser(u => u ? { ...u, first_name: v } : u)} required />
-                <FormInput label="Familiya" placeholder="Familiya" value={editUser?.last_name} onChange={(v) => setEditUser(u => u ? { ...u, last_name: v } : u)} required />
-                <FormInput label="Email" type="email" placeholder="Email" value={editUser?.email} onChange={(v) => setEditUser(u => u ? { ...u, email: v } : u)} required />
+                <FormInput label="Ism" placeholder="Ism" value={editUser?.first_name} onChange={(e) => setEditUser(u => u ? { ...u, first_name: e.target.value } : u)} required />
+                <FormInput label="Familiya" placeholder="Familiya" value={editUser?.last_name} onChange={(e) => setEditUser(u => u ? { ...u, last_name: e.target.value } : u)} required />
+                <FormInput label="Email" type="email" placeholder="Email" value={editUser?.email} onChange={(e) => setEditUser(u => u ? { ...u, email: e.target.value } : u)} required />
                 <div className="col-span-2">
                   <div className="flex items-center gap-2">
                     <input id="is_active" type="checkbox" checked={editUser?.is_active} onChange={() => setEditUser(u => u ? { ...u, is_active: !u.is_active } : u)} className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500" />

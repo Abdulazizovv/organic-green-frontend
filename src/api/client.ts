@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 
 // Create axios instance with base configuration
 const client: AxiosInstance = axios.create({
@@ -10,9 +10,8 @@ const client: AxiosInstance = axios.create({
   },
 });
 
-// Request interceptor to add idempotency key when provided
-client.interceptors.request.use((config: AxiosRequestConfig) => {
-  // Idempotency key will be set by the calling hook when needed
+// Request interceptor (typing fixed)
+client.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   return config;
 });
 

@@ -7,24 +7,7 @@ import { Loader2, Search, RefreshCw, X, ArrowUpDown } from 'lucide-react';
 import { AdminModal } from '@/components/admin/AdminModal';
 import ConfirmDialog from '@/components/admin/ConfirmDialog';
 import { useToast } from '@/context/ToastContext';
-
-interface FranchiseApplication {
-  id: number;
-  full_name: string;
-  phone: string;
-  email: string;
-  city: string;
-  investment_amount: string;
-  experience: string;
-  message: string;
-  status: string; // pending, reviewed, approved, rejected
-  status_display?: string;
-  is_pending?: boolean;
-  is_approved?: boolean;
-  created_at: string;
-  created_at_formatted?: string;
-  updated_at: string;
-}
+import type { FranchiseApplication as AdminFranchiseApplication } from '@/services/adminAPI';
 
 const statusColors: Record<string,string> = {
   pending: 'bg-amber-100 text-amber-700',
@@ -35,7 +18,7 @@ const statusColors: Record<string,string> = {
 
 export default function FranchiseApplicationsPage() {
   const { showError, showSuccess } = useToast();
-  const [items, setItems] = useState<FranchiseApplication[]>([]);
+  const [items, setItems] = useState<AdminFranchiseApplication[]>([]);
   const [meta, setMeta] = useState({ page: 1, page_size: 20, total: 0 });
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -44,8 +27,8 @@ export default function FranchiseApplicationsPage() {
   const [ordering, setOrdering] = useState('');
   const [filterStatus, setFilterStatus] = useState<string | undefined>();
   const [detailOpen, setDetailOpen] = useState(false);
-  const [detail, setDetail] = useState<FranchiseApplication | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<FranchiseApplication | null>(null);
+  const [detail, setDetail] = useState<AdminFranchiseApplication | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<AdminFranchiseApplication | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const fetchItems = useCallback(async () => {
@@ -56,7 +39,7 @@ export default function FranchiseApplicationsPage() {
       if (ordering) params.ordering = ordering;
       if (filterStatus) params.status = filterStatus;
       const { data } = await adminAPI.getFranchiseApplications(params);
-      setItems(data.results as FranchiseApplication[]);
+      setItems(data.results as AdminFranchiseApplication[]);
       setMeta(m => ({ ...m, total: data.count }));
     } catch (e: unknown) {
       let msg = 'Yuklashda xatolik';
@@ -81,11 +64,24 @@ export default function FranchiseApplicationsPage() {
   };
 
   const openDetail = async (id: number) => {
-    try { const { data } = await adminAPI.getFranchiseApplication(id); setDetail(data as FranchiseApplication); setDetailOpen(true); } catch { showError('Tafsilotlarni yuklab bo\'lmadi'); }
+    try { const { data } = await adminAPI.getFranchiseApplication(id); setDetail(data as AdminFranchiseApplication); setDetailOpen(true); } catch { showError('Tafsilotlarni yuklab bo\'lmadi'); }
   };
 
-  const updateStatus = async (item: FranchiseApplication, status: string) => {
-    try { setSaving(true); await adminAPI.updateFranchiseApplication(item.id, { status }); showSuccess('Holat yangilandi'); fetchItems(); if (detail && detail.id === item.id) { setDetail(d => d && ({ ...d, status })); } } catch { showError('Holatni yangilab bo\'lmadi'); } finally { setSaving(false); }
+  const updateStatus = async (item: AdminFranchiseApplication, status: AdminFranchiseApplication['status']) => {
+    try {
+      setSaving(true);
+      const newStatus: AdminFranchiseApplication['status'] = status;
+      await adminAPI.updateFranchiseApplication(Number(item.id), { status: newStatus });
+      showSuccess('Holat yangilandi');
+      fetchItems();
+      if (detail && detail.id === item.id) {
+        setDetail(d => d && ({ ...d, status: newStatus }));
+      }
+    } catch {
+      showError("Holatni yangilab bo'lmadi");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const stats = {
@@ -140,7 +136,7 @@ export default function FranchiseApplicationsPage() {
                 {loading && <tr><td colSpan={6} className="px-4 py-16 text-center text-gray-500 text-sm"><Loader2 className="w-5 h-5 animate-spin mx-auto mb-2" />Yuklanmoqda...</td></tr>}
                 {!loading && items.map(i => (
                   <tr key={i.id} className="border-t hover:bg-gray-50">
-                    <td className="px-4 py-2 text-gray-700 text-sm underline cursor-pointer" onClick={() => openDetail(i.id)}>{i.full_name}</td>
+                    <td className="px-4 py-2 text-gray-700 text-sm underline cursor-pointer" onClick={() => openDetail(Number(i.id))}>{i.full_name}</td>
                     <td className="px-4 py-2 text-xs text-gray-600">{i.city}</td>
                     <td className="px-4 py-2 text-xs text-gray-600">{i.investment_amount}</td>
                     <td className="px-4 py-2 text-xs">
@@ -149,7 +145,7 @@ export default function FranchiseApplicationsPage() {
                     <td className="px-4 py-2 text-xs text-gray-500">{new Date(i.created_at).toLocaleString()}</td>
                     <td className="px-4 py-2 text-xs">
                       <div className="flex gap-2">
-                        <button onClick={() => openDetail(i.id)} className="px-2 py-1 bg-blue-50 text-blue-600 rounded hover:bg-blue-100">Ko&apos;rish</button>
+                        <button onClick={() => openDetail(Number(i.id))} className="px-2 py-1 bg-blue-50 text-blue-600 rounded hover:bg-blue-100">Ko&apos;rish</button>
                         <button onClick={() => { setDeleteTarget(i); setConfirmOpen(true); }} className="px-2 py-1 bg-red-50 text-red-600 rounded hover:bg-red-100">O&apos;chirish</button>
                       </div>
                     </td>
@@ -211,7 +207,7 @@ export default function FranchiseApplicationsPage() {
                 </div>
                 <div className="flex flex-wrap gap-2 text-xs">
                   {['pending','reviewed','approved','rejected'].map(s => (
-                    <button key={s} disabled={saving} onClick={() => detail && updateStatus(detail, s)} className={`px-3 py-1 rounded border ${detail.status === s ? 'bg-purple-600 text-white border-purple-600' : 'bg-white hover:bg-gray-50'} disabled:opacity-50`}>{s}</button>
+                    <button key={s} disabled={saving} onClick={() => detail && updateStatus(detail, s as AdminFranchiseApplication['status'])} className={`px-3 py-1 rounded border ${detail.status === s ? 'bg-purple-600 text-white border-purple-600' : 'bg-white hover:bg-gray-50'} disabled:opacity-50`}>{s}</button>
                   ))}
                 </div>
               </div>

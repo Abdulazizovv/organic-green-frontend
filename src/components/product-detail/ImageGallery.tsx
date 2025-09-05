@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ZoomIn, X } from 'lucide-react';
 import Image from 'next/image';
 
-import { Product } from '@/api/products';
+import { Product, ProductImage } from '@/lib/api';
 import { useLanguage, getLocalizedName } from '@/lib/language';
 
 interface ImageGalleryProps {
@@ -17,21 +17,28 @@ export default function ImageGallery({ product }: ImageGalleryProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
 
-  // Get all product images, fallback to primary image if no images
-  const images = product.images && product.images.length > 0 
-    ? product.images.sort((a, b) => a.order - b.order)
-    : product.primary_image 
+  type GalleryImage = ProductImage | string;
+  const images: GalleryImage[] = (product.images && product.images.length > 0)
+    ? [...product.images].sort((a, b) => a.order - b.order)
+    : product.primary_image
       ? [product.primary_image]
       : [];
 
   // Fallback to placeholder if no images
   const hasImages = images.length > 0;
-  const currentImage = hasImages ? images[selectedImageIndex] : null;
-  
+  const currentImage: GalleryImage | null = hasImages ? images[selectedImageIndex] : null;
+
+  const getImageUrl = (img: GalleryImage | null) => {
+    if (!img) return '/placeholder-product.jpg';
+    if (typeof img === 'string') return img; // already a path or URL
+    return img.image; // ProductImage shape from lib/api has 'image'
+  };
+
   // Get localized alt text
-  const getAltText = (image: any) => {
+  const getAltText = (image: GalleryImage | null) => {
     if (!image) return getLocalizedName(product, language);
-    
+    if (typeof image === 'string') return getLocalizedName(product, language);
+
     switch (language) {
       case 'ru':
         return image.alt_text_ru || image.alt_text_uz || getLocalizedName(product, language);
@@ -79,14 +86,14 @@ export default function ImageGallery({ product }: ImageGalleryProps) {
           {hasImages && currentImage ? (
             <div className="relative w-full h-full">
               <Image
-                src={currentImage.image_url || currentImage.image}
+                src={getImageUrl(currentImage)}
                 alt={getAltText(currentImage)}
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 priority
               />
-              
+
               {/* Zoom Button */}
               <button
                 onClick={() => setIsZoomModalOpen(true)}
@@ -94,7 +101,7 @@ export default function ImageGallery({ product }: ImageGalleryProps) {
               >
                 <ZoomIn className="w-5 h-5 text-gray-700" />
               </button>
-              
+
               {/* Navigation Arrows */}
               {images.length > 1 && (
                 <>
@@ -131,19 +138,19 @@ export default function ImageGallery({ product }: ImageGalleryProps) {
         <div className="flex gap-2 overflow-x-auto pb-2">
           {images.map((image, index) => (
             <motion.button
-              key={image.id}
+              key={typeof image === 'string' ? `${index}-${image}` : image.id}
               onClick={() => setSelectedImageIndex(index)}
               className={`relative flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
-                selectedImageIndex === index 
-                  ? 'border-green-500 shadow-md' 
+                selectedImageIndex === index
+                  ? 'border-green-500 shadow-md'
                   : 'border-gray-200 hover:border-green-300'
               }`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               <Image
-                src={image.image_url || image.image}
-                alt={getAltText(image)}
+                src={getImageUrl(image)}
+                alt={getAltText(typeof image === 'string' ? null : image)}
                 fill
                 className="object-cover"
                 sizes="80px"
@@ -174,13 +181,13 @@ export default function ImageGallery({ product }: ImageGalleryProps) {
               onClick={(e) => e.stopPropagation()}
             >
               <Image
-                src={currentImage.image_url || currentImage.image}
+                src={getImageUrl(currentImage)}
                 alt={getAltText(currentImage)}
                 fill
                 className="object-contain"
                 sizes="100vw"
               />
-              
+
               {/* Close Button */}
               <button
                 onClick={() => setIsZoomModalOpen(false)}
@@ -210,177 +217,6 @@ export default function ImageGallery({ product }: ImageGalleryProps) {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
-  );
-}
-          url: buildImageUrl(primaryImage),
-          alt: product.name_uz || 'Product image'
-        });
-      }
-    }
-    
-    // If still no images, use placeholder
-    if (images.length === 0) {
-      images.push({
-        url: DEFAULT_SPROUT_IMAGE,
-        alt: t('product.no_image') || 'No image available'
-      });
-    }
-    
-    return images;
-  }, [product, language, t]);
-
-  const currentImage = allImages[selectedImageIndex] || allImages[0];
-
-  const handleImageSelect = useCallback((index: number) => {
-    setSelectedImageIndex(index);
-    setImageError(false);
-  }, []);
-
-  const handlePrevImage = useCallback(() => {
-    setSelectedImageIndex(prev => 
-      prev === 0 ? allImages.length - 1 : prev - 1
-    );
-  }, [allImages.length]);
-
-  const handleNextImage = useCallback(() => {
-    setSelectedImageIndex(prev => 
-      prev === allImages.length - 1 ? 0 : prev + 1
-    );
-  }, [allImages.length]);
-
-  const handleImageError = useCallback(() => {
-    setImageError(true);
-  }, []);
-
-  const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
-    switch (event.key) {
-      case 'ArrowLeft':
-        handlePrevImage();
-        break;
-      case 'ArrowRight':
-        handleNextImage();
-        break;
-      case 'Enter':
-      case ' ':
-        setIsZoomed(!isZoomed);
-        break;
-    }
-  }, [handlePrevImage, handleNextImage, isZoomed]);
-
-  return (
-    <div className="space-y-4">
-      {/* Main Image Display */}
-      <div className="relative aspect-square bg-gradient-to-br from-green-50 to-white rounded-2xl overflow-hidden shadow-lg">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={selectedImageIndex}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.05 }}
-            transition={{ duration: 0.3 }}
-            className="relative w-full h-full"
-          >
-            {imageError || currentImage.url === DEFAULT_SPROUT_IMAGE ? (
-              // Placeholder with sprout
-              <div className="flex items-center justify-center w-full h-full bg-gradient-to-br from-green-100 to-green-50">
-                <div className="text-center">
-                  <div className="text-6xl mb-4 opacity-60">🌱</div>
-                  <p className="text-green-600 text-sm font-medium">
-                    {t('product.no_image') || 'No image available'}
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <Image
-                src={currentImage.url}
-                alt={currentImage.alt}
-                fill
-                className={`object-cover transition-transform duration-300 ${
-                  isZoomed ? 'scale-110' : 'scale-100'
-                }`}
-                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                priority={selectedImageIndex === 0}
-                onError={handleImageError}
-              />
-            )}
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Navigation Arrows */}
-        {allImages.length > 1 && !imageError && (
-          <>
-            <button
-              onClick={handlePrevImage}
-              className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-white/80 hover:bg-white rounded-full shadow-lg transition-all duration-200 hover:scale-105"
-              aria-label={t('gallery.previous') || 'Previous image'}
-            >
-              <ChevronLeft className="w-5 h-5 text-gray-700" />
-            </button>
-            
-            <button
-              onClick={handleNextImage}
-              className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-white/80 hover:bg-white rounded-full shadow-lg transition-all duration-200 hover:scale-105"
-              aria-label={t('gallery.next') || 'Next image'}
-            >
-              <ChevronRight className="w-5 h-5 text-gray-700" />
-            </button>
-          </>
-        )}
-
-        {/* Zoom Button */}
-        {!imageError && currentImage.url !== DEFAULT_SPROUT_IMAGE && (
-          <button
-            onClick={() => setIsZoomed(!isZoomed)}
-            className="absolute top-4 right-4 p-2 bg-white/80 hover:bg-white rounded-full shadow-lg transition-all duration-200 hover:scale-105"
-            aria-label={isZoomed ? (t('gallery.zoom_out') || 'Zoom out') : (t('gallery.zoom_in') || 'Zoom in')}
-          >
-            <ZoomIn className={`w-5 h-5 text-gray-700 transition-transform ${isZoomed ? 'scale-110' : ''}`} />
-          </button>
-        )}
-
-        {/* Image Counter */}
-        {allImages.length > 1 && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 bg-black/60 text-white text-sm rounded-full">
-            {selectedImageIndex + 1} / {allImages.length}
-          </div>
-        )}
-      </div>
-
-      {/* Thumbnail Strip */}
-      {allImages.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-2">
-          {allImages.map((image, index) => (
-            <motion.button
-              key={index}
-              onClick={() => handleImageSelect(index)}
-              onKeyDown={handleKeyDown}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={`flex-shrink-0 relative w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
-                selectedImageIndex === index
-                  ? 'border-green-500 shadow-lg'
-                  : 'border-gray-200 hover:border-green-300'
-              }`}
-              aria-label={`${t('gallery.select_image') || 'Select image'} ${index + 1}`}
-            >
-              {image.url === DEFAULT_SPROUT_IMAGE ? (
-                <div className="flex items-center justify-center w-full h-full bg-gradient-to-br from-green-100 to-green-50">
-                  <span className="text-2xl opacity-60">🌱</span>
-                </div>
-              ) : (
-                <Image
-                  src={image.url}
-                  alt={image.alt}
-                  fill
-                  className="object-cover"
-                  sizes="80px"
-                />
-              )}
-            </motion.button>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

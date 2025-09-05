@@ -139,17 +139,49 @@ export interface DashboardResponse {
   application_stats: DashboardApplicationStats;
   generated_at: string;
 }
-// Eskirgan (agar boshqa joyda ishlatilsa, vaqtincha saqlanadi)
-export interface DashboardStats {
-  total_products?: number;
-  active_products?: number;
-  featured_products?: number;
-  out_of_stock?: number;
-  total_revenue?: number;
-  pending_orders?: number;
-  completed_orders?: number;
-  staff_users?: number;
-  total_users?: number;
+
+// Course Applications
+export interface CourseApplication {
+  id: string;
+  course: string; // slug or id
+  full_name: string;
+  phone: string; // raw phone
+  email?: string;
+  city?: string;
+  investment_amount?: number;
+  referral_source?: string;
+  message?: string;
+  status: 'pending' | 'approved' | 'rejected';
+  processed?: boolean;
+  admin_notes?: string;
+  created_at: string;
+  updated_at?: string;
+  // Extra fields used by admin UI
+  application_number?: string;
+  phone_number?: string; // formatted variant
+  course_name?: string; // localized course title
+  status_display?: string;
+}
+
+// Franchise Applications (minimal fields based on API docs assumptions)
+export interface FranchiseApplication {
+  id: number | string;
+  full_name: string;
+  phone: string;
+  email?: string;
+  city?: string;
+  investment_amount?: number | string; // API might return number or formatted string
+  referral_source?: string;
+  message?: string;
+  experience?: string; // added for admin UI detail modal
+  status: 'pending' | 'reviewed' | 'approved' | 'rejected'; // include 'reviewed'
+  status_display?: string; // human readable label
+  is_pending?: boolean;
+  is_approved?: boolean;
+  created_at: string;
+  created_at_formatted?: string; // optional pre-formatted timestamp
+  updated_at: string; // required for detail view
+  admin_notes?: string; // future-proofing similar to course applications
 }
 
 // Query parameter helpers
