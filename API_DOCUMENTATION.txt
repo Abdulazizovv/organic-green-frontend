@@ -5,7 +5,7 @@
 
 ## Base URLs
 ```
-URL: https:/api.organicgreen.uz/api/
+URL: https://api.organicgreen.uz/api/
 ```
 
 ## Quick Start for Frontend Developers
@@ -13,7 +13,7 @@ URL: https:/api.organicgreen.uz/api/
 ### 1. Authentication Flow
 ```javascript
 // 1. Register user
-const register = await fetch('https:/api.organicgreen.uz/api/auth/register/simple/', {
+const register = await fetch('https://api.organicgreen.uz/api/auth/register/simple/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username: 'user123', password: 'password123' })
@@ -25,7 +25,7 @@ localStorage.setItem('access_token', tokens.access);
 localStorage.setItem('refresh_token', tokens.refresh);
 
 // 3. Use token in subsequent requests
-const response = await fetch('https:/api.organicgreen.uz/api/products/', {
+const response = await fetch('https://api.organicgreen.uz/api/products/', {
     headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
 });
 ```
@@ -33,13 +33,13 @@ const response = await fetch('https:/api.organicgreen.uz/api/products/', {
 ### 2. Basic Product Fetching
 ```javascript
 // Get all products with pagination
-const products = await fetch('https:/api.organicgreen.uz/api/products/');
+const products = await fetch('https://api.organicgreen.uz/api/products/');
 const data = await products.json();
 
 // Response structure:
 {
     "count": 150,
-    "next": "https:/api.organicgreen.uz/api/products/?page=2",
+    "next": "https://api.organicgreen.uz/api/products/?page=2",
     "previous": null,
     "results": [...products array...]
 }
@@ -69,7 +69,7 @@ const data = await products.json();
 - **Header Format**: `Authorization: Bearer <access_token>`
 
 ### 1. Simple Registration
-**POST** `https:/api.organicgreen.uz/api/auth/register/simple/`
+**POST** `https://api.organicgreen.uz/api/auth/register/simple/`
 
 **Request Body:**
 ```json
@@ -99,7 +99,7 @@ const data = await products.json();
 ```
 
 ### 2. Full Registration
-**POST** `https:/api.organicgreen.uz/api/auth/register/`
+**POST** `https://api.organicgreen.uz/api/auth/register/`
 
 **Request Body:**
 ```json
@@ -114,7 +114,7 @@ const data = await products.json();
 ```
 
 ### 3. Login
-**POST** `https:/api.organicgreen.uz/api/auth/login/`
+**POST** `https://api.organicgreen.uz/api/auth/login/`
 
 **Request Body:**
 ```json
@@ -143,7 +143,7 @@ const data = await products.json();
 ```
 
 ### 4. Token Refresh
-**POST** `https:/api.organicgreen.uz/api/auth/token/refresh/`
+**POST** `https://api.organicgreen.uz/api/auth/token/refresh/`
 
 **Request Body:**
 ```json
@@ -153,7 +153,7 @@ const data = await products.json();
 ```
 
 ### 5. User Profile
-**GET** `https:/api.organicgreen.uz/api/auth/profile/`
+**GET** `https://api.organicgreen.uz/api/auth/profile/`
 **Authentication Required**
 
 **Success Response (200):**
@@ -170,11 +170,11 @@ const data = await products.json();
 ```
 
 ### 6. Update Profile
-**PUT/PATCH** `https:/api.organicgreen.uz/api/auth/profile/`
+**PUT/PATCH** `https://api.organicgreen.uz/api/auth/profile/`
 **Authentication Required**
 
 ### 7. Change Password
-**POST** `https:/api.organicgreen.uz/api/auth/change-password/`
+**POST** `https://api.organicgreen.uz/api/auth/change-password/`
 **Authentication Required**
 
 **Request Body:**
@@ -187,7 +187,7 @@ const data = await products.json();
 ```
 
 ### 8. Logout
-**POST** `https:/api.organicgreen.uz/api/auth/logout/`
+**POST** `https://api.organicgreen.uz/api/auth/logout/`
 **Authentication Required**
 
 **Request Body:**
@@ -198,7 +198,7 @@ const data = await products.json();
 ```
 
 ### 9. Check Auth Status
-**GET** `https:/api.organicgreen.uz/api/auth/status/`
+**GET** `https://api.organicgreen.uz/api/auth/status/`
 **Authentication Required**
 
 ---
@@ -216,7 +216,7 @@ All list endpoints use **PageNumberPagination**:
 ```json
 {
     "count": 150,
-    "next": "https:/api.organicgreen.uz/api/products/?page=2",
+    "next": "https://api.organicgreen.uz/api/products/?page=2",
     "previous": null,
     "page_size": 20,
     "total_pages": 8,
@@ -226,7 +226,7 @@ All list endpoints use **PageNumberPagination**:
 ```
 
 ### 1. List Products (with Advanced Filtering)
-**GET** `https:/api.organicgreen.uz/api/products/`
+**GET** `https://api.organicgreen.uz/api/products/`
 
 **Query Parameters:**
 - `page`: Page number
@@ -244,14 +244,14 @@ All list endpoints use **PageNumberPagination**:
 
 **Example Request:**
 ```
-GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&page=1
+GET https://api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&page=1
 ```
 
 **Success Response (200):**
 ```json
 {
     "count": 25,
-    "next": "https:/api.organicgreen.uz/api/products/?page=2",
+    "next": "https://api.organicgreen.uz/api/products/?page=2",
     "previous": null,
     "page_size": 20,
     "total_pages": 2,
@@ -280,7 +280,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
             "is_featured": true,
             "primary_image": {
                 "id": 1,
-                "image": "https:/api.organicgreen.uz/media/products/tomatoes.jpg",
+                "image": "https://api.organicgreen.uz/media/products/tomatoes.jpg",
                 "alt_text_uz": "Organik pomidorlar"
             },
             "images_count": 3,
@@ -291,8 +291,8 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 ```
 
 ### 2. Get Product Details
-**GET** `https:/api.organicgreen.uz/api/products/{id}/`
-**GET** `https:/api.organicgreen.uz/api/products/{slug}/`
+**GET** `https://api.organicgreen.uz/api/products/{id}/`
+**GET** `https://api.organicgreen.uz/api/products/{slug}/`
 
 **Success Response (200):**
 ```json
@@ -339,8 +339,8 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
     "images": [
         {
             "id": 1,
-            "image": "https:/api.organicgreen.uz/media/products/tomatoes.jpg",
-            "image_url": "https:/api.organicgreen.uz/media/products/tomatoes.jpg",
+            "image": "https://api.organicgreen.uz/media/products/tomatoes.jpg",
+            "image_url": "https://api.organicgreen.uz/media/products/tomatoes.jpg",
             "alt_text_uz": "Organik pomidorlar",
             "is_primary": true,
             "order": 1
@@ -348,7 +348,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
     ],
     "primary_image": {
         "id": 1,
-        "image": "https:/api.organicgreen.uz/media/products/tomatoes.jpg",
+        "image": "https://api.organicgreen.uz/media/products/tomatoes.jpg",
         "alt_text_uz": "Organik pomidorlar"
     },
     "images_count": 3,
@@ -359,7 +359,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 ```
 
 ### 3. Create Product (Admin Only)
-**POST** `https:/api.organicgreen.uz/api/products/`
+**POST** `https://api.organicgreen.uz/api/products/`
 **Authentication Required: Admin**
 
 **Request Body:**
@@ -382,13 +382,13 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 ```
 
 ### 4. Featured Products
-**GET** `https:/api.organicgreen.uz/api/products/featured/`
+**GET** `https://api.organicgreen.uz/api/products/featured/`
 
 ### 5. Products On Sale
-**GET** `https:/api.organicgreen.uz/api/products/on_sale/`
+**GET** `https://api.organicgreen.uz/api/products/on_sale/`
 
 ### 6. Product Statistics (Admin Only)
-**GET** `https:/api.organicgreen.uz/api/products/stats/`
+**GET** `https://api.organicgreen.uz/api/products/stats/`
 **Authentication Required: Admin**
 
 **Success Response (200):**
@@ -408,14 +408,14 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 ```
 
 ### 7. Suggested Products
-**GET** `https:/api.organicgreen.uz/api/products/{id}/suggested/`
+**GET** `https://api.organicgreen.uz/api/products/{id}/suggested/`
 
 ---
 
 ## Categories API
 
 ### 1. List Categories
-**GET** `https:/api.organicgreen.uz/api/categories/`
+**GET** `https://api.organicgreen.uz/api/categories/`
 
 **Query Parameters:**
 - `page`: Page number
@@ -434,7 +434,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
             "id": 1,
             "name": "Vegetables",
             "description": "Fresh organic vegetables",
-            "image": "https:/api.organicgreen.uz/media/categories/vegetables.jpg",
+            "image": "https://api.organicgreen.uz/media/categories/vegetables.jpg",
             "is_active": true,
             "products_count": 45,
             "created_at": "2025-01-15T10:30:00Z"
@@ -444,10 +444,10 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 ```
 
 ### 2. Category Details
-**GET** `https:/api.organicgreen.uz/api/categories/{id}/`
+**GET** `https://api.organicgreen.uz/api/categories/{id}/`
 
 ### 3. Category Products
-**GET** `https:/api.organicgreen.uz/api/categories/{id}/products/`
+**GET** `https://api.organicgreen.uz/api/categories/{id}/products/`
 
 **Query Parameters:**
 - `page`: Page number
@@ -459,10 +459,10 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 ## Tags API
 
 ### 1. List Tags
-**GET** `https:/api.organicgreen.uz/api/tags/`
+**GET** `https://api.organicgreen.uz/api/tags/`
 
 ### 2. Tag Products
-**GET** `https:/api.organicgreen.uz/api/tags/{id}/products/`
+**GET** `https://api.organicgreen.uz/api/tags/{id}/products/`
 
 ---
 
@@ -476,7 +476,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 - **Price calculation** with discounts
 
 ### 1. Get Current Cart
-**GET** `https:/api.organicgreen.uz/api/cart/current/`
+**GET** `https://api.organicgreen.uz/api/cart/current/`
 
 **Success Response (200):**
 ```json
@@ -491,7 +491,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
                 "price": "25000.00",
                 "sale_price": "20000.00",
                 "final_price": "20000.00",
-                "image": "https:/api.organicgreen.uz/media/products/tomatoes.jpg",
+                "image": "https://api.organicgreen.uz/media/products/tomatoes.jpg",
                 "stock": 100
             },
             "quantity": 2,
@@ -508,7 +508,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 ```
 
 ### 2. Add Item to Cart
-**POST** `https:/api.organicgreen.uz/api/cart/add_item/`
+**POST** `https://api.organicgreen.uz/api/cart/add_item/`
 
 **Request Body:**
 ```json
@@ -537,7 +537,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 ```
 
 ### 3. Update Item Quantity
-**PATCH** `https:/api.organicgreen.uz/api/cart/update_item/`
+**PATCH** `https://api.organicgreen.uz/api/cart/update_item/`
 
 **Request Body:**
 ```json
@@ -548,7 +548,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 ```
 
 ### 4. Remove Item from Cart
-**DELETE** `https:/api.organicgreen.uz/api/cart/remove_item/`
+**DELETE** `https://api.organicgreen.uz/api/cart/remove_item/`
 
 **Request Body:**
 ```json
@@ -558,10 +558,10 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 ```
 
 ### 5. Clear Cart
-**DELETE** `https:/api.organicgreen.uz/api/cart/clear/`
+**DELETE** `https://api.organicgreen.uz/api/cart/clear/`
 
 ### 6. Cart Summary
-**GET** `https:/api.organicgreen.uz/api/cart/summary/`
+**GET** `https://api.organicgreen.uz/api/cart/summary/`
 
 **Success Response (200):**
 ```json
@@ -574,7 +574,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 ```
 
 ### 7. Cart History
-**GET** `https:/api.organicgreen.uz/api/cart/history/`
+**GET** `https://api.organicgreen.uz/api/cart/history/`
 **Authentication Required**
 
 ---
@@ -589,7 +589,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 - **Product availability** checking
 
 ### 1. List User Favorites
-**GET** `https:/api.organicgreen.uz/api/favorites/`
+**GET** `https://api.organicgreen.uz/api/favorites/`
 **Authentication Required**
 
 **Query Parameters:**
@@ -603,7 +603,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 ```json
 {
     "count": 15,
-    "next": "https:/api.organicgreen.uz/api/favorites/?page=2",
+    "next": "https://api.organicgreen.uz/api/favorites/?page=2",
     "previous": null,
     "results": [
         {
@@ -620,7 +620,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
                 "stock": 100,
                 "is_active": true,
                 "is_featured": true,
-                "image": "https:/api.organicgreen.uz/media/products/tomatoes.jpg",
+                "image": "https://api.organicgreen.uz/media/products/tomatoes.jpg",
                 "category_name": "Sabzavotlar",
                 "is_on_sale": true,
                 "created_at": "2025-01-15T10:30:00Z"
@@ -632,7 +632,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 ```
 
 ### 2. Add to Favorites
-**POST** `https:/api.organicgreen.uz/api/favorites/`
+**POST** `https://api.organicgreen.uz/api/favorites/`
 **Authentication Required**
 
 **Request Body:**
@@ -659,7 +659,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 ```
 
 ### 3. Remove from Favorites
-**DELETE** `https:/api.organicgreen.uz/api/favorites/{id}/`
+**DELETE** `https://api.organicgreen.uz/api/favorites/{id}/`
 **Authentication Required**
 
 **Success Response (204):**
@@ -670,7 +670,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 ```
 
 ### 4. Check if Product is Favorited
-**GET** `https:/api.organicgreen.uz/api/favorites/check/?product_id={product_id}`
+**GET** `https://api.organicgreen.uz/api/favorites/check/?product_id={product_id}`
 **Authentication Required**
 
 **Success Response (200):**
@@ -683,7 +683,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 ```
 
 ### 5. Toggle Favorite Status
-**POST** `https:/api.organicgreen.uz/api/favorites/toggle/`
+**POST** `https://api.organicgreen.uz/api/favorites/toggle/`
 **Authentication Required**
 
 **Request Body:**
@@ -704,7 +704,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 ```
 
 ### 6. Clear All Favorites
-**DELETE** `https:/api.organicgreen.uz/api/favorites/clear/`
+**DELETE** `https://api.organicgreen.uz/api/favorites/clear/`
 **Authentication Required**
 
 **Success Response (200):**
@@ -716,7 +716,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 ```
 
 ### 7. Favorites Statistics
-**GET** `https:/api.organicgreen.uz/api/favorites/stats/`
+**GET** `https://api.organicgreen.uz/api/favorites/stats/`
 **Authentication Required**
 
 **Success Response (200):**
@@ -737,7 +737,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 ```
 
 ### 8. Bulk Add to Favorites
-**POST** `https:/api.organicgreen.uz/api/favorites/bulk_add/`
+**POST** `https://api.organicgreen.uz/api/favorites/bulk_add/`
 **Authentication Required**
 
 **Request Body:**
@@ -752,7 +752,7 @@ GET https:/api.organicgreen.uz/api/products/?category=1&featured=true&lang=uz&pa
 ```
 
 ### 9. Move Favorites to Cart
-**POST** `https:/api.organicgreen.uz/api/favorites/move_to_cart/`
+**POST** `https://api.organicgreen.uz/api/favorites/move_to_cart/`
 **Authentication Required**
 
 **Request Body:**
@@ -844,7 +844,7 @@ X-RateLimit-Reset: 1642694400
 ### Usage
 Add `lang` parameter to any request:
 ```
-GET https:/api.organicgreen.uz/api/products/?lang=ru
+GET https://api.organicgreen.uz/api/products/?lang=ru
 ```
 
 ### Localized Fields
@@ -869,7 +869,7 @@ const useApi = (url, options = {}) => {
         const fetchData = async () => {
             try {
                 const token = localStorage.getItem('access_token');
-                const response = await fetch(`https:/api.organicgreen.uz${url}`, {
+                const response = await fetch(`https://api.organicgreen.uz${url}`, {
                     ...options,
                     headers: {
                         'Content-Type': 'application/json',
@@ -918,7 +918,7 @@ const ProductList = () => {
 ```javascript
 class OrganicGreenAPI {
     constructor() {
-        this.baseURL = 'https:/api.organicgreen.uz/api';
+        this.baseURL = 'https://api.organicgreen.uz/api';
         this.token = localStorage.getItem('access_token');
     }
 
@@ -1053,7 +1053,7 @@ const PaginationComponent = ({ data, onPageChange }) => {
 ## Testing Endpoints
 
 ### Health Check
-**GET** `https:/api.organicgreen.uz/api/health/`
+**GET** `https://api.organicgreen.uz/api/health/`
 
 ```json
 {
@@ -1065,7 +1065,7 @@ const PaginationComponent = ({ data, onPageChange }) => {
 ```
 
 ### API Documentation
-**GET** `https:/api.organicgreen.uz/api/`
+**GET** `https://api.organicgreen.uz/api/`
 
 Returns complete API documentation in JSON format.
 
@@ -1125,8 +1125,8 @@ const handleApiError = (error) => {
 ## Contact & Support
 
 ### Base URL
-- **Production**: `https:/api.organicgreen.uz/api/`
-- **Documentation**: `https:/api.organicgreen.uz/api/`
+- **Production**: `https://api.organicgreen.uz/api/`
+- **Documentation**: `https://api.organicgreen.uz/api/`
 
 ### API Version
 - **Current Version**: 1.0.0

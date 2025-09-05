@@ -253,7 +253,7 @@ export function buildImageUrl(imagePath: string): string {
   }
   
   // If relative path, prepend API base URL
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https:/api.organicgreen.uz';
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.organicgreen.uz';
   
   // Ensure proper path joining
   const cleanPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;

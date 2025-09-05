@@ -1,7 +1,7 @@
 // Centralized API Configuration with JWT Token Management
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https:/api.organicgreen.uz/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.organicgreen.uz/api';
 
 // Types for token management
 interface AuthTokens {

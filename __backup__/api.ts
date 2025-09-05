@@ -1,7 +1,7 @@
 // API configuration
 import axios from 'axios';
 
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https:/api.organicgreen.uz/api';
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.organicgreen.uz/api';
 
 // Create axios instance
 export const api = axios.create({

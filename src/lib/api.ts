@@ -2,7 +2,7 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { getCartSessionKey, getAccessToken } from './session';
 
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https:/api.organicgreen.uz/api';
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.organicgreen.uz/api';
 
 // Auth service interface for API client
 interface AuthService {

@@ -10,7 +10,7 @@ import type {
 } from '@/types/order';
 import type { Cart } from '@/types/cart';
 
-const API_BASE_URL = 'https:/api.organicgreen.uz/api';
+const API_BASE_URL = 'https://api.organicgreen.uz/api';
 
 // Logger utility for debugging
 const logger = {

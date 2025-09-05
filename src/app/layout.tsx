@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https:/api.organicgreen.uz"),
+  metadataBase: new URL("https://api.organicgreen.uz"),
   alternates: {
     canonical: "/",
     languages: {
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Organic Green Uzbekistan - Микрозелень ва табиий маҳсулотлар",
     description: "Ўзбекистонда микрозелень бўйича етакчи компания. Табиий ва органик маҳсулотлар, франшиза, таълим дастурлари.",
-    url: "https:/api.organicgreen.uz",
+    url: "https://api.organicgreen.uz",
     siteName: "Organic Green Uzbekistan",
     images: [
       {

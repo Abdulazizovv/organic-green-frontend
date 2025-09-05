@@ -6,7 +6,7 @@ The Franchise API allows users to submit franchise applications and provides adm
 
 ## Base URL
 ```
-https:/api.organicgreen.uz/api/franchise/
+https://api.organicgreen.uz/api/franchise/
 ```
 
 ## Authentication
@@ -106,7 +106,7 @@ GET /applications/list/?status=pending&ordering=-created_at&page=1
 ```json
 {
     "count": 25,
-    "next": "https:/api.organicgreen.uz/api/franchise/applications/list/?page=2",
+    "next": "https://api.organicgreen.uz/api/franchise/applications/list/?page=2",
     "previous": null,
     "results": [
         {
@@ -392,7 +392,7 @@ DELETE /applications/1/delete/
 #### Submit Application (Public)
 ```javascript
 const submitApplication = async (applicationData) => {
-    const response = await fetch('https:/api.organicgreen.uz/api/franchise/applications/', {
+    const response = await fetch('https://api.organicgreen.uz/api/franchise/applications/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -432,7 +432,7 @@ const getApplications = async (filters = {}) => {
     const params = new URLSearchParams(filters);
     
     const response = await fetch(
-        `https:/api.organicgreen.uz/api/franchise/applications/list/?${params}`,
+        `https://api.organicgreen.uz/api/franchise/applications/list/?${params}`,
         {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -458,7 +458,7 @@ const updateApplicationStatus = async (applicationId, status) => {
     const token = localStorage.getItem('access_token');
     
     const response = await fetch(
-        `https:/api.organicgreen.uz/api/franchise/applications/${applicationId}/update/`,
+        `https://api.organicgreen.uz/api/franchise/applications/${applicationId}/update/`,
         {
             method: 'PATCH',
             headers: {

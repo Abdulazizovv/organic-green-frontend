@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { setAuthService } from './api';
 
-const API_BASE_URL = 'https:/api.organicgreen.uz/api';
+const API_BASE_URL = 'https://api.organicgreen.uz/api';
 
 // Auth API interface types
 export interface RegisterRequest {

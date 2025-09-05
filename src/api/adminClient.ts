@@ -9,7 +9,7 @@ export interface ApiErrorShape {
 }
 
 export const adminClient: AxiosInstance = axios.create({
-  baseURL: 'https:/api.organicgreen.uz/api/admin/',
+  baseURL: 'https://api.organicgreen.uz/api/admin/',
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
