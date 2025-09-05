@@ -8,11 +8,12 @@ interface AuthContextType {
   accessToken: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
-  login: (credentials: LoginRequest) => Promise<void>;
-  register: (userData: RegisterRequest) => Promise<void>;
+  login: (credentials: LoginRequest) => Promise<User>; // changed to return User
+  register: (userData: RegisterRequest) => Promise<User>; // changed to return User
   logout: () => void;
   refreshAccessToken: () => Promise<void>;
   loading: boolean;
+  isAdmin: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -36,7 +37,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setLoading(false);
   }, []);
 
-  const login = async (credentials: LoginRequest) => {
+  const login = async (credentials: LoginRequest): Promise<User> => {
     try {
       setLoading(true);
       const response = await authService.login(credentials);
@@ -45,6 +46,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       authService.saveTokens(response.tokens);
       authService.saveUser(response.user);
       setUser(response.user);
+      return response.user; // return fresh user
     } catch (error) {
       throw error;
     } finally {
@@ -52,7 +54,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  const register = async (userData: RegisterRequest) => {
+  const register = async (userData: RegisterRequest): Promise<User> => {
     try {
       setLoading(true);
       const response = await authService.register(userData);
@@ -61,6 +63,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       authService.saveTokens(response.tokens);
       authService.saveUser(response.user);
       setUser(response.user);
+      return response.user; // return fresh user
     } catch (error) {
       throw error;
     } finally {
@@ -84,6 +87,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const isAuthenticated = !!user && authService.isAuthenticated();
+  const isAdmin = !!user && ((user.is_staff ?? false) || (user.is_superuser ?? false));
 
   const value = {
     user,
@@ -95,6 +99,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     logout,
     refreshAccessToken,
     loading,
+    isAdmin,
   };
 
   return (

@@ -28,6 +28,9 @@ export interface User {
   is_active: boolean;
   date_joined: string;
   last_login: string | null;
+  // Added admin related flags
+  is_staff?: boolean;
+  is_superuser?: boolean;
 }
 
 export interface AuthTokens {
@@ -61,8 +64,9 @@ export const authService = {
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {
-        console.log(error.response.data);
-        throw new Error(error.response.data.message || 'Registration failed');
+        interface ErrShape { message?: string }
+        const data = error.response.data as ErrShape;
+        throw new Error(data.message || 'Registration failed');
       }
       throw new Error('Network error occurred');
     }
@@ -75,7 +79,9 @@ export const authService = {
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {
-        throw new Error(error.response.data.message || 'Login failed');
+        interface ErrShape { message?: string }
+        const data = error.response.data as ErrShape;
+        throw new Error(data.message || 'Login failed');
       }
       throw new Error('Network error occurred');
     }
@@ -102,7 +108,9 @@ export const authService = {
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {
-        throw new Error(error.response.data.message || 'Token refresh failed');
+        interface ErrShape { message?: string }
+        const data = error.response.data as ErrShape;
+        throw new Error(data.message || 'Token refresh failed');
       }
       throw new Error('Network error occurred');
     }
@@ -183,17 +191,3 @@ authApi.interceptors.request.use(
 );
 
 export default authService;
-
-// Add request interceptor to add auth token
-authApi.interceptors.request.use(
-  (config) => {
-    const token = authService.getAccessToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);

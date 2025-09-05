@@ -50,10 +50,14 @@ export default function LoginPage() {
     setError('');
 
     try {
-      await login(formData);
-      
-      // Check for redirect parameter
+      const loggedInUser = await login(formData);
+      const admin = (loggedInUser.is_staff ?? false) || (loggedInUser.is_superuser ?? false);
+      // After login, determine admin redirect first
       const nextUrl = searchParams.get('next');
+      if (admin) {
+        router.push('/admin/dashboard');
+        return;
+      }
       if (nextUrl) {
         router.push(decodeURIComponent(nextUrl));
       } else {
