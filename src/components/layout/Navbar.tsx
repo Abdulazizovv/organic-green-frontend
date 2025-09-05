@@ -11,6 +11,8 @@ import { useLanguage, type Language } from "@/lib/language";
 import { useAuth } from "@/lib/authContext";
 import { useCart } from "@/context/CartContext";
 // import { useFavorites } from "@/hooks/useFavorites";
+import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const navigationItems = [
   { href: "/", key: "navigation.home" },
@@ -28,13 +30,20 @@ const languages = [
   { code: "en", label: "English", flag: "🇺🇸" },
 ];
 
+const testModeMessages = [
+  { lang: 'UZ', text: 'Sayt test rejimida ishlamoqda' },
+  { lang: 'RU', text: 'Сайт работает в тестовом режиме' },
+  { lang: 'EN', text: 'The site is running in test mode' },
+];
+
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  
+  const [bannerIndex, setBannerIndex] = useState(0);
+
   // Get language context
   const { language, setLanguage, t } = useLanguage();
   
@@ -76,6 +85,13 @@ export function Navbar() {
     }
   }, [isLangOpen, isProductsOpen, isUserMenuOpen]);
 
+  useEffect(() => {
+    const id = setInterval(() => {
+      setBannerIndex(i => (i + 1) % testModeMessages.length);
+    }, 3000);
+    return () => clearInterval(id);
+  }, []);
+
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
   const toggleLangMenu = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -98,26 +114,50 @@ export function Navbar() {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50">
+      {/* Test Mode Banner */}
+      <div className="w-full bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-gray-900 shadow-sm border-b border-amber-300 h-7 flex items-center justify-center overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={bannerIndex}
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -20, opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="flex items-center gap-2 text-xs sm:text-sm font-medium tracking-wide"
+          >
+            <span className="px-1.5 py-0.5 bg-white/70 rounded text-[10px] font-semibold text-amber-800">
+              {testModeMessages[bannerIndex].lang}
+            </span>
+            <span>{testModeMessages[bannerIndex].text}</span>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+      {/* Main Nav */}
       <nav className={cn(
-        "transition-all duration-300 border-b",
-        scrolled 
-          ? "bg-white/95 backdrop-blur-md border-green-200 shadow-sm" 
-          : "bg-white border-green-100"
+        'transition-all duration-300 border-b',
+        scrolled ? 'bg-white/95 backdrop-blur-md border-green-200 shadow-sm' : 'bg-white border-green-100'
       )}>
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2 group">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-green-500 to-green-700 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
-                <span className="text-white font-bold text-lg sm:text-xl lg:text-2xl">OG</span>
+              <div className="relative w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-full overflow-hidden">
+                <Image
+                  src="/logo.png"
+                  alt="Organic Green"
+                  fill
+                  priority
+                  className="object-contain p-1 transition-transform duration-300 group-hover:scale-105"
+                  sizes="(max-width: 640px) 48px, (max-width: 1024px) 56px, 64px"
+                />
               </div>
               <div className="hidden sm:block">
                 <h1 className="text-lg lg:text-xl font-bold text-gray-800 leading-tight">
-                  Organic Green
+                  Organic <span className="text-green-600"> Green</span>
                 </h1>
-                <p className="text-xs lg:text-sm text-green-600 font-medium">
+                {/* <p className="text-xs lg:text-sm text-green-600 font-medium">
                   {t('tagline')}
-                </p>
+                </p> */}
               </div>
             </Link>
 
