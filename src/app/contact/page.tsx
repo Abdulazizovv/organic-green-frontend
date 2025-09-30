@@ -26,7 +26,7 @@ export default function ContactPage() {
     {
       icon: Phone,
       title: "Телефон",
-      value: "+998 90 123 45 67",
+      value: "+998 90 844 08 44",
       description: "24/7 қўллаб-қувватлаш хизмати"
     },
     {
@@ -46,7 +46,7 @@ export default function ContactPage() {
   const departments = [
     {
       title: "Сотув бўлими",
-      phone: "+998 90 123 45 67",
+      phone: "+998 90 844 08 44",
       email: "sales@organicgreen.uz",
       description: "Маҳсулотлар сотиб олиш ва нархлар ҳақида"
     },
@@ -258,7 +258,7 @@ export default function ContactPage() {
                     <input
                       type="tel"
                       className="w-full px-4 py-3 border border-green-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                      placeholder="+998 90 123 45 67"
+                      placeholder="+998 90 844 08 44"
                     />
                   </div>
                   

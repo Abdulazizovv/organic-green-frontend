@@ -358,7 +358,7 @@
       "fullName": "Full Name",
       "fullNamePlaceholder": "Enter your full name",
       "phone": "Phone Number",
-      "phonePlaceholder": "+998 90 123 45 67",
+      "phonePlaceholder": "+998 90 844 08 44",
       "email": "Email (Optional)",
       "emailPlaceholder": "your.email@example.com",
       "city": "City",
@@ -488,7 +488,7 @@
     "phone": "Phone Number",
     "phone_required": "Phone number is required",
     "phone_invalid": "Please enter a valid phone number (+998xxxxxxxxx)",
-    "phone_placeholder": "+998 90 123 45 67",
+    "phone_placeholder": "+998 90 844 08 44",
     "email": "Email (optional)",
     "email_invalid": "Please enter a valid email address",
     "city": "City",
@@ -666,7 +666,7 @@
     "contact_info": {
       "title": "Contact Information",
       "address": "Tashkent city, Yunusabad district",
-      "phone": "+998 90 123 45 67",
+      "phone": "+998 90 844 08 44",
       "email": "education@organicgreen.uz",
       "working_hours": "Mon-Fri: 09:00-18:00"
     }
@@ -758,7 +758,7 @@
   },
   "contact": {
     "address": "Tashkent, Mirzo Ulugbek District, University Street 4",
-    "phone": "+998 90 123 45 67",
+    "phone": "+998 90 844 08 44",
     "email": "info@organicgreen.uz"
   },
   "common": {
@@ -932,7 +932,7 @@
     "phone_note": "If you register with this phone number in our Telegram bot, order details and statuses will be sent to you.",
     "telegram_bot_link": "Go to Telegram Bot",
     "full_name_placeholder": "Enter your full name",
-    "phone_placeholder": "+998 90 123 45 67",
+    "phone_placeholder": "+998 90 844 08 44",
     "delivery_address_placeholder": "Enter your full delivery address",
     "notes_placeholder": "Any special instructions for delivery..."
   },
@@ -976,7 +976,7 @@
       "discount": "Discount",
       "total": "Total",
       "thank_you": "Thank you for your purchase!",
-      "contact": "Contact: +998 90 123 45 67"
+      "contact": "Contact: +998 90 844 08 44"
     },
     "telegram_promo": {
       "title": "Track your order updates through our Telegram bot!",

@@ -344,7 +344,7 @@
       "fullName": "Тўлиқ исм",
       "fullNamePlaceholder": "Тўлиқ исмингизни киритинг",
       "phone": "Телефон рақам",
-      "phonePlaceholder": "+998 90 123 45 67",
+      "phonePlaceholder": "+998 90 844 08 44",
       "email": "Электрон почта (ихтиёрий)",
       "emailPlaceholder": "sizning.email@example.com",
       "city": "Шаҳар",
@@ -474,7 +474,7 @@
     "phone": "Телефон рақами",
     "phone_required": "Телефон рақами киритиш мажбурий",
     "phone_invalid": "Тўғри телефон рақами киритинг (+998xxxxxxxxx)",
-    "phone_placeholder": "+998 90 123 45 67",
+    "phone_placeholder": "+998 90 844 08 44",
     "email": "Email (ихтиёрий)",
     "email_invalid": "Тўғри email манзил киритинг",
     "city": "Шаҳар",
@@ -638,7 +638,7 @@
     "contact_info": {
       "title": "Алоқа маълумотлари",
       "address": "Тошкент шаҳри, Юнусобод тумани",
-      "phone": "+998 90 123 45 67",
+      "phone": "+998 90 844 08 44",
       "email": "education@organicgreen.uz",
       "working_hours": "Душ-Жума: 09:00-18:00"
     }
@@ -730,7 +730,7 @@
   },
   "contact": {
     "address": "Ташкент ш., Мирзо Улуғбек т., Университет кўчаси 4-уй",
-    "phone": "+998 90 123 45 67",
+    "phone": "+998 90 844 08 44",
     "email": "info@organicgreen.uz"
   },
   "common": {
@@ -900,7 +900,7 @@
     "phone_note": "Агар шу телефон рақам орқали Telegram ботда рўйхатдан ўтсангиз, буюртма тафсилотлари ва статуслари сизга юборилади.",
     "telegram_bot_link": "Telegram ботга ўтиш",
     "full_name_placeholder": "Тўлиқ исмингизни киритинг",
-    "phone_placeholder": "+998 90 123 45 67",
+    "phone_placeholder": "+998 90 844 08 44",
     "delivery_address_placeholder": "Етказиб бериш манзилини тўлиқ киритинг",
     "notes_placeholder": "Етказиб бериш учун махсус кўрсатмалар..."
   },
@@ -944,7 +944,7 @@
       "discount": "Чегирма",
       "total": "Жами",
       "thank_you": "Харидингиз учун раҳмат!",
-      "contact": "Алоқа учун: +998 90 123 45 67"
+      "contact": "Алоқа учун: +998 90 844 08 44"
     },
     "telegram_promo": {
       "title": "Буюртмангиз ҳақида янгиланишларни бизнинг Telegram ботимиз орқали кузатиб боринг!",

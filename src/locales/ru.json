@@ -339,7 +339,7 @@
       "fullName": "Полное имя",
       "fullNamePlaceholder": "Введите ваше полное имя",
       "phone": "Номер телефона",
-      "phonePlaceholder": "+998 90 123 45 67",
+      "phonePlaceholder": "+998 90 844 08 44",
       "email": "Электронная почта (необязательно)",
       "emailPlaceholder": "your.email@example.com",
       "city": "Город",
@@ -478,7 +478,7 @@
     "phone": "Номер телефона",
     "phone_required": "Номер телефона обязателен",
     "phone_invalid": "Введите правильный номер телефона (+998xxxxxxxxx)",
-    "phone_placeholder": "+998 90 123 45 67",
+    "phone_placeholder": "+998 90 844 08 44",
     "email": "Email (необязательно)",
     "email_invalid": "Введите правильный email адрес",
     "city": "Город",
@@ -656,7 +656,7 @@
     "contact_info": {
       "title": "Контактная информация",
       "address": "г. Ташкент, Юнусабадский район",
-      "phone": "+998 90 123 45 67",
+      "phone": "+998 90 844 08 44",
       "email": "education@organicgreen.uz",
       "working_hours": "Пн-Пт: 09:00-18:00"
     }
@@ -748,7 +748,7 @@
   },
   "contact": {
     "address": "Ташкент, район Мирзо Улугбек, улица Университетская 4",
-    "phone": "+998 90 123 45 67",
+    "phone": "+998 90 844 08 44",
     "email": "info@organicgreen.uz"
   },
   "common": {
@@ -918,7 +918,7 @@
     "phone_note": "Если вы зарегистрируетесь с этим номером телефона в нашем Telegram боте, детали заказа и статусы будут отправляться вам.",
     "telegram_bot_link": "Перейти к Telegram боту",
     "full_name_placeholder": "Введите ваше полное имя",
-    "phone_placeholder": "+998 90 123 45 67",
+    "phone_placeholder": "+998 90 844 08 44",
     "delivery_address_placeholder": "Введите полный адрес доставки",
     "notes_placeholder": "Любые специальные инструкции для доставки..."
   },
@@ -962,7 +962,7 @@
       "discount": "Скидка",
       "total": "Итого",
       "thank_you": "Спасибо за покупку!",
-      "contact": "Контакт: +998 90 123 45 67"
+      "contact": "Контакт: +998 90 844 08 44"
     },
     "telegram_promo": {
       "title": "Отслеживайте обновления вашего заказа через наш Telegram бот!",

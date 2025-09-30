@@ -225,7 +225,7 @@ export function ApplyModal({ isOpen, onClose, course }: ApplyModalProps) {
                   <Input
                     id="phone"
                     type="tel"
-                    placeholder="+998901234567"
+                    placeholder="+998908440844"
                     value={formData.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
                     className={errors.phone ? 'border-red-500' : ''}
