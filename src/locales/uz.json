@@ -445,7 +445,7 @@
     "microgreens_description": "Тоза ва табиий микрозелень парваришлаш",
     "microgreens_benefit1": "100% органик",
     "microgreens_benefit2": "Юқори озуқавийлик",
-    "microgreens_benefit3": "Тоза етказиб бериш",
+    "microgreens_benefit3": "Таза етказиб бериш",
     "supplements_title": "БАД Қўшимчалар",
     "supplements_description": "Табиий витаминлар ва озуқа қўшимчалари",
     "supplements_benefit1": "Табиий таркиб",
@@ -913,7 +913,7 @@
     "payment_method": "Тўлов усули",
     "delivery_address": "Етказиб бериш манзили",
     "order_items": "Буюртма буюмлари",
-    "continue_shopping": "Харидни давом еттириш",
+    "continue_shopping": "Харидни давом эттириш",
     "view_orders": "Буюртмаларимни кўриш",
     "order_details": "Буюртма тафсилотлари",
     "order_status": "Буюртма ҳолати",
@@ -1099,6 +1099,11 @@
       "description": "Соғлом турмуш тарзини ривожлантириш миссиясида биз билан ҳамкорлик қилинг",
       "contact_button": "Алоқа",
       "partner_button": "Ҳамкор бўлиш"
+    },
+    "locations": {
+      "title": "Манзилларимиз",
+      "description": "Офис ва ишлаб чиқариш нуқталаримизга ташриф буюринг",
+      "view_on_map": "Google Xaritalarda ko‘рish"
     }
   },
   "courses": {
@@ -1192,5 +1197,55 @@
   "footer_education": "Курслар",
   "footer_about":"Биз ҳақимизда",
   "footer_blog":"Блог",
-  "footer_contact":"Алоқа"
+  "footer_contact":"Алоқа",
+  "contactPage": {
+    "hero_title_part1": "Биз билан",
+    "hero_title_part2": "алоқа",
+    "hero_subtitle": "Саволларингиз борми? Биз ёрдам беришга тайёрмиз. Профессионал маслаҳат учун биз билан боғланинг.",
+    "send_message": "Хабар йўллаш",
+    "call_us": "Қўнғироқ қилиш",
+    "form": {
+      "title": "Хабар йўллаш",
+      "subtitle": "Формани тўлдиринг ва биз тез орада боғланамиз",
+      "first_name": "Исм",
+      "last_name": "Фамилия",
+      "email": "Электрон почта",
+      "phone": "Телефон",
+      "topic": "Мавзу",
+      "topics": {
+        "general": "Умумий савол",
+        "products": "Маҳсулотлар ҳақида",
+        "franchise": "Франшиза ҳақида",
+        "education": "Таълим курслари",
+        "support": "Техник қўллаб-қувватлаш",
+        "partnership": "Ҳамкорлик таклифи"
+      },
+      "message": "Хабар",
+      "submit": "Юбориш"
+    },
+    "info": {
+      "title_part1": "Алоқа",
+      "title_part2": "маълумотлари",
+      "subtitle": "Бизга турли йўллар орқали мурожаат қилишингиз мумкин"
+    },
+    "departments": {
+      "title_part1": "Бўлимлар",
+      "title_part2": "билан алоқа",
+      "subtitle": "Муайян саволларингиз учун тегишли бўлим билан бевосита алоқага чиқинг"
+    },
+    "social": {
+      "title_part1": "Ижтимоий",
+      "title_part2": "тармоқларда",
+      "subtitle": "Янгиликлар ва фойдали маслаҳатлар учун обуна бўлинг"
+    },
+    "address": "Манзил",
+    "address_desc": "Асосий офис ва ишлаб чиқариш",
+    "phone": "Телефон",
+    "phone_desc": "24/7 қўллаб-қувватлаш хизмати",
+    "email": "Электрон почта",
+    "email_desc": "Барча саволлар учун",
+    "hours": "Иш вақти",
+    "hours_value": "Душанба - Жума: 9:00 - 18:00",
+    "hours_desc": "Шанба: 9:00 - 14:00"
+  }
 }

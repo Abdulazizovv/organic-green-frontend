@@ -14,32 +14,37 @@ import {
   Building,
   CheckCircle
 } from "lucide-react";
+import { useLanguage } from "@/lib/language";
+import { getLocalizedAddresses } from "@/data/locations";
 
 export default function ContactPage() {
+  const { t, language } = useLanguage();
+  const localizedAddresses = getLocalizedAddresses(language);
+
   const contactInfo = [
     {
       icon: MapPin,
-      title: "Манзил",
-      value: "Тошкент ш., Юнусобод тумани, Абдулла Қодирий кўчаси 12-уй",
-      description: "Асосий офис ва ишлаб чиқариш"
+      title: t('contactPage.address'),
+      value: localizedAddresses[0] ?? '',
+      description: t('contactPage.address_desc')
     },
     {
       icon: Phone,
-      title: "Телефон",
+      title: t('contactPage.phone'),
       value: "+998 90 844 08 44",
-      description: "24/7 қўллаб-қувватлаш хизмати"
+      description: t('contactPage.phone_desc')
     },
     {
       icon: Mail,
-      title: "Электрон почта",
+      title: t('contactPage.email'),
       value: "info@organicgreen.uz",
-      description: "Барча саволлар учун"
+      description: t('contactPage.email_desc')
     },
     {
       icon: Clock,
-      title: "Иш вақти",
-      value: "Душанба - Жума: 9:00 - 18:00",
-      description: "Шанба: 9:00 - 14:00"
+      title: t('contactPage.hours'),
+      value: t('contactPage.hours_value'),
+      description: t('contactPage.hours_desc')
     }
   ];
 
@@ -140,8 +145,7 @@ export default function ContactPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              Биз билан{" "}
-              <span className="text-green-600">алоқа</span>
+              {t('contactPage.hero_title_part1')} <span className="text-green-600">{t('contactPage.hero_title_part2')}</span>
             </motion.h1>
             
             <motion.p 
@@ -150,8 +154,7 @@ export default function ContactPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              Саволларингиз борми? Биз ёрдам беришга тайёрмиз! 
-              Бизга мурожаат қилинг ва профессионал маслаҳат олинг
+              {t('contactPage.hero_subtitle')}
             </motion.p>
             
             <motion.div 
@@ -165,7 +168,7 @@ export default function ContactPage() {
                 className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-4 text-lg font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <MessageCircle className="w-5 h-5 mr-2" />
-                Хабар йўллаш
+                {t('contactPage.send_message')}
               </Button>
               <Button 
                 variant="outline" 
@@ -173,7 +176,7 @@ export default function ContactPage() {
                 className="border-green-200 text-green-700 hover:bg-green-50 px-8 py-4 text-lg font-medium rounded-xl"
               >
                 <Phone className="w-5 h-5 mr-2" />
-                Қўнғироқ қилиш
+                {t('contactPage.call_us')}
               </Button>
             </motion.div>
           </div>
@@ -221,13 +224,13 @@ export default function ContactPage() {
             >
               <Card className="border-green-100 shadow-xl">
                 <CardHeader>
-                  <CardTitle className="text-2xl text-gray-900">Хабар йўллаш</CardTitle>
-                  <p className="text-gray-600">Формани тўлдиринг ва биз сиз билан тез орада боғланамиз</p>
+                  <CardTitle className="text-2xl text-gray-900">{t('contactPage.form.title')}</CardTitle>
+                  <p className="text-gray-600">{t('contactPage.form.subtitle')}</p>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Исм</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">{t('contactPage.form.first_name')}</label>
                       <input
                         type="text"
                         className="w-full px-4 py-3 border border-green-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent"
@@ -235,7 +238,7 @@ export default function ContactPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Фамилия</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">{t('contactPage.form.last_name')}</label>
                       <input
                         type="text"
                         className="w-full px-4 py-3 border border-green-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent"
@@ -245,7 +248,7 @@ export default function ContactPage() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Электрон почта</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('contactPage.form.email')}</label>
                     <input
                       type="email"
                       className="w-full px-4 py-3 border border-green-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent"
@@ -254,7 +257,7 @@ export default function ContactPage() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Телефон</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('contactPage.form.phone')}</label>
                     <input
                       type="tel"
                       className="w-full px-4 py-3 border border-green-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent"
@@ -263,19 +266,19 @@ export default function ContactPage() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Мавзу</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('contactPage.form.topic')}</label>
                     <select className="w-full px-4 py-3 border border-green-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                      <option>Умумий савол</option>
-                      <option>Маҳсулотлар ҳақида</option>
-                      <option>Франшиза ҳақида</option>
-                      <option>Таълим курслари</option>
-                      <option>Техник қўллаб-қувватлаш</option>
-                      <option>Ҳамкорлик таклифи</option>
+                      <option>{t('contactPage.form.topics.general')}</option>
+                      <option>{t('contactPage.form.topics.products')}</option>
+                      <option>{t('contactPage.form.topics.franchise')}</option>
+                      <option>{t('contactPage.form.topics.education')}</option>
+                      <option>{t('contactPage.form.topics.support')}</option>
+                      <option>{t('contactPage.form.topics.partnership')}</option>
                     </select>
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Хабар</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('contactPage.form.message')}</label>
                     <textarea
                       rows={4}
                       className="w-full px-4 py-3 border border-green-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
@@ -283,11 +286,9 @@ export default function ContactPage() {
                     />
                   </div>
                   
-                  <Button 
-                    className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-4 text-lg font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
+                  <Button className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-4 text-lg font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
                     <Send className="w-5 h-5 mr-2" />
-                    Хабарни йўллаш
+                    {t('contactPage.form.submit')}
                   </Button>
                 </CardContent>
               </Card>
@@ -303,10 +304,10 @@ export default function ContactPage() {
             >
               <div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-6 font-heading">
-                  Алоқа <span className="text-green-600">маълумотлари</span>
+                  {t('contactPage.info.title_part1')} <span className="text-green-600">{t('contactPage.info.title_part2')}</span>
                 </h2>
                 <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                  Бизга турли йўллар орқали мурожаат қилишингиз мумкин
+                  {t('contactPage.info.subtitle')}
                 </p>
               </div>
 
@@ -346,10 +347,10 @@ export default function ContactPage() {
         <div className="container">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4 font-heading">
-              Бўлимлар <span className="text-green-600">билан алоқа</span>
+              {t('contactPage.departments.title_part1')} <span className="text-green-600">{t('contactPage.departments.title_part2')}</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Муайян саволларингиз учун тегишли бўлим билан бевосита алоқага чиқинг
+              {t('contactPage.departments.subtitle')}
             </p>
           </div>
 
@@ -397,30 +398,56 @@ export default function ContactPage() {
         <div className="container">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4 font-heading">
-              Бизни <span className="text-green-600">топинг</span>
+              {t('about.locations.title')}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Офисимизга келиб, шахсан учрашув ташкил қилинг
+              {t('about.locations.description')}
             </p>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <Card className="border-green-100 overflow-hidden">
-              <div className="h-96 bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin className="w-16 h-16 text-green-600 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Интерактив харита</h3>
-                  <p className="text-gray-600">Тошкент ш., Юнусобод тумани</p>
-                  <p className="text-gray-600">Абдулла Қодирий кўчаси 12-уй</p>
-                </div>
-              </div>
-            </Card>
-          </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {localizedAddresses.map((addr, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: idx * 0.1 }}
+                viewport={{ once: true }}
+                className="space-y-3"
+              >
+                <Card className="border-green-100 overflow-hidden">
+                  <CardContent className="p-0">
+                    <div className="w-full overflow-hidden">
+                      <iframe
+                        title={`contact-map-${idx}`}
+                        src={`https://www.google.com/maps?q=${encodeURIComponent(addr)}&output=embed`}
+                        className="w-full h-72 md:h-80"
+                        style={{ border: 0 }}
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        allowFullScreen
+                      />
+                    </div>
+                    <div className="p-4 flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-semibold">{idx + 1}</div>
+                      <div>
+                        <div className="font-semibold text-gray-900 flex items-center gap-2"><MapPin className="w-4 h-4 text-green-600" /> {t('footer.contact.address')}</div>
+                        <div className="text-gray-600">{addr}</div>
+                        <a
+                          href={`https://maps.google.com/?q=${encodeURIComponent(addr)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-green-600 hover:text-green-700 text-sm font-medium"
+                        >
+                          {t('about.locations.view_on_map')}
+                        </a>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -429,10 +456,10 @@ export default function ContactPage() {
         <div className="container">
           <div className="text-center">
             <h2 className="text-4xl font-bold text-gray-900 mb-4 font-heading">
-              Ижтимоий <span className="text-green-600">тармоқларда</span>
+              {t('contactPage.social.title_part1')} <span className="text-green-600">{t('contactPage.social.title_part2')}</span>
             </h2>
             <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Янгиликлар ва фойдали маслаҳатларни олиш учун ижтимоий тармоқларимизга обуна бўлинг
+              {t('contactPage.social.subtitle')}
             </p>
             
             <div className="flex justify-center gap-6">

@@ -1143,6 +1143,11 @@
       "description": "Partner with us in our mission to promote healthy living",
       "contact_button": "Contact Us",
       "partner_button": "Become a Partner"
+    },
+    "locations": {
+      "title": "Our Locations",
+      "description": "Visit our offices and production sites",
+      "view_on_map": "View on Google Maps"
     }
   },
   "courses": {
@@ -1236,5 +1241,55 @@
   "footer_about": "About Us",
   "footer_products": "Products",
   "footer_franchise": "Franchise",
-  "footer_contact": "Contact"
+  "footer_contact": "Contact",
+  "contactPage": {
+    "hero_title_part1": "Get in",
+    "hero_title_part2": "Touch",
+    "hero_subtitle": "Have questions? We’re ready to help. Contact us for professional assistance.",
+    "send_message": "Send a Message",
+    "call_us": "Call Us",
+    "form": {
+      "title": "Send a Message",
+      "subtitle": "Fill in the form and we will get back to you shortly",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "email": "Email",
+      "phone": "Phone",
+      "topic": "Topic",
+      "topics": {
+        "general": "General Question",
+        "products": "About Products",
+        "franchise": "About Franchise",
+        "education": "Education Courses",
+        "support": "Technical Support",
+        "partnership": "Partnership Proposal"
+      },
+      "message": "Message",
+      "submit": "Send Message"
+    },
+    "info": {
+      "title_part1": "Contact",
+      "title_part2": "Information",
+      "subtitle": "You can reach us through various channels"
+    },
+    "departments": {
+      "title_part1": "Contact our",
+      "title_part2": "Departments",
+      "subtitle": "Reach out directly to the relevant department for specific questions"
+    },
+    "social": {
+      "title_part1": "Follow us on",
+      "title_part2": "Social Media",
+      "subtitle": "Subscribe to receive news and useful tips"
+    },
+    "address": "Address",
+    "address_desc": "Head office and production",
+    "phone": "Phone",
+    "phone_desc": "24/7 support service",
+    "email": "Email",
+    "email_desc": "For all inquiries",
+    "hours": "Working Hours",
+    "hours_value": "Mon - Fri: 9:00 - 18:00",
+    "hours_desc": "Sat: 9:00 - 14:00"
+  }
 }
