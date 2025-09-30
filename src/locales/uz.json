@@ -620,8 +620,8 @@
       "subtitle": "Bizdan ta'lim olgan o'quvchilarning haqiqiy fikrlari"
     },
     "cta_section": {
-      "title": "Organic Green bilan kelajagingizni boshlang",
-      "subtitle": "Professional ta'lim oling va muvaffaqiyatli karyera quring",
+      "title": "Organic Green билан келажагингизни бошланг",
+      "subtitle": "Professional ta'lim oling ва muvaffaqiyatli karyera quring",
       "free_trial": "Bepul sinov darsi",
       "international_certificate": "Xalqaro sertifikat",
       "lifetime_access": "Doimiy kirish huquqi"
@@ -697,7 +697,8 @@
       "subscribe": "Обуна бўлиш"
     },
     "company": {
-      "description": "Ўзбекистонда микрозелень бўйича етакчи компания. Табиий ва органик маҳсулотлар орқали соғлом турмуш тарзини ривожлантирамиз."
+      "description": "Ўзбекистонда микрозелень бўйича етакчи компания. Табиий ва органик маҳсулотлар орқали соғлом турмуш тарзини ривожлантирамиз.",
+      "country": "Ўзбекистон"
     },
     "sections": {
       "company": "Компания",
@@ -831,7 +832,7 @@
     "secure_payment": "Хавфсиз тўлов",
     "empty": "Саватча бўш",
     "subtotal": "Оралиқ жами",
-    "continue_shopping": "Харидни давом еттириш",
+    "continue_shopping": "Харидни давом эттириш",
     "item_count": "буюм",
     "items_count": "буюмлар",
     "updating": "Янгиланмоқда...",
@@ -859,6 +860,7 @@
     "itemsInCart": "та маҳсулот"
   },
   "checkout": {
+    "item_count": "махсулот",
     "items_count": "махсулот",
     "title": "Тўлов",
     "contact_information": "Алоқа маълумотлари",
@@ -929,7 +931,7 @@
     "contact_phone": "Алоқа телефони",
     "notes": "Изоҳлар",
     "order_summary": "Буюртма хулосаси",
-    "subtotal": "Орасумма",
+    "subtotal": "Махсулотлар нархи",
     "discount": "Чегирма",
     "delivery": "Етказиб бериш",
     "delivery_free": "Бепул",
@@ -1025,7 +1027,7 @@
       },
       "innovation": {
         "title": "Инновация",
-        "description": "Илмий тадқиқотлар ва замонавий технологиялар асосида ривожланиш"
+        "description": "Илғор технологиялар ва замонавий технологиялар асосида ривожланиш"
       }
     },
     "timeline": {
@@ -1175,5 +1177,20 @@
       "browse": "Курсларни кўриш",
       "contact": "Алоқа"
     }
-  }
+  },
+  "microgreens": "Микрозелень",
+  "powders": "Кукунлар",
+  "supplements": "Қўшимчалар",
+  "kits": "Тўпламлар",
+  "payment": "Тўлов",
+  "warranty": "Кафолат",
+  "shipping": "Етказиб бериш",
+  "education": "Таълим",
+  "returns": "Қайтариш",
+  "faq": "Савол-жавоб",
+  "footer_franchise": "Франшиза",
+  "footer_education": "Курслар",
+  "footer_about":"Биз ҳақимизда",
+  "footer_blog":"Блог",
+  "footer_contact":"Алоқа"
 }

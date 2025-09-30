@@ -725,7 +725,8 @@
       "subscribe": "Subscribe"
     },
     "company": {
-      "description": "Leading microgreen company in Uzbekistan. Developing healthy lifestyle through natural and organic products."
+      "description": "Leading microgreen company in Uzbekistan. Developing healthy lifestyle through natural and organic products.",
+      "country": "Uzbekistan"
     },
     "sections": {
       "company": "Company",
@@ -891,6 +892,7 @@
     "empty_description": "Save products you love to see them here"
   },
   "checkout": {
+    "item_count": "item",
     "items_count": "items",
     "title": "Checkout",
     "contact_information": "Contact Information",
@@ -1219,5 +1221,20 @@
       "browse": "Browse Courses",
       "contact": "Contact Us"
     }
-  }
+  },
+  "microgreens": "Microgreens",
+  "powders": "Powders",
+  "supplements": "Supplements",
+  "kits": "Kits",
+  "payment": "Payment",
+  "warranty": "Warranty",
+  "shipping": "Shipping",
+  "returns": "Returns",
+  "faqs": "FAQs",
+  "footer_blog": "Blog",
+  "footer_education": "Education",
+  "footer_about": "About Us",
+  "footer_products": "Products",
+  "footer_franchise": "Franchise",
+  "footer_contact": "Contact"
 }

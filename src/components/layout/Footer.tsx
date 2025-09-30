@@ -8,11 +8,11 @@ import { useLanguage } from "@/lib/language";
 
 const footerLinks = {
   company: [
-    { href: "/about", key: "about" },
-    { href: "/franchise", key: "franchise" },
-    { href: "/education", key: "education" },
-    { href: "/blog", key: "blog" },
-    { href: "/contact", key: "contact" },
+    { href: "/about", key: "footer_about" },
+    { href: "/franchise", key: "footer_franchise" },
+    { href: "/education", key: "footer_education" },
+    { href: "/blog", key: "footer_blog" },
+    { href: "/contact", key: "footer_contact" },
   ],
   products: [
     { href: "/products?category=microgreens", key: "microgreens" },
@@ -114,7 +114,7 @@ export function Footer() {
                   Organic Green
                 </span>
                 <span className="text-sm text-organic-green-400 font-medium">
-                  Uzbekistan
+                  {t('footer.company.country')}
                 </span>
               </div>
             </Link>
