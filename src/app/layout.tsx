@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/layout/Navbar";
-import { NavbarSpacer } from "@/components/layout/NavbarSpacer";
-import { Footer } from "@/components/layout/Footer";
+import AppChrome from "@/components/layout/AppChrome";
 import { LanguageProvider } from "@/lib/language";
 import { AuthProvider } from "@/lib/authContext";
 import { CartProvider } from "@/context/CartContext";
@@ -125,12 +123,9 @@ export default function RootLayout({
           <AuthProvider>
             <CartProvider>
               <ToastProvider>
-                <Navbar />
-                <NavbarSpacer />
-                <main className="flex-1">
+                <AppChrome>
                   {children}
-                </main>
-                <Footer />
+                </AppChrome>
               </ToastProvider>
             </CartProvider>
           </AuthProvider>

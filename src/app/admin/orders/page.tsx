@@ -5,7 +5,7 @@ import { AdminGuard } from '@/components/admin/AdminGuard';
 import DataTable, { Column } from '@/components/admin/DataTable';
 import { adminAPI, AdminOrderListItem, AdminOrderDetail, Paginated, ListQuery } from '@/services/adminAPI';
 import { AdminModal } from '@/components/admin/AdminModal';
-import { Search, Loader2, RefreshCw, Volume2, VolumeX, StickyNote, Sparkles, Activity, Clock, PackageCheck, FileDown } from 'lucide-react';
+import { Loader2, Sparkles, Activity, Clock, PackageCheck, FileDown, StickyNote } from 'lucide-react';
 import html2canvas from 'html2canvas';
 
 // Status metadata (Uzbek)
@@ -39,6 +39,74 @@ const AnimatedNumber: React.FC<AnimatedNumberProps> = ({ value }) => {
   return <span>{display}</span>;
 };
 
+// Memoized OrderCard extracted to top-level so unchanged cards don't re-render
+const OrderCard: React.FC<{
+  o: AdminOrderListItem;
+  isNew: boolean;
+  isChanged: boolean;
+  isUpdating: boolean;
+  isDownloading: boolean;
+  onOpenDetail: (id: string) => void;
+  onUpdateStatus: (id: string, status: string) => void;
+  onDownloadReceipt: (id: string) => void | Promise<void>;
+}> = ({ o, isNew, isChanged, isUpdating, isDownloading, onOpenDetail, onUpdateStatus, onDownloadReceipt }) => {
+  return (
+    <div
+      onClick={(e) => { if ((e.target as HTMLElement).tagName === 'SELECT') return; onOpenDetail(o.id); }}
+      className={`group relative rounded-xl border bg-white p-4 shadow-sm cursor-pointer hover:shadow-md transition-all duration-300 overflow-hidden ${isNew ? 'new-order-glow' : ''} ${isChanged ? 'status-change-glow' : ''}`}
+    >
+      <div className="flex items-start justify-between mb-2">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-semibold">{o.order_number}</span>
+          {isNew && <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />}
+        </div>
+        <div className="flex items-center gap-1">
+          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium text-white shadow ${STATUS_META.find(s => s.key === o.status)?.color || 'bg-gray-500'}`}>
+            {STATUS_META.find(s => s.key === o.status)?.label || o.status}
+          </span>
+          <select
+            value={o.status}
+            onChange={(e) => onUpdateStatus(o.id, e.target.value)}
+            disabled={isUpdating}
+            className="border rounded px-1 py-0.5 text-[10px] focus:outline-none focus:ring-2 focus:ring-green-500 bg-white disabled:opacity-50"
+          >
+            {STATUS_META.map(s => <option key={s.key} value={s.key}>{s.label}</option>)}
+          </select>
+        </div>
+      </div>
+      <p className="text-sm font-medium truncate">{o.full_name}</p>
+      <p className="text-[11px] text-gray-500 truncate mb-2">{o.user_email}</p>
+      <div className="flex items-center justify-between text-xs text-gray-600">
+        <span>{o.items_count} pozitsiya</span>
+        <span className="font-semibold text-gray-800">{o.total_price}</span>
+      </div>
+      <div className="mt-2 flex items-center justify-between text-[11px] text-gray-400">
+        <span>{new Date(o.created_at).toLocaleTimeString()}</span>
+        <span className="opacity-0 group-hover:opacity-100 transition">Batafsil →</span>
+      </div>
+      <div className="mt-3">
+        <button
+          onClick={(e) => { e.stopPropagation(); onDownloadReceipt(o.id); }}
+          disabled={isDownloading}
+          className="inline-flex items-center gap-1 px-2 py-1 rounded border text-[11px] bg-white hover:bg-green-50 disabled:opacity-50"
+        >
+          {isDownloading ? <Loader2 className="w-3 h-3 animate-spin" /> : <><FileDown className="w-3 h-3" /> Chek</>}
+        </button>
+      </div>
+    </div>
+  );
+};
+const MemoOrderCard = React.memo(
+  OrderCard,
+  (prev, next) => (
+    prev.o === next.o &&
+    prev.isNew === next.isNew &&
+    prev.isChanged === next.isChanged &&
+    prev.isUpdating === next.isUpdating &&
+    prev.isDownloading === next.isDownloading
+  )
+);
+
 export default function OrdersPage() {
   // Data state
   const [orders, setOrders] = useState<AdminOrderListItem[]>([]);
@@ -55,12 +123,16 @@ export default function OrdersPage() {
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailLoading, setDetailLoading] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<AdminOrderDetail | null>(null);
+  const selectedOrderRef = useRef<AdminOrderDetail | null>(null);
+  useEffect(() => { selectedOrderRef.current = selectedOrder; }, [selectedOrder]);
 
   // Refs for refresh & new order detection
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const firstLoadRef = useRef(true);
   const prevIdsRef = useRef<Set<string>>(new Set());
   const prevStatusesRef = useRef<Map<string, string>>(new Map());
+  const prevOrdersRef = useRef<AdminOrderListItem[]>([]);
+  const lastUserUpdateRef = useRef<number>(0);
   const [highlightIds, setHighlightIds] = useState<Set<string>>(new Set());
   // track status changes separately
   const [changedStatusIds, setChangedStatusIds] = useState<Set<string>>(new Set());
@@ -98,49 +170,80 @@ export default function OrdersPage() {
   };
 
   // Fetch orders
+  const isSameOrder = (a: AdminOrderListItem, b: AdminOrderListItem) => {
+    if (!a || !b) return false;
+    return (
+      a.status === b.status &&
+      a.total_price === b.total_price &&
+      a.items_count === b.items_count &&
+      a.updated_at === b.updated_at &&
+      a.user_email === b.user_email &&
+      a.full_name === b.full_name
+    );
+  };
+
   const fetchOrders = useCallback(() => {
     setLoading(true); setError(null);
     adminAPI.getOrders(buildParams())
       .then(r => {
         const data = r.data as Paginated<AdminOrderListItem>;
-        const currentIds = new Set<string>();
-        const newly: string[] = [];
-        const changed: string[] = [];
-        data.results.forEach(o => {
-          currentIds.add(o.id);
-          const prevStatus = prevStatusesRef.current.get(o.id);
-          if (!prevIdsRef.current.has(o.id)) {
-            if (!firstLoadRef.current) newly.push(o.id);
-          } else if (prevStatus && prevStatus !== o.status) {
-            // only mark as changed if it existed before and status actually changed
-            if (!firstLoadRef.current) changed.push(o.id);
-          }
+        const next = data.results;
+
+        // If user just updated a status, avoid applying server list instantly (debounce)
+        if (Date.now() - lastUserUpdateRef.current < 900) {
+          setMeta(m => ({ ...m, total: data.count }));
+          return; // skip UI update; next tick will catch up
+        }
+
+        const prev = prevOrdersRef.current;
+        const prevMap = new Map(prev.map(o => [o.id, o]));
+
+        const merged = next.map(n => {
+          const p = prevMap.get(n.id);
+          return p && isSameOrder(p, n) ? p : n;
         });
-        if (newly.length && soundEnabled) playBeep();
-        if (newly.length) {
-          setHighlightIds(prev => new Set([...prev, ...newly]));
+
+        // Detect diffs (adds/removes/changes)
+        const prevIds = new Set(prev.map(o => o.id));
+        const nextIds = new Set(next.map(o => o.id));
+        const added: string[] = [];
+        const removed: string[] = [];
+        nextIds.forEach(id => { if (!prevIds.has(id)) added.push(id); });
+        prevIds.forEach(id => { if (!nextIds.has(id)) removed.push(id); });
+        const changed: string[] = [];
+        next.forEach(n => { const p = prevMap.get(n.id); if (p && !isSameOrder(p, n)) changed.push(n.id); });
+
+        const hasChanges = added.length || removed.length || changed.length;
+
+        // Highlight and status-change tracking
+        if (added.length && !firstLoadRef.current) {
+          if (soundEnabled) playBeep();
+          setHighlightIds(prevSet => new Set([...prevSet, ...added]));
           setTimeout(() => {
-            setHighlightIds(h => {
-              const clone = new Set(h); newly.forEach(id => clone.delete(id)); return clone;
-            });
+            setHighlightIds(h => { const clone = new Set(h); added.forEach(id => clone.delete(id)); return clone; });
           }, 4000);
         }
         if (changed.length) {
-          setChangedStatusIds(prev => new Set([...prev, ...changed]));
+          setChangedStatusIds(prevSet => new Set([...prevSet, ...changed]));
           setTimeout(() => {
-            setChangedStatusIds(h => {
-              const clone = new Set(h); changed.forEach(id => clone.delete(id)); return clone;
-            });
+            setChangedStatusIds(h => { const clone = new Set(h); changed.forEach(id => clone.delete(id)); return clone; });
           }, 3000);
         }
-        // update refs after detection
-        prevIdsRef.current = currentIds;
+
+        // Update refs for next cycle
+        prevIdsRef.current = nextIds;
         const newStatusMap = new Map<string, string>();
-        data.results.forEach(o => newStatusMap.set(o.id, o.status));
+        next.forEach(o => newStatusMap.set(o.id, o.status));
         prevStatusesRef.current = newStatusMap;
         firstLoadRef.current = false;
-        setOrders(data.results);
+
         setMeta(m => ({ ...m, total: data.count }));
+
+        if (hasChanges) {
+          prevOrdersRef.current = merged;
+          setOrders(merged);
+        }
+        // else: no state update -> no re-render
       })
       .catch(e => setError(e?.message || 'Ma\'lumotni olishda xatolik'))
       .finally(() => setLoading(false));
@@ -158,58 +261,52 @@ export default function OrdersPage() {
   }, [autoRefresh, fetchOrders]);
 
   // Helpers
-  const manualRefresh = () => fetchOrders();
-  const toggleSound = () => setSoundEnabled(s => { const next = !s; localStorage.setItem('og_admin_sound', next ? 'on' : 'off'); return next; });
   const handlePageChange = (page: number) => setMeta(m => ({ ...m, page }));
   const handlePageSizeChange = (page_size: number) => setMeta(m => ({ ...m, page_size, page: 1 }));
   const handleSortChange = (key: string, dir: 'asc' | 'desc' | undefined) => { if (!dir) setOrdering(''); else setOrdering(`${dir === 'desc' ? '-' : ''}${key}`); };
 
-  const openDetail = (id: string) => {
+  const openDetail = useCallback((id: string) => {
     setDetailOpen(true); setDetailLoading(true); setSelectedOrder(null);
     adminAPI.getOrder(id)
       .then(r => setSelectedOrder(r.data))
       .catch(() => {})
       .finally(() => setDetailLoading(false));
-  };
-  const updateStatus = async (id: string, status: string) => {
-    // optimistic update
-    const original = orders.find(o => o.id === id);
+  }, []);
+
+  const updateStatus = useCallback(async (id: string, status: string) => {
+    lastUserUpdateRef.current = Date.now();
+    let original: AdminOrderListItem | null = null;
     setUpdatingStatusIds(s => new Set(s).add(id));
-    setOrders(prev => prev.map(o => o.id === id ? { ...o, status } : o));
-    if (selectedOrder?.id === id) setSelectedOrder(o => o ? { ...o, status } : o);
+    setOrders(prev => {
+      original = prev.find(o => o.id === id) || null;
+      return prev.map(o => (o.id === id ? { ...o, status } : o));
+    });
+    const sel = selectedOrderRef.current;
+    if (sel?.id === id) setSelectedOrder(o => (o ? { ...o, status } : o));
     try {
       await adminAPI.updateOrderStatus(id, status);
       setChangedStatusIds(prev => new Set([...prev, id]));
       setTimeout(() => {
         setChangedStatusIds(h => { const clone = new Set(h); clone.delete(id); return clone; });
       }, 3000);
-      // refetch to sync counts & any server-side changes (debounced feel)
-      fetchOrders();
     } catch {
-      // revert on error
       if (original) {
-        setOrders(prev => prev.map(o => o.id === id ? { ...o, status: original.status } : o));
-        if (selectedOrder?.id === id) setSelectedOrder(o => o ? { ...o, status: original.status } : o);
+        setOrders(prev => prev.map(o => (o.id === id ? { ...o, status: original!.status } : o)));
+        if (selectedOrderRef.current?.id === id) setSelectedOrder(o => (o ? { ...o, status: original!.status } : o));
       }
     } finally {
       setUpdatingStatusIds(s => { const clone = new Set(s); clone.delete(id); return clone; });
     }
-  };
+  }, []);
 
-  // Badge renderer (restored)
-  const statusBadge = (status: string) => {
-    const meta = STATUS_META.find(s => s.key === status);
-    const label = meta?.label || status;
-    return <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium text-white shadow ${meta?.color || 'bg-gray-500'}`}>{label}</span>;
-  };
-
-  const downloadReceipt = async (id: string) => {
+  const downloadReceipt = useCallback(async (id: string) => {
     if (typeof window === 'undefined') return;
     setDownloadingReceiptIds(s => new Set(s).add(id));
     try {
       let detail: AdminOrderDetail | null = null;
-      if (selectedOrder && selectedOrder.id === id && selectedOrder.items?.length) {
-        detail = selectedOrder;
+      const sel = selectedOrderRef.current;
+      if (sel && sel.id === id && sel.items?.length) {
+        detail = sel;
       } else {
         const r = await adminAPI.getOrder(id);
         detail = r.data as AdminOrderDetail;
@@ -305,7 +402,7 @@ export default function OrdersPage() {
     } finally {
       setDownloadingReceiptIds(s => { const clone = new Set(s); clone.delete(id); return clone; });
     }
-  };
+  }, []);
 
   // Derived stats (restored)
   const counts = STATUS_META.reduce<Record<string, number>>((acc, s) => { acc[s.key] = orders.filter(o => o.status === s.key).length; return acc; }, {});
@@ -330,7 +427,7 @@ export default function OrdersPage() {
     { key: 'items_count', header: 'Soni', sortable: true },
     { key: 'status', header: 'Holat', sortable: true, render: o => (
       <div className={`flex items-center gap-2 ${changedStatusIds.has(o.id) ? 'status-change-glow rounded-md px-1' : ''}`}>
-        {statusBadge(o.status)}
+        {(() => { const meta = STATUS_META.find(s => s.key === o.status); const label = meta?.label || o.status; return <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium text-white shadow ${meta?.color || 'bg-gray-500'}`}>{label}</span>; })()}
         <div className="relative">
           <select
             value={o.status}
@@ -356,61 +453,49 @@ export default function OrdersPage() {
     ) },
   ];
 
-  // Card view (mobile)
-  const OrderCard: React.FC<{ o: AdminOrderListItem; idx: number }> = ({ o }) => {
-    const isNew = highlightIds.has(o.id);
-    const isChanged = changedStatusIds.has(o.id);
-    return (
-      <div
-        onClick={(e) => { if ((e.target as HTMLElement).tagName === 'SELECT') return; openDetail(o.id); }}
-        className={`group relative rounded-xl border bg-white p-4 shadow-sm cursor-pointer hover:shadow-md transition-all duration-300 overflow-hidden ${isNew ? 'new-order-glow' : ''} ${isChanged ? 'status-change-glow' : ''}`}
-      >
-        <div className="flex items-start justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold">{o.order_number}</span>
-            {isNew && <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />}
-          </div>
-          <div className="flex items-center gap-1">
-            {statusBadge(o.status)}
-            <select
-              value={o.status}
-              onChange={(e) => updateStatus(o.id, e.target.value)}
-              disabled={updatingStatusIds.has(o.id)}
-              className="border rounded px-1 py-0.5 text-[10px] focus:outline-none focus:ring-2 focus:ring-green-500 bg-white disabled:opacity-50"
-            >
-              {STATUS_META.map(s => <option key={s.key} value={s.key}>{s.label}</option>)}
-            </select>
-          </div>
-        </div>
-        <p className="text-sm font-medium truncate">{o.full_name}</p>
-        <p className="text-[11px] text-gray-500 truncate mb-2">{o.user_email}</p>
-        <div className="flex items-center justify-between text-xs text-gray-600">
-          <span>{o.items_count} pozitsiya</span>
-          <span className="font-semibold text-gray-800">{o.total_price}</span>
-        </div>
-        <div className="mt-2 flex items-center justify-between text-[11px] text-gray-400">
-          <span>{new Date(o.created_at).toLocaleTimeString()}</span>
-          <span className="opacity-0 group-hover:opacity-100 transition">Batafsil →</span>
-        </div>
-        <div className="mt-3">
-          <button
-            onClick={(e) => { e.stopPropagation(); downloadReceipt(o.id); }}
-            disabled={downloadingReceiptIds.has(o.id)}
-            className="inline-flex items-center gap-1 px-2 py-1 rounded border text-[11px] bg-white hover:bg-green-50 disabled:opacity-50"
-          >
-            {downloadingReceiptIds.has(o.id) ? <Loader2 className="w-3 h-3 animate-spin" /> : <><FileDown className="w-3 h-3" /> Chek</>}
-          </button>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <AdminGuard>
-      <AdminLayout title="Buyurtmalar" description="Real vaqt rejimidagi boshqaruv paneli">
+      <AdminLayout title="Buyurtmalar" description="Mijoz buyurtmalarini boshqarish va monitoring">
         <div className="space-y-6">
-          {/* TOP CONTROLS & METRICS */}
-          <div className="grid gap-5 lg:grid-cols-4 md:grid-cols-2">
+          {/* Settings toolbar */}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <input
+                value={search}
+                onChange={(e) => { setSearch(e.target.value); setMeta(m => ({ ...m, page: 1 })); }}
+                placeholder="Qidirish..."
+                className="h-9 w-48 sm:w-64 rounded-md border px-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+              <select
+                value={statusFilter}
+                onChange={(e) => { setStatusFilter(e.target.value); setMeta(m => ({ ...m, page: 1 })); }}
+                className="h-9 rounded-md border px-2 text-sm bg-white"
+              >
+                <option value="">Barchasi</option>
+                {STATUS_META.map(s => (
+                  <option key={s.key} value={s.key}>{s.label}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-center gap-2">
+              <button onClick={() => fetchOrders()} className="h-9 px-3 rounded-md border text-sm bg-white hover:bg-green-50">Yangilash</button>
+              <button
+                onClick={() => setAutoRefresh(v => !v)}
+                className={`h-9 px-3 rounded-md border text-sm ${autoRefresh ? 'bg-green-600 text-white border-green-600' : 'bg-white hover:bg-green-50'}`}
+              >
+                {autoRefresh ? 'Auto ON' : 'Auto OFF'}
+              </button>
+              <button
+                onClick={() => setSoundEnabled(prev => { const next = !prev; try { localStorage.setItem('og_admin_sound', next ? 'on' : 'off'); } catch {} return next; })}
+                className={`h-9 px-3 rounded-md border text-sm ${soundEnabled ? 'bg-amber-500 text-white border-amber-500' : 'bg-white hover:bg-yellow-50'}`}
+              >
+                {soundEnabled ? 'Sound ON' : 'Sound OFF'}
+              </button>
+            </div>
+          </div>
+
+          {/* Stats overview */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             <div className="relative overflow-hidden rounded-xl p-4 bg-gradient-to-br from-green-600 to-emerald-500 text-white shadow">
               <div className="flex items-center justify-between mb-2"><span className="text-xs uppercase tracking-wide opacity-80">Jami buyurtmalar</span><Activity className="w-4 h-4 opacity-80" /></div>
               <div className="text-2xl font-semibold"><AnimatedNumber value={total} /></div>
@@ -433,55 +518,10 @@ export default function OrdersPage() {
             </div>
           </div>
 
-          {/* FILTER BAR */}
-          <div className="flex flex-wrap gap-2 items-center">
-            <div className="relative w-full sm:w-64">
-              <Search className="w-4 h-4 absolute left-2 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
-                value={search}
-                onChange={(e) => { setSearch(e.target.value); setMeta(m => ({ ...m, page: 1 })); }}
-                placeholder="Qidirish (ism, email)..."
-                className="pl-7 pr-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 w-full bg-white"
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <button onClick={manualRefresh} className="inline-flex items-center gap-1 px-3 py-2 rounded-md bg-white border text-sm hover:bg-green-50 transition">
-                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} /> Yangilash
-              </button>
-              <label className="flex items-center gap-2 text-xs font-medium select-none px-3 py-2 rounded-md border bg-white">
-                <input type="checkbox" checked={autoRefresh} onChange={e => setAutoRefresh(e.target.checked)} className="h-4 w-4" /> Auto 5s
-              </label>
-              <button onClick={toggleSound} className={`inline-flex items-center gap-1 px-3 py-2 rounded-md text-sm border transition ${soundEnabled ? 'bg-green-600 text-white border-green-600 hover:bg-green-700' : 'bg-white hover:bg-green-50'}`}>{soundEnabled ? <><Volume2 className="w-4 h-4" /> Ovoz ON</> : <><VolumeX className="w-4 h-4" /> Ovoz OFF</>}</button>
-            </div>
-            <div className="flex gap-2 flex-1 overflow-x-auto pb-1 scrollbar-thin">
-              <button
-                onClick={() => { setStatusFilter(''); setMeta(m => ({ ...m, page: 1 })); }}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium border transition whitespace-nowrap ${statusFilter === '' ? 'bg-green-600 text-white border-green-600 shadow' : 'bg-white hover:bg-green-50 text-gray-700 border-gray-200'}`}
-              >Barchasi <span className="ml-1 font-semibold">{total}</span></button>
-              {STATUS_META.map(s => {
-                const active = statusFilter === s.key;
-                return (
-                  <button
-                    key={s.key}
-                    onClick={() => { setStatusFilter(s.key); setMeta(m => ({ ...m, page: 1 })); }}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition flex items-center gap-1 whitespace-nowrap ${active ? `${s.color} text-white border-transparent shadow` : 'bg-white hover:bg-green-50 text-gray-700 border-gray-200'}`}
-                  >
-                    {s.label}
-                    <span className={`ml-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold ${active ? 'bg-black/20' : 'bg-gray-100 text-gray-600'}`}><AnimatedNumber value={counts[s.key] || 0} /></span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
           {error && <div className="p-3 rounded bg-red-50 border border-red-200 text-sm text-red-700 animate-shake">{error}</div>}
 
-          {/* TABLE (desktop) */}
-          <div className="hidden lg:block bg-white border rounded-xl shadow-sm overflow-hidden animate-fade-in">
-            <div className="p-3 border-b flex items-center justify-between bg-gradient-to-r from-green-50 to-emerald-50">
-              <h2 className="text-sm font-semibold tracking-wide text-gray-700">Buyurtmalar jadvali</h2>
-              {loading && <span className="text-xs text-gray-500 inline-flex items-center gap-1"><Loader2 className="w-3 h-3 animate-spin" /> Yuklanmoqda...</span>}
-            </div>
+          {/* Table (desktop) */}
+          <div className="hidden lg:block overflow-x-auto border rounded-lg bg-white">
             <DataTable
               columns={columns}
               rows={orders}
@@ -494,12 +534,25 @@ export default function OrdersPage() {
               onSortChange={handleSortChange}
               searchable={false}
               emptyText={loading ? 'Yuklanmoqda...' : 'Buyurtmalar topilmadi'}
+              ariaLabel="Orders table"
             />
           </div>
 
-          {/* CARD GRID (mobile / tablet) */}
-          <div className="grid gap-4 md:grid-cols-2 lg:hidden">
-            {orders.map((o, i) => <OrderCard key={o.id} o={o} idx={i} />)}
+          {/* Cards (mobile/tablet) */}
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:hidden">
+            {orders.map((o) => (
+              <MemoOrderCard
+                key={o.id}
+                o={o}
+                isNew={highlightIds.has(o.id)}
+                isChanged={changedStatusIds.has(o.id)}
+                isUpdating={updatingStatusIds.has(o.id)}
+                isDownloading={downloadingReceiptIds.has(o.id)}
+                onOpenDetail={openDetail}
+                onUpdateStatus={updateStatus}
+                onDownloadReceipt={downloadReceipt}
+              />
+            ))}
             {!loading && orders.length === 0 && (
               <div className="col-span-full text-center py-16 text-sm text-gray-500">Buyurtmalar topilmadi</div>
             )}
@@ -539,7 +592,7 @@ export default function OrdersPage() {
                 <div className="space-y-1">
                   <p className="text-xs font-medium uppercase text-gray-500">Holat</p>
                   <div className="flex items-center gap-2 flex-wrap">
-                    {statusBadge(selectedOrder.status)}
+                    {(() => { const meta = STATUS_META.find(s => s.key === selectedOrder.status); const label = meta?.label || selectedOrder.status; return <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium text-white shadow ${meta?.color || 'bg-gray-500'}`}>{label}</span>; })()}
                     <select
                       value={selectedOrder.status}
                       onChange={(e) => updateStatus(selectedOrder.id, e.target.value)}
