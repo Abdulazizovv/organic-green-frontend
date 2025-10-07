@@ -119,6 +119,8 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#22c55e" />
         <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
         <meta name="theme-color" content="#22c55e" />
+        {/* Google AdSense account meta tag */}
+        <meta name="google-adsense-account" content="ca-pub-3735738350705166" />
       </head>
       <body className="min-h-screen bg-white text-gray-900 antialiased">
         <LanguageProvider>
