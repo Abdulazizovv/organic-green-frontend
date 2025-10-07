@@ -8,11 +8,11 @@ import { useLanguage } from "@/lib/language";
 
 const footerLinks = {
   company: [
-    { href: "/about", key: "about" },
-    { href: "/franchise", key: "franchise" },
-    { href: "/education", key: "education" },
-    { href: "/blog", key: "blog" },
-    { href: "/contact", key: "contact" },
+    { href: "/about", key: "footer_about" },
+    { href: "/franchise", key: "footer_franchise" },
+    { href: "/education", key: "footer_education" },
+    { href: "/blog", key: "footer_blog" },
+    { href: "/contact", key: "footer_contact" },
   ],
   products: [
     { href: "/products?category=microgreens", key: "microgreens" },
@@ -36,26 +36,43 @@ const socialLinks = [
   { href: "https://youtube.com/@organicgreen_uz", icon: Youtube, label: "YouTube" },
 ];
 
-const contactInfo = [
-  {
-    icon: Phone,
-    titleKey: "footer.contact.phone",
-    details: ["+998 90 123 45 67", "+998 91 234 56 78"],
-  },
-  {
-    icon: Mail,
-    titleKey: "footer.contact.email",
-    details: ["info@organicgreen.uz", "sales@organicgreen.uz"],
-  },
-  {
-    icon: MapPin,
-    titleKey: "footer.contact.address",
-    details: ["Тошкент, Чилонзор тумани", "Фарғона, Қўқон шаҳри"],
-  },
-];
-
 export function Footer() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+
+  // Addresses per language
+  const addresses: Record<string, string[]> = {
+    uz: [
+      'Тошкент Шахар, М Улугбек тумани, Корасу 6, 17а',
+      'Фаргона Шахар, Машъал МФЙ Б.Маргиноний 24',
+    ],
+    ru: [
+      'г. Ташкент, Мирзо-Улугбекский район, Карасу-6, 17а',
+      'г. Фергана, МФЙ «Машъал», Б. Маргиланий, 24',
+    ],
+    en: [
+      'Tashkent city, Mirzo Ulugbek district, Karasu-6, 17a',
+      'Fergana city, Mashal MFY, B. Margilaniy 24',
+    ],
+  };
+
+  // Compose contact info localized
+  const contactInfo = [
+    {
+      icon: Phone,
+      titleKey: 'footer.contact.phone',
+      details: ['+998908440844', '+998908448484'],
+    },
+    {
+      icon: Mail,
+      titleKey: 'footer.contact.email',
+      details: ['info@organicgreen.uz', 'sales@organicgreen.uz'],
+    },
+    {
+      icon: MapPin,
+      titleKey: 'footer.contact.address',
+      details: addresses[language] ?? addresses.uz,
+    },
+  ];
 
   return (
     <footer className="bg-gray-900 text-white">
@@ -97,7 +114,7 @@ export function Footer() {
                   Organic Green
                 </span>
                 <span className="text-sm text-organic-green-400 font-medium">
-                  Uzbekistan
+                  {t('footer.company.country')}
                 </span>
               </div>
             </Link>

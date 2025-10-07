@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language";
 
 export default function AboutPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const values = [
     {
@@ -102,6 +102,23 @@ export default function AboutPage() {
       icon: TreePine
     }
   ];
+
+  // Localized addresses (same as Footer)
+  const addresses: Record<string, string[]> = {
+    uz: [
+      'Тошкент Шахар, М Улугбек тумани, Корасу 6, 17а',
+      'Фаргона Шахар, Машъал МФЙ Б.Маргиноний 24',
+    ],
+    ru: [
+      'г. Ташкент, Мирзо-Улугбекский район, Карасу-6, 17а',
+      'г. Фергана, МФЙ «Машъал», Б. Маргиланий, 24',
+    ],
+    en: [
+      'Tashkent city, Mirzo Ulugbek district, Karasu-6, 17a',
+      'Fergana city, Mashal MFY, B. Margilaniy 24',
+    ],
+  };
+  const localizedAddresses = addresses[language] ?? addresses.uz;
 
   return (
     <div className="min-h-screen">
@@ -376,6 +393,53 @@ export default function AboutPage() {
                   </CardContent>
                 </Card>
               </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Locations with Interactive Maps */}
+      <section className="py-20 bg-gray-50">
+        <div className="container">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 font-heading">
+              {t('about.locations.title')}
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              {t('about.locations.description')}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {localizedAddresses.map((addr, idx) => (
+              <div key={idx} className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-semibold">{idx + 1}</div>
+                  <div>
+                    <div className="font-semibold text-gray-900">{t('footer.contact.address')}</div>
+                    <div className="text-gray-600">{addr}</div>
+                    <a
+                      href={`https://maps.google.com/?q=${encodeURIComponent(addr)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-green-600 hover:text-green-700 text-sm font-medium"
+                    >
+                      {t('about.locations.view_on_map')}
+                    </a>
+                  </div>
+                </div>
+                <div className="w-full overflow-hidden rounded-xl border border-gray-200">
+                  <iframe
+                    title={`map-${idx}`}
+                    src={`https://www.google.com/maps?q=${encodeURIComponent(addr)}&output=embed`}
+                    className="w-full h-64"
+                    style={{ border: 0 }}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
             ))}
           </div>
         </div>

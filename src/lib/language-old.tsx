@@ -115,7 +115,7 @@ const translations = {
 
     // Contact
     address: 'Ташкент ш., Мирзо Улуғбек т., Университет кўчаси 4-уй',
-    phone: '+998 90 123 45 67',
+    phone: '+998 90 844 08 44',
     contact_email: 'info@organicgreen.uz',
 
     // Currency
@@ -225,7 +225,7 @@ const translations = {
 
     // Contact
     address: 'г. Ташкент, Мирзо-Улугбекский р-н, ул. Университетская 4',
-    phone: '+998 90 123 45 67',
+    phone: '+998 90 844 08 44',
     contact_email: 'info@organicgreen.uz',
 
     // Currency
@@ -335,7 +335,7 @@ const translations = {
 
     // Contact
     address: 'Tashkent, Mirzo Ulugbek District, University Street 4',
-    phone: '+998 90 123 45 67',
+    phone: '+998 90 844 08 44',
     contact_email: 'info@organicgreen.uz',
 
     // Currency

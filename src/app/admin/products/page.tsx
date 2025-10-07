@@ -177,10 +177,10 @@ export default function ProductsPage() {
 
   // Cards view
   const productCards = (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
       {products.map(p => (
         <div key={p.id} className="group relative border rounded-xl bg-white overflow-hidden hover:shadow-md transition flex flex-col">
-          <div className="relative h-40 bg-gray-100">
+          <div className="relative h-44 sm:h-40 bg-gray-100">
             {p.primary_image_url ? (
               <Image src={p.primary_image_url} alt={p.name_uz} fill className="object-cover" />
             ) : (
@@ -215,7 +215,7 @@ export default function ProductsPage() {
       <AdminLayout title="Mahsulotlar" description="Mahsulotlarni boshqarish va optimallashtirish">
         <div className="space-y-6">
           {/* Stats */}
-          <div className="grid gap-5 md:grid-cols-4 sm:grid-cols-2">
+          <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
             <div className="p-4 rounded-lg bg-gradient-to-br from-green-600 to-emerald-500 text-white shadow"><div className="flex items-center justify-between mb-1"><span className="text-xs uppercase tracking-wide opacity-80">Jami</span></div><p className="text-2xl font-semibold">{stats.total}</p><p className="text-[11px] opacity-70">Mahsulotlar</p></div>
             <div className="p-4 rounded-lg bg-white border shadow-sm"><div className="flex items-center justify-between mb-1"><span className="text-xs uppercase tracking-wide text-gray-500">Faol</span></div><p className="text-2xl font-semibold text-gray-800">{stats.active}</p><p className="text-[11px] text-gray-500">Faol</p></div>
             <div className="p-4 rounded-lg bg-white border shadow-sm"><div className="flex items-center justify-between mb-1"><span className="text-xs uppercase tracking-wide text-gray-500">Tavsiya</span></div><p className="text-2xl font-semibold text-gray-800">{stats.featured}</p><p className="text-[11px] text-gray-500">Tanlangan</p></div>
@@ -235,12 +235,12 @@ export default function ProductsPage() {
               <button onClick={() => { setFilterFeatured(p => p === false ? undefined : false); setMeta(m => ({ ...m, page: 1 })); }} className={`inline-flex items-center gap-1 px-3 py-2 rounded-md border text-xs font-medium ${filterFeatured === false ? 'bg-gray-700 border-gray-700 text-white' : 'bg-white hover:bg-gray-50'}`}>Tavsiya emas</button>
               <button onClick={() => { setOrdering('-created_at'); }} className="inline-flex items-center gap-1 px-3 py-2 rounded-md border text-xs font-medium bg-white hover:bg-gray-50"><RefreshCw className="w-3 h-3" /> Eng yangi</button>
               <button onClick={fetchProducts} className="inline-flex items-center gap-1 px-3 py-2 rounded-md border text-xs font-medium bg-white hover:bg-gray-50"><RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} /> Yangilash</button>
-              <div className="flex items-center gap-1 ml-2 border rounded-md overflow-hidden">
+              <div className="flex items-center gap-1 ml-0 md:ml-2 border rounded-md overflow-hidden">
                 <button onClick={() => setView('grid')} className={`px-2 py-2 text-xs ${view === 'grid' ? 'bg-green-600 text-white' : 'bg-white hover:bg-gray-50'}`}><GridIcon className="w-3 h-3" /></button>
                 <button onClick={() => setView('table')} className={`px-2 py-2 text-xs ${view === 'table' ? 'bg-green-600 text-white' : 'bg-white hover:bg-gray-50'}`}><ListIcon className="w-3 h-3" /></button>
               </div>
             </div>
-            <button onClick={openCreate} className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-green-600 text-white text-sm font-medium hover:bg-green-700"><Plus className="w-4 h-4" /> Yangi mahsulot</button>
+            <button onClick={openCreate} className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-green-600 text-white text-sm font-medium hover:bg-green-700 w-full md:w-auto justify-center"><Plus className="w-4 h-4" /> Yangi mahsulot</button>
           </div>
 
           {/* List */}
@@ -249,7 +249,7 @@ export default function ProductsPage() {
             {loading && <div className="py-16 text-center text-gray-500 text-sm flex items-center justify-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Yuklanmoqda...</div>}
             {!loading && (view === 'grid' ? productCards : (
               <div className="overflow-x-auto border rounded-lg bg-white">
-                <table className="w-full text-sm">
+                <table className="w-full min-w-[720px] text-sm">
                   <thead className="bg-gray-100">
                     <tr>
                       <th className="px-4 py-2 text-left">Mahsulot</th>
@@ -298,7 +298,7 @@ export default function ProductsPage() {
           </div>
 
           {/* Pagination */}
-          <div className="flex items-center justify-between gap-4 text-sm">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
             <div>Jami: {meta.total}</div>
             <div className="flex items-center gap-2">
               <select value={meta.page_size} onChange={e => setMeta(m => ({ ...m, page_size: Number(e.target.value), page: 1 }))} className="border rounded px-2 py-1 text-sm">

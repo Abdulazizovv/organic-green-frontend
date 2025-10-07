@@ -344,7 +344,7 @@
       "fullName": "Тўлиқ исм",
       "fullNamePlaceholder": "Тўлиқ исмингизни киритинг",
       "phone": "Телефон рақам",
-      "phonePlaceholder": "+998 90 123 45 67",
+      "phonePlaceholder": "+998 90 844 08 44",
       "email": "Электрон почта (ихтиёрий)",
       "emailPlaceholder": "sizning.email@example.com",
       "city": "Шаҳар",
@@ -445,7 +445,7 @@
     "microgreens_description": "Тоза ва табиий микрозелень парваришлаш",
     "microgreens_benefit1": "100% органик",
     "microgreens_benefit2": "Юқори озуқавийлик",
-    "microgreens_benefit3": "Тоза етказиб бериш",
+    "microgreens_benefit3": "Таза етказиб бериш",
     "supplements_title": "БАД Қўшимчалар",
     "supplements_description": "Табиий витаминлар ва озуқа қўшимчалари",
     "supplements_benefit1": "Табиий таркиб",
@@ -474,7 +474,7 @@
     "phone": "Телефон рақами",
     "phone_required": "Телефон рақами киритиш мажбурий",
     "phone_invalid": "Тўғри телефон рақами киритинг (+998xxxxxxxxx)",
-    "phone_placeholder": "+998 90 123 45 67",
+    "phone_placeholder": "+998 90 844 08 44",
     "email": "Email (ихтиёрий)",
     "email_invalid": "Тўғри email манзил киритинг",
     "city": "Шаҳар",
@@ -620,8 +620,8 @@
       "subtitle": "Bizdan ta'lim olgan o'quvchilarning haqiqiy fikrlari"
     },
     "cta_section": {
-      "title": "Organic Green bilan kelajagingizni boshlang",
-      "subtitle": "Professional ta'lim oling va muvaffaqiyatli karyera quring",
+      "title": "Organic Green билан келажагингизни бошланг",
+      "subtitle": "Professional ta'lim oling ва muvaffaqiyatli karyera quring",
       "free_trial": "Bepul sinov darsi",
       "international_certificate": "Xalqaro sertifikat",
       "lifetime_access": "Doimiy kirish huquqi"
@@ -638,7 +638,7 @@
     "contact_info": {
       "title": "Алоқа маълумотлари",
       "address": "Тошкент шаҳри, Юнусобод тумани",
-      "phone": "+998 90 123 45 67",
+      "phone": "+998 90 844 08 44",
       "email": "education@organicgreen.uz",
       "working_hours": "Душ-Жума: 09:00-18:00"
     }
@@ -697,7 +697,8 @@
       "subscribe": "Обуна бўлиш"
     },
     "company": {
-      "description": "Ўзбекистонда микрозелень бўйича етакчи компания. Табиий ва органик маҳсулотлар орқали соғлом турмуш тарзини ривожлантирамиз."
+      "description": "Ўзбекистонда микрозелень бўйича етакчи компания. Табиий ва органик маҳсулотлар орқали соғлом турмуш тарзини ривожлантирамиз.",
+      "country": "Ўзбекистон"
     },
     "sections": {
       "company": "Компания",
@@ -730,7 +731,7 @@
   },
   "contact": {
     "address": "Ташкент ш., Мирзо Улуғбек т., Университет кўчаси 4-уй",
-    "phone": "+998 90 123 45 67",
+    "phone": "+998 90 844 08 44",
     "email": "info@organicgreen.uz"
   },
   "common": {
@@ -831,7 +832,7 @@
     "secure_payment": "Хавфсиз тўлов",
     "empty": "Саватча бўш",
     "subtotal": "Оралиқ жами",
-    "continue_shopping": "Харидни давом еттириш",
+    "continue_shopping": "Харидни давом эттириш",
     "item_count": "буюм",
     "items_count": "буюмлар",
     "updating": "Янгиланмоқда...",
@@ -859,6 +860,7 @@
     "itemsInCart": "та маҳсулот"
   },
   "checkout": {
+    "item_count": "махсулот",
     "items_count": "махсулот",
     "title": "Тўлов",
     "contact_information": "Алоқа маълумотлари",
@@ -900,7 +902,7 @@
     "phone_note": "Агар шу телефон рақам орқали Telegram ботда рўйхатдан ўтсангиз, буюртма тафсилотлари ва статуслари сизга юборилади.",
     "telegram_bot_link": "Telegram ботга ўтиш",
     "full_name_placeholder": "Тўлиқ исмингизни киритинг",
-    "phone_placeholder": "+998 90 123 45 67",
+    "phone_placeholder": "+998 90 844 08 44",
     "delivery_address_placeholder": "Етказиб бериш манзилини тўлиқ киритинг",
     "notes_placeholder": "Етказиб бериш учун махсус кўрсатмалар..."
   },
@@ -911,7 +913,7 @@
     "payment_method": "Тўлов усули",
     "delivery_address": "Етказиб бериш манзили",
     "order_items": "Буюртма буюмлари",
-    "continue_shopping": "Харидни давом еттириш",
+    "continue_shopping": "Харидни давом эттириш",
     "view_orders": "Буюртмаларимни кўриш",
     "order_details": "Буюртма тафсилотлари",
     "order_status": "Буюртма ҳолати",
@@ -929,7 +931,7 @@
     "contact_phone": "Алоқа телефони",
     "notes": "Изоҳлар",
     "order_summary": "Буюртма хулосаси",
-    "subtotal": "Орасумма",
+    "subtotal": "Махсулотлар нархи",
     "discount": "Чегирма",
     "delivery": "Етказиб бериш",
     "delivery_free": "Бепул",
@@ -944,7 +946,7 @@
       "discount": "Чегирма",
       "total": "Жами",
       "thank_you": "Харидингиз учун раҳмат!",
-      "contact": "Алоқа учун: +998 90 123 45 67"
+      "contact": "Алоқа учун: +998 90 844 08 44"
     },
     "telegram_promo": {
       "title": "Буюртмангиз ҳақида янгиланишларни бизнинг Telegram ботимиз орқали кузатиб боринг!",
@@ -1025,7 +1027,7 @@
       },
       "innovation": {
         "title": "Инновация",
-        "description": "Илмий тадқиқотлар ва замонавий технологиялар асосида ривожланиш"
+        "description": "Илғор технологиялар ва замонавий технологиялар асосида ривожланиш"
       }
     },
     "timeline": {
@@ -1097,6 +1099,11 @@
       "description": "Соғлом турмуш тарзини ривожлантириш миссиясида биз билан ҳамкорлик қилинг",
       "contact_button": "Алоқа",
       "partner_button": "Ҳамкор бўлиш"
+    },
+    "locations": {
+      "title": "Манзилларимиз",
+      "description": "Офис ва ишлаб чиқариш нуқталаримизга ташриф буюринг",
+      "view_on_map": "Google Xaritalarda ko‘рish"
     }
   },
   "courses": {
@@ -1175,5 +1182,70 @@
       "browse": "Курсларни кўриш",
       "contact": "Алоқа"
     }
+  },
+  "microgreens": "Микрозелень",
+  "powders": "Кукунлар",
+  "supplements": "Қўшимчалар",
+  "kits": "Тўпламлар",
+  "payment": "Тўлов",
+  "warranty": "Кафолат",
+  "shipping": "Етказиб бериш",
+  "education": "Таълим",
+  "returns": "Қайтариш",
+  "faq": "Савол-жавоб",
+  "footer_franchise": "Франшиза",
+  "footer_education": "Курслар",
+  "footer_about":"Биз ҳақимизда",
+  "footer_blog":"Блог",
+  "footer_contact":"Алоқа",
+  "contactPage": {
+    "hero_title_part1": "Биз билан",
+    "hero_title_part2": "алоқа",
+    "hero_subtitle": "Саволларингиз борми? Биз ёрдам беришга тайёрмиз. Профессионал маслаҳат учун биз билан боғланинг.",
+    "send_message": "Хабар йўллаш",
+    "call_us": "Қўнғироқ қилиш",
+    "form": {
+      "title": "Хабар йўллаш",
+      "subtitle": "Формани тўлдиринг ва биз тез орада боғланамиз",
+      "first_name": "Исм",
+      "last_name": "Фамилия",
+      "email": "Электрон почта",
+      "phone": "Телефон",
+      "topic": "Мавзу",
+      "topics": {
+        "general": "Умумий савол",
+        "products": "Маҳсулотлар ҳақида",
+        "franchise": "Франшиза ҳақида",
+        "education": "Таълим курслари",
+        "support": "Техник қўллаб-қувватлаш",
+        "partnership": "Ҳамкорлик таклифи"
+      },
+      "message": "Хабар",
+      "submit": "Юбориш"
+    },
+    "info": {
+      "title_part1": "Алоқа",
+      "title_part2": "маълумотлари",
+      "subtitle": "Бизга турли йўллар орқали мурожаат қилишингиз мумкин"
+    },
+    "departments": {
+      "title_part1": "Бўлимлар",
+      "title_part2": "билан алоқа",
+      "subtitle": "Муайян саволларингиз учун тегишли бўлим билан бевосита алоқага чиқинг"
+    },
+    "social": {
+      "title_part1": "Ижтимоий",
+      "title_part2": "тармоқларда",
+      "subtitle": "Янгиликлар ва фойдали маслаҳатлар учун обуна бўлинг"
+    },
+    "address": "Манзил",
+    "address_desc": "Асосий офис ва ишлаб чиқариш",
+    "phone": "Телефон",
+    "phone_desc": "24/7 қўллаб-қувватлаш хизмати",
+    "email": "Электрон почта",
+    "email_desc": "Барча саволлар учун",
+    "hours": "Иш вақти",
+    "hours_value": "Душанба - Жума: 9:00 - 18:00",
+    "hours_desc": "Шанба: 9:00 - 14:00"
   }
 }

@@ -478,7 +478,7 @@ export default function EducationPage() {
                     <div className="space-y-4">
                       <div className="flex items-center gap-3">
                         <Phone className="w-5 h-5 text-green-600" />
-                        <span className="text-gray-700">+998 90 123 45 67</span>
+                        <span className="text-gray-700">+998 90 844 08 44</span>
                       </div>
                       <div className="flex items-center gap-3">
                         <Mail className="w-5 h-5 text-green-600" />
